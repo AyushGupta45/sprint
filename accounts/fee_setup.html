@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fee Setup - BrightPath</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary-fixed": "#00174b",
+                        "secondary-fixed-dim": "#4edea3",
+                        "inverse-on-surface": "#eaf1ff",
+                        "secondary": "#006c49",
+                        "secondary-fixed": "#6ffbbe",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#0b1c30",
+                        "tertiary-container": "#996100",
+                        "surface-bright": "#f8f9ff",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary-container": "#eeefff",
+                        "outline-variant": "#c3c6d7",
+                        "on-tertiary": "#ffffff",
+                        "sidebar-bg": "#FFFFFF",
+                        "primary": "#004ac6",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "secondary-container": "#6cf8bb",
+                        "surface": "#f8f9ff",
+                        "on-tertiary-container": "#ffeedd",
+                        "on-error-container": "#93000a",
+                        "background": "#f8f9ff",
+                        "tertiary": "#784b00",
+                        "surface-container-high": "#dce9ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-secondary-container": "#00714d",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-container": "#e5eeff",
+                        "surface-container-highest": "#d3e4fe",
+                        "waitlist-blue": "#3B82F6",
+                        "surface-tint": "#0053db",
+                        "bg-main": "#F8FAFC",
+                        "on-background": "#0b1c30",
+                        "on-error": "#ffffff",
+                        "danger": "#EF4444",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-secondary-fixed-variant": "#005236",
+                        "error": "#ba1a1a",
+                        "accent-purple": "#8B5CF6",
+                        "on-surface-variant": "#434655",
+                        "surface-dim": "#cbdbf5",
+                        "surface-container-low": "#eff4ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "outline": "#737686",
+                        "surface-variant": "#d3e4fe",
+                        "on-tertiary-fixed-variant": "#653e00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "container-max-width": "1440px",
+                        "margin-mobile": "16px",
+                        "stack-gap": "16px",
+                        "sidebar-width": "260px",
+                        "sidebar-collapsed": "80px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-bg-main text-on-background min-h-screen font-body-md text-body-md antialiased overflow-x-hidden">
+<!-- TopNavBar (Mobile Only) -->
+<header class="md:hidden fixed top-0 w-full h-16 z-30 flex justify-between items-center px-margin-mobile bg-surface dark:bg-surface-dim flat no shadows border-b border-outline-variant">
+<div class="flex items-center gap-2">
+<button aria-label="Open menu" class="text-on-surface p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">BrightPath</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface hover:text-primary dark:hover:text-inverse-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<img alt="Admin Avatar" class="w-8 h-8 rounded-full object-cover" data-alt="A small circular avatar placeholder image for the user profile, light mode, simple flat design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBroqVLzur39KnE72V0YSXl163Ojz9hAZoHZC1uYRJNB4tJHwi3PXDUwVGO3tdFdFTTkXiQ1-xMhyDprQOcxXQWluzFYmW0PDcACMnpLoRI3ML3XPxg4F9qRXzCP6am4dIjfcRm725AMYFzTkxhZj7TO9jMAxVquu0ZmPFn_rU81AedwjPOYrd6Zxyf9iuNL0tO-4StsrL2eDnL2Ct9H06AhCPfDucv7zbTNDNR8qgf-BaPhHXeXNG1lQt8yBBGvRi9Rd_IordpNpjG"/>
+</div>
+</header>
+<!-- SideNavBar (Desktop) -->
+<aside class="hidden md:flex fixed left-0 top-0 h-full w-[260px] z-40 flex-col py-6 bg-sidebar-bg dark:bg-inverse-surface shadow-sm dark:bg-inverse-surface">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container font-bold">school</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">BrightPath</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Admin Portal</div>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">school</span>
+                Students
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">book</span>
+                Courses
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">person_add</span>
+                Enrollments
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">hourglass_empty</span>
+                Waitlist
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">payments</span>
+                Payments
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container/10 text-primary border-l-4 border-primary font-bold active:scale-[0.98] transition-transform duration-200" href="#">
+<span class="material-symbols-outlined font-bold">receipt_long</span>
+                Fee Setup
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">notifications</span>
+                Notifications
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">manage_accounts</span>
+                Users &amp; Roles
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">analytics</span>
+                Reports
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="flex items-center gap-3">
+<img alt="BrightPath Admin Profile" class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="Admin user avatar placeholder for BrightPath admin portal, minimal modern flat design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhMXJP4MwpjUGXdynfI5RiX4cpteVEBOJ1OzJRLZSrHTiJQanY1d4G97qJl-XXwDa0atQxyyI0Mz0Rqav0h26Qxt77yhxO06BYGo7sZ6VY-MzybHJhU93f4UDfLw7UOxoLaC4eTT2VHr1R4JOI9_HeKlJSY03EuPcUgVgy2iKQVsVr_Nl4lI2kzKDCj0HALoZkhxJbSoLTE48vym47huXYPm1K2u8CFfoG2mZWCfHOKsEb7qv8A9LEuOPKrKu32tH9JZKXsv1oIakA"/>
+<div>
+<div class="font-label-md text-label-md text-on-surface">Admin User</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">admin@brightpath.edu</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="pt-20 md:pt-8 pb-12 px-margin-mobile md:px-gutter md:ml-[260px] max-w-container-max-width mx-auto">
+<!-- Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+<div>
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background mb-1">Fee Setup</h1>
+<p class="text-on-surface-variant">Configure payment plans and installation schedules for courses.</p>
+</div>
+<div class="flex gap-3 w-full md:w-auto">
+<button class="flex-1 md:flex-none px-6 py-2.5 rounded-lg border border-outline text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors">
+                    Cancel
+                </button>
+<button class="flex-1 md:flex-none px-6 py-2.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:bg-surface-tint shadow-sm transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 20px;">save</span>
+                    Save Fee Plan
+                </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Configuration -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<!-- Course Selection Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 p-6">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">book</span>
+                        Course Association
+                    </h2>
+<div class="space-y-4">
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-2">Select Course</label>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface font-body-md text-body-md rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary block p-3 appearance-none transition-shadow">
+<option disabled="" selected="" value="">Choose a course...</option>
+<option value="cs101">Introduction to Computer Science (CS101)</option>
+<option value="math201">Advanced Calculus (MATH201)</option>
+<option value="phy301">Quantum Mechanics (PHY301)</option>
+<option value="eng102">Creative Writing (ENG102)</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-2">This fee plan will be applied to all new enrollments for this course.</p>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-2">Base Course Fee</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined">attach_money</span>
+</div>
+<input class="w-full pl-10 bg-surface-container-low border border-outline-variant text-on-surface font-body-md text-body-md rounded-lg block p-3 focus:outline-none" disabled="" type="number" value="1200.00"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Plan Type Toggle Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 p-6">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">toggle_on</span>
+                        Fee Plan Type
+                    </h2>
+<div class="flex p-1 bg-surface-container-low rounded-lg">
+<button class="flex-1 py-2 px-4 rounded-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">
+                            One-Time
+                        </button>
+<button class="flex-1 py-2 px-4 rounded-md bg-surface-container-lowest shadow-sm border border-outline-variant/20 font-label-md text-label-md text-primary">
+                            Installment
+                        </button>
+</div>
+<div class="mt-6 p-4 bg-surface-container-low rounded-lg border border-primary/20 border-l-4 border-l-primary">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary">info</span>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface">Installment Plan Selected</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Configure the payment breakdown schedule in the builder. Total installments must equal the base course fee.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Builder -->
+<div class="lg:col-span-8 flex flex-col gap-gutter">
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 flex flex-col h-full">
+<div class="p-6 border-b border-outline-variant/30 flex justify-between items-center">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">calendar_month</span>
+                                Installment Schedule Builder
+                            </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Define due dates and amounts for each payment phase.</p>
+</div>
+<button class="px-4 py-2 bg-surface-container-low text-primary font-label-md text-label-md rounded-lg border border-primary/20 hover:bg-surface-container transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+                            Add Row
+                        </button>
+</div>
+<div class="p-6 flex-1 bg-surface-bright/50">
+<!-- Summary Stats -->
+<div class="grid grid-cols-3 gap-4 mb-6">
+<div class="p-4 bg-surface-container-lowest rounded-lg border border-outline-variant/30">
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-1">Total Allocated</div>
+<div class="font-headline-md text-headline-md text-on-surface">$1,200.00</div>
+</div>
+<div class="p-4 bg-surface-container-lowest rounded-lg border border-outline-variant/30">
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-1">Remaining</div>
+<div class="font-headline-md text-headline-md text-secondary">$0.00</div>
+</div>
+<div class="p-4 bg-surface-container-lowest rounded-lg border border-outline-variant/30">
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-1">Total Installments</div>
+<div class="font-headline-md text-headline-md text-on-surface">3</div>
+</div>
+</div>
+<!-- Schedule Rows -->
+<div class="space-y-3">
+<!-- Header Row -->
+<div class="grid grid-cols-12 gap-4 px-4 pb-2 border-b border-outline-variant/50 hidden md:grid">
+<div class="col-span-2 font-label-sm text-label-sm text-on-surface-variant">Installment No.</div>
+<div class="col-span-4 font-label-sm text-label-sm text-on-surface-variant">Amount ($)</div>
+<div class="col-span-5 font-label-sm text-label-sm text-on-surface-variant">Due Date</div>
+<div class="col-span-1 text-center font-label-sm text-label-sm text-on-surface-variant">Action</div>
+</div>
+<!-- Row 1 -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-surface-container-lowest p-4 rounded-lg border border-outline-variant/30 hover:bg-surface-container-low transition-colors group">
+<div class="md:col-span-2">
+<span class="md:hidden font-label-sm text-label-sm text-on-surface-variant mr-2">No:</span>
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surface-container text-on-surface font-label-md text-label-md">1</span>
+</div>
+<div class="md:col-span-4 relative">
+<span class="md:hidden font-label-sm text-label-sm text-on-surface-variant block mb-1">Amount</span>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-size: 18px;">attach_money</span>
+</div>
+<input class="w-full pl-8 pr-3 py-2 bg-surface-container-lowest border border-outline-variant text-on-surface font-body-md text-body-md rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow" type="number" value="400.00"/>
+</div>
+</div>
+<div class="md:col-span-5">
+<span class="md:hidden font-label-sm text-label-sm text-on-surface-variant block mb-1">Due Date</span>
+<input class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant text-on-surface font-body-md text-body-md rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow" type="date" value="2024-09-01"/>
+</div>
+<div class="md:col-span-1 flex justify-end md:justify-center">
+<button class="p-2 text-on-surface-variant hover:text-danger hover:bg-error-container/50 rounded-md transition-colors" title="Remove row">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-surface-container-lowest p-4 rounded-lg border border-outline-variant/30 hover:bg-surface-container-low transition-colors group">
+<div class="md:col-span-2">
+<span class="md:hidden font-label-sm text-label-sm text-on-surface-variant mr-2">No:</span>
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surface-container text-on-surface font-label-md text-label-md">2</span>
+</div>
+<div class="md:col-span-4 relative">
+<span class="md:hidden font-label-sm text-label-sm text-on-surface-variant block mb-1">Amount</span>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-size: 18px;">attach_money</span>
+</div>
+<input class="w-full pl-8 pr-3 py-2 bg-surface-container-lowest border border-outline-variant text-on-surface font-body-md text-body-md rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow" type="number" value="400.00"/>
+</div>
+</div>
+<div class="md:col-span-5">
+<span class="md:hidden font-label-sm text-label-sm text-on-surface-variant block mb-1">Due Date</span>
+<input class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant text-on-surface font-body-md text-body-md rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow" type="date" value="2024-10-01"/>
+</div>
+<div class="md:col-span-1 flex justify-end md:justify-center">
+<button class="p-2 text-on-surface-variant hover:text-danger hover:bg-error-container/50 rounded-md transition-colors" title="Remove row">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-surface-container-lowest p-4 rounded-lg border border-outline-variant/30 hover:bg-surface-container-low transition-colors group">
+<div class="md:col-span-2">
+<span class="md:hidden font-label-sm text-label-sm text-on-surface-variant mr-2">No:</span>
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surface-container text-on-surface font-label-md text-label-md">3</span>
+</div>
+<div class="md:col-span-4 relative">
+<span class="md:hidden font-label-sm text-label-sm text-on-surface-variant block mb-1">Amount</span>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-size: 18px;">attach_money</span>
+</div>
+<input class="w-full pl-8 pr-3 py-2 bg-surface-container-lowest border border-outline-variant text-on-surface font-body-md text-body-md rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow" type="number" value="400.00"/>
+</div>
+</div>
+<div class="md:col-span-5">
+<span class="md:hidden font-label-sm text-label-sm text-on-surface-variant block mb-1">Due Date</span>
+<input class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant text-on-surface font-body-md text-body-md rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow" type="date" value="2024-11-01"/>
+</div>
+<div class="md:col-span-1 flex justify-end md:justify-center">
+<button class="p-2 text-on-surface-variant hover:text-danger hover:bg-error-container/50 rounded-md transition-colors" title="Remove row">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- Add Row Trigger (Ghost State) -->
+<button class="w-full py-4 border-2 border-dashed border-outline-variant/50 rounded-lg text-on-surface-variant hover:text-primary hover:border-primary/50 hover:bg-primary-container/5 transition-colors flex items-center justify-center gap-2 font-label-md text-label-md">
+<span class="material-symbols-outlined">add_circle</span>
+                                Add another installment
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

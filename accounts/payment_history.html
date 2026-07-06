@@ -1,0 +1,544 @@
+<!DOCTYPE html><html class="h-full bg-main" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BrightPath - Payment History</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed": "#ffddb8",
+                      "surface-container": "#e5eeff",
+                      "on-surface": "#0b1c30",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "error": "#ba1a1a",
+                      "on-error-container": "#93000a",
+                      "surface-bright": "#f8f9ff",
+                      "on-secondary-container": "#00714d",
+                      "surface-variant": "#d3e4fe",
+                      "on-secondary-fixed-variant": "#005236",
+                      "secondary-fixed-dim": "#4edea3",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-background": "#0b1c30",
+                      "secondary-container": "#6cf8bb",
+                      "on-surface-variant": "#434655",
+                      "on-primary-container": "#eeefff",
+                      "surface-tint": "#0053db",
+                      "secondary": "#006c49",
+                      "inverse-primary": "#b4c5ff",
+                      "on-secondary-fixed": "#002113",
+                      "tertiary": "#784b00",
+                      "accent-purple": "#8B5CF6",
+                      "surface-container-lowest": "#ffffff",
+                      "on-error": "#ffffff",
+                      "secondary-fixed": "#6ffbbe",
+                      "primary": "#004ac6",
+                      "tertiary-container": "#996100",
+                      "surface-container-low": "#eff4ff",
+                      "surface-dim": "#cbdbf5",
+                      "primary-fixed": "#dbe1ff",
+                      "surface-container-high": "#dce9ff",
+                      "bg-main": "#F8FAFC",
+                      "primary-container": "#2563eb",
+                      "on-tertiary-fixed-variant": "#653e00",
+                      "tertiary-fixed-dim": "#ffb95f",
+                      "on-secondary": "#ffffff",
+                      "surface": "#f8f9ff",
+                      "waitlist-blue": "#3B82F6",
+                      "on-primary-fixed": "#00174b",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-fixed": "#2a1700",
+                      "on-tertiary-container": "#ffeedd",
+                      "outline": "#737686",
+                      "sidebar-bg": "#FFFFFF",
+                      "outline-variant": "#c3c6d7",
+                      "background": "#f8f9ff",
+                      "error-container": "#ffdad6",
+                      "danger": "#EF4444",
+                      "inverse-surface": "#213145",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-highest": "#d3e4fe"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sidebar-width": "260px",
+                      "sidebar-collapsed": "80px",
+                      "gutter": "24px",
+                      "container-max-width": "1440px",
+                      "stack-gap": "16px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "headline-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+</head>
+<body class="h-full bg-main text-on-surface font-body-md text-body-md overflow-x-hidden antialiased">
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-0 md:left-[260px] h-16 z-30 flex justify-between items-center px-gutter bg-surface dark:bg-surface-dim shadow-sm transition-all duration-300" id="topNav">
+<!-- Mobile Menu Toggle & Brand (Visible only on mobile) -->
+<div class="flex items-center gap-4 md:hidden">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 -ml-2 rounded-full hover:bg-surface-container" id="mobileMenuBtn">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary truncate">
+                BrightPath
+            </div>
+</div>
+<!-- Search Bar (Left aligned on desktop as per JSON) -->
+<div class="hidden md:flex flex-1 max-w-md items-center">
+<div class="relative w-full group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2 border border-outline-variant rounded-lg leading-5 bg-surface-container-lowest placeholder-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary sm:text-sm transition-all duration-200" placeholder="Search accounts, transactions..." type="text">
+</div>
+</div>
+<!-- Right Actions -->
+<div class="flex items-center gap-4 ml-auto md:ml-0">
+<button aria-label="notifications" class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container relative">
+<span class="material-symbols-outlined">notifications</span>
+<!-- Unread indicator -->
+<span class="absolute top-2 right-2 block h-2 w-2 rounded-full bg-danger ring-2 ring-surface"></span>
+</button>
+<button class="flex items-center focus:outline-none rounded-full ring-2 ring-transparent hover:ring-primary/30 transition-all">
+<img alt="Admin Avatar" class="h-8 w-8 rounded-full object-cover shadow-sm" data-alt="A professional headshot of a corporate admin staff member in a bright, modern office setting. Clear, soft lighting, sharp focus, Corporate aesthetic, Light mode UI context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbjAgHNVL6AbUrr4vnPyI_uXsMJz6ximz407Arr8GSPlHj969VvFze2sAj6IdUa2nx5no3G5GPlUYZdZInli31OUAXW8fPa2WDTFzDgZAjNcW6DNCbW3-dmHXHAGGxzXKRL6HzvBC1zQrAftqOFIyn-cQZ5kcCfJ7YPLTlgecMQ8KYQfWMJu98hnCyKWXQaSvAd9wVu7_pykxrGOzyF-esVfTu5Jqu9h43t1iqRVnM1ZyKMM_ep3IuBV7f4zpzzfKeIbA_sysPTYJW">
+</button>
+</div>
+</header>
+<!-- SideNavBar -->
+<!-- Mobile overlay -->
+<div class="fixed inset-0 bg-on-surface/50 z-40 hidden md:hidden transition-opacity opacity-0 backdrop-blur-sm" id="mobileSidebarOverlay"></div>
+<aside class="fixed left-0 top-0 h-full w-[260px] z-50 flex flex-col py-6 bg-sidebar-bg dark:bg-inverse-surface shadow-sm transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out" id="sidebar">
+<!-- Brand Header -->
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="h-8 w-8 rounded bg-primary flex items-center justify-center text-on-primary font-bold shadow-sm">
+                B
+             </div>
+<div>
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary tracking-tight">BrightPath</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Admin Portal</div>
+</div>
+<button class="md:hidden ml-auto text-on-surface-variant p-1 rounded-full hover:bg-surface-container" id="closeSidebarBtn">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-1 overflow-y-auto px-3 space-y-1 scrollbar-hide">
+<a class="group flex items-center px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors hover:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="group flex items-center px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors hover:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">school</span>
+<span class="font-label-md text-label-md">Students</span>
+</a>
+<a class="group flex items-center px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors hover:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">book</span>
+<span class="font-label-md text-label-md">Courses</span>
+</a>
+<a class="group flex items-center px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors hover:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">person_add</span>
+<span class="font-label-md text-label-md">Enrollments</span>
+</a>
+<a class="group flex items-center px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors hover:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">hourglass_empty</span>
+<span class="font-label-md text-label-md">Waitlist</span>
+</a>
+<!-- Active Navigation Item -->
+<a class="group flex items-center px-3 py-2.5 rounded-r-lg bg-primary-container/10 text-primary border-l-4 border-primary font-bold shadow-sm transition-transform duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-label-md text-label-md">Payments</span>
+</a>
+<a class="group flex items-center px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors hover:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">receipt_long</span>
+<span class="font-label-md text-label-md">Fee Setup</span>
+</a>
+<a class="group flex items-center px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors hover:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">notifications</span>
+<span class="font-label-md text-label-md">Notifications</span>
+</a>
+<a class="group flex items-center px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors hover:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">manage_accounts</span>
+<span class="font-label-md text-label-md">Users &amp; Roles</span>
+</a>
+<a class="group flex items-center px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors hover:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">analytics</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+</nav>
+<!-- Bottom Settings Anchor -->
+<div class="px-3 mt-auto pt-4 border-t border-outline-variant/30">
+<a class="group flex items-center px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors hover:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="pt-16 md:pl-[260px] min-h-screen transition-all duration-300">
+<div class="max-w-[1440px] mx-auto p-margin-mobile md:p-gutter">
+<!-- Page Header & Actions -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+<div>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Payment History</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Track and manage all inbound transactions.</p>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<!-- Export Button -->
+<button class="flex items-center gap-2 px-4 py-2 border border-outline text-on-surface font-label-md text-label-md rounded-lg hover:bg-surface-container transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary shadow-sm bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                        Export CSV
+                    </button>
+<!-- Create Payment Button -->
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary font-label-md text-label-md rounded-lg hover:bg-primary-container transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-bg-main">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        Record Payment
+                    </button>
+</div>
+</div>
+<!-- Filters & Search Toolbar -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/50 p-4 mb-6">
+<div class="flex flex-col md:flex-row gap-4 items-end md:items-center">
+<!-- Search -->
+<div class="w-full md:w-80">
+<label class="sr-only" for="searchPayments">Search Payments</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2 border border-outline-variant rounded-lg font-body-md text-body-md bg-surface-bright placeholder-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200" id="searchPayments" placeholder="Search by ID, Name, Ref No..." type="text">
+</div>
+</div>
+<!-- Date Range -->
+<div class="w-full md:w-auto flex items-center gap-2">
+<div class="relative w-full md:w-auto">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+</div>
+<input aria-label="Start Date" class="block w-full pl-10 pr-3 py-2 border border-outline-variant rounded-lg font-body-md text-body-md bg-surface-bright text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200" type="date" value="2023-10-01">
+</div>
+<span class="text-on-surface-variant font-body-md">to</span>
+<div class="relative w-full md:w-auto">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+</div>
+<input aria-label="End Date" class="block w-full pl-10 pr-3 py-2 border border-outline-variant rounded-lg font-body-md text-body-md bg-surface-bright text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200" type="date" value="2023-10-31">
+</div>
+</div>
+<!-- Status Filter -->
+<div class="w-full md:w-auto">
+<select class="block w-full py-2 pl-3 pr-10 border border-outline-variant rounded-lg font-body-md text-body-md bg-surface-bright text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23434655%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_0.5rem_center] bg-[length:1.25em_1.25em]">
+<option value="all">All Modes</option>
+<option value="upi">UPI</option>
+<option value="card">Card</option>
+<option value="cash">Cash</option>
+<option value="bank">Bank Transfer</option>
+</select>
+</div>
+<!-- Filter Reset -->
+<button class="hidden md:flex ml-auto items-center justify-center p-2 text-on-surface-variant hover:text-primary rounded-lg hover:bg-surface-container transition-colors" title="Clear Filters">
+<span class="material-symbols-outlined text-[20px]">filter_alt_off</span>
+</button>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant/50">
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant whitespace-nowrap">Payment ID</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant whitespace-nowrap">Date &amp; Time</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant whitespace-nowrap">Student / Payer</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant whitespace-nowrap">Mode</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant whitespace-nowrap">Reference No.</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant text-right whitespace-nowrap">Amount Paid</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant text-right whitespace-nowrap">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30 font-body-md text-body-md">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-variant/20 transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap font-medium text-on-surface">#PAY-8921</td>
+<td class="px-6 py-4 whitespace-nowrap text-on-surface-variant">
+<div class="">Oct 24, 2023</div>
+<div class="font-label-sm text-label-sm text-outline">10:45 AM</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="font-medium text-on-surface">Sarah Jenkins</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Grade 10 - Term 2</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-primary-fixed text-on-primary-fixed-variant w-20 justify-center">
+<span class="material-symbols-outlined text-[14px] w-20 justify-center">credit_card</span>
+                                        Card
+                                    </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-on-surface-variant">TXN-99827361</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-medium text-on-surface">$1,250.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="text-primary hover:text-on-primary-fixed-variant font-label-md text-label-md inline-flex items-center gap-1 hover:underline underline-offset-2 transition-colors">
+<span class="material-symbols-outlined text-[16px]">receipt</span>
+                                        Download Receipt
+                                    </button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-main/30 hover:bg-surface-variant/20 transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap font-medium text-on-surface">#PAY-8920</td>
+<td class="px-6 py-4 whitespace-nowrap text-on-surface-variant">
+<div class="">Oct 24, 2023</div>
+<div class="font-label-sm text-label-sm text-outline">09:15 AM</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="font-medium text-on-surface">Michael Chang</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Annual Athletics Fee</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-secondary-fixed text-on-secondary-fixed-variant w-20 justify-center">
+<span class="material-symbols-outlined text-[14px] w-20 justify-center">qr_code_scanner</span>
+                                        UPI
+                                    </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-on-surface-variant">UPI-77623910</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-medium text-on-surface">$150.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="text-primary hover:text-on-primary-fixed-variant font-label-md text-label-md inline-flex items-center gap-1 hover:underline underline-offset-2 transition-colors">
+<span class="material-symbols-outlined text-[16px]">receipt</span>
+                                        Download Receipt
+                                    </button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-variant/20 transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap font-medium text-on-surface">#PAY-8919</td>
+<td class="px-6 py-4 whitespace-nowrap text-on-surface-variant">
+<div class="">Oct 23, 2023</div>
+<div class="font-label-sm text-label-sm text-outline">02:30 PM</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="font-medium text-on-surface">Emily Davis</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Grade 8 - Term 2</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-tertiary-fixed text-on-tertiary-fixed-variant w-20 justify-center">
+<span class="material-symbols-outlined text-[14px] w-20 justify-center">payments</span>
+                                        Cash
+                                    </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-on-surface-variant">RCPT-8821</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-medium text-on-surface">$1,100.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="text-primary hover:text-on-primary-fixed-variant font-label-md text-label-md inline-flex items-center gap-1 hover:underline underline-offset-2 transition-colors">
+<span class="material-symbols-outlined text-[16px]">receipt</span>
+                                        Download Receipt
+                                    </button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-main/30 hover:bg-surface-variant/20 transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap font-medium text-on-surface">#PAY-8918</td>
+<td class="px-6 py-4 whitespace-nowrap text-on-surface-variant">
+<div class="">Oct 23, 2023</div>
+<div class="font-label-sm text-label-sm text-outline">11:05 AM</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="font-medium text-on-surface">David Wilson</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Library Late Fees</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-primary-fixed text-on-primary-fixed-variant w-20 justify-center">
+<span class="material-symbols-outlined text-[14px] w-20 justify-center">credit_card</span>
+                                        Card
+                                    </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-on-surface-variant">TXN-44521190</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-medium text-on-surface">$25.50</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="text-primary hover:text-on-primary-fixed-variant font-label-md text-label-md inline-flex items-center gap-1 hover:underline underline-offset-2 transition-colors">
+<span class="material-symbols-outlined text-[16px]">receipt</span>
+                                        Download Receipt
+                                    </button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-variant/20 transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap font-medium text-on-surface">#PAY-8917</td>
+<td class="px-6 py-4 whitespace-nowrap text-on-surface-variant">
+<div class="">Oct 22, 2023</div>
+<div class="font-label-sm text-label-sm text-outline">04:45 PM</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="font-medium text-on-surface">James Smith</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Grade 12 - Term 2</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-surface-container-high text-on-surface w-20 justify-center">
+<span class="material-symbols-outlined text-[14px] w-20 justify-center">account_balance</span>
+                                        Bank
+                                    </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-on-surface-variant">TRF-9928172</td>
+<td class="px-6 py-4 whitespace-nowrap text-right font-medium text-on-surface">$1,450.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="text-primary hover:text-on-primary-fixed-variant font-label-md text-label-md inline-flex items-center gap-1 hover:underline underline-offset-2 transition-colors">
+<span class="material-symbols-outlined text-[16px]">receipt</span>
+                                        Download Receipt
+                                    </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="bg-surface-container-lowest px-6 py-4 border-t border-outline-variant/50 flex items-center justify-between">
+<div class="font-body-md text-body-md text-on-surface-variant">
+                        Showing <span class="font-medium text-on-surface">1</span> to <span class="font-medium text-on-surface">5</span> of <span class="font-medium text-on-surface">124</span> results
+                    </div>
+<div class="flex items-center gap-2">
+<button class="p-1 rounded text-on-surface-variant hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center shadow-sm">1</button>
+<button class="w-8 h-8 rounded-full text-on-surface-variant hover:bg-surface-container font-label-md text-label-md flex items-center justify-center transition-colors">2</button>
+<button class="w-8 h-8 rounded-full text-on-surface-variant hover:bg-surface-container font-label-md text-label-md flex items-center justify-center transition-colors">3</button>
+<span class="text-on-surface-variant px-1">...</span>
+<button class="w-8 h-8 rounded-full text-on-surface-variant hover:bg-surface-container font-label-md text-label-md flex items-center justify-center transition-colors">25</button>
+<button class="p-1 rounded text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simple script for mobile sidebar toggle
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileSidebarOverlay');
+
+            function toggleSidebar() {
+                const isOpen = !sidebar.classList.contains('-translate-x-full');
+                
+                if (isOpen) {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                    setTimeout(() => overlay.classList.remove('opacity-100'), 10);
+                } else {
+                    sidebar.classList.remove('-translate-x-full');
+                    overlay.classList.remove('hidden');
+                    // Slight delay to allow display:block to apply before animating opacity
+                    setTimeout(() => overlay.classList.add('opacity-100'), 10);
+                }
+            }
+
+            mobileMenuBtn?.addEventListener('click', toggleSidebar);
+            closeSidebarBtn?.addEventListener('click', toggleSidebar);
+            overlay?.addEventListener('click', toggleSidebar);
+        });
+    </script>
+
+
+</body></html>

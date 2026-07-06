@@ -1,0 +1,675 @@
+<!doctype html>
+<html class="h-full" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Enrollment List - BrightPath</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed-variant": "#653e00",
+              "sidebar-bg": "#FFFFFF",
+              surface: "#f8f9ff",
+              "on-secondary": "#ffffff",
+              background: "#f8f9ff",
+              "primary-fixed-dim": "#b4c5ff",
+              error: "#ba1a1a",
+              "tertiary-fixed-dim": "#ffb95f",
+              "secondary-fixed-dim": "#4edea3",
+              "on-tertiary-fixed": "#2a1700",
+              "on-primary": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "surface-bright": "#f8f9ff",
+              "primary-container": "#2563eb",
+              "error-container": "#ffdad6",
+              "bg-main": "#F8FAFC",
+              "on-secondary-fixed": "#002113",
+              "inverse-primary": "#b4c5ff",
+              "on-tertiary-container": "#ffeedd",
+              "tertiary-container": "#996100",
+              tertiary: "#784b00",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-tint": "#0053db",
+              "secondary-container": "#6cf8bb",
+              "on-primary-container": "#eeefff",
+              "surface-container-low": "#eff4ff",
+              "on-primary-fixed-variant": "#003ea8",
+              "on-background": "#0b1c30",
+              "surface-container-highest": "#d3e4fe",
+              "on-surface": "#0b1c30",
+              "outline-variant": "#c3c6d7",
+              outline: "#737686",
+              "on-secondary-fixed-variant": "#005236",
+              "accent-purple": "#8B5CF6",
+              "primary-fixed": "#dbe1ff",
+              secondary: "#006c49",
+              "on-surface-variant": "#434655",
+              "inverse-surface": "#213145",
+              "on-primary-fixed": "#00174b",
+              "on-error-container": "#93000a",
+              "surface-container-high": "#dce9ff",
+              "surface-container": "#e5eeff",
+              "on-error": "#ffffff",
+              primary: "#004ac6",
+              "waitlist-blue": "#3B82F6",
+              "on-secondary-container": "#00714d",
+              "tertiary-fixed": "#ffddb8",
+              "surface-container-lowest": "#ffffff",
+              danger: "#EF4444",
+              "secondary-fixed": "#6ffbbe",
+              "surface-dim": "#cbdbf5",
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+            spacing: {
+              "container-max-width": "1440px",
+              "sidebar-collapsed": "80px",
+              "sidebar-width": "260px",
+              "stack-gap": "16px",
+              gutter: "24px",
+              "margin-mobile": "16px",
+            },
+            fontFamily: {
+              "label-sm": ["Inter"],
+              "headline-lg": ["Inter"],
+              "headline-sm": ["Inter"],
+              "body-lg": ["Inter"],
+              "headline-md": ["Inter"],
+              "label-md": ["Inter"],
+              "headline-lg-mobile": ["Inter"],
+              "body-md": ["Inter"],
+            },
+            fontSize: {
+              "label-sm": [
+                "12px",
+                {
+                  lineHeight: "16px",
+                  letterSpacing: "0.01em",
+                  fontWeight: "500",
+                },
+              ],
+              "headline-lg": [
+                "32px",
+                {
+                  lineHeight: "40px",
+                  letterSpacing: "-0.02em",
+                  fontWeight: "700",
+                },
+              ],
+              "headline-sm": [
+                "20px",
+                { lineHeight: "28px", fontWeight: "600" },
+              ],
+              "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+              "headline-md": [
+                "24px",
+                {
+                  lineHeight: "32px",
+                  letterSpacing: "-0.01em",
+                  fontWeight: "600",
+                },
+              ],
+              "label-md": ["14px", { lineHeight: "20px", fontWeight: "600" }],
+              "headline-lg-mobile": [
+                "24px",
+                { lineHeight: "32px", fontWeight: "700" },
+              ],
+              "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-bg-main text-on-surface font-body-md h-full overflow-hidden flex"
+  >
+    <div
+      class="fixed inset-0 bg-on-background/50 z-40 hidden md:hidden"
+      id="mobile-nav-overlay"
+    ></div>
+
+    <aside
+      class="fixed left-0 top-0 h-full w-sidebar-width z-40 flex flex-col py-6 bg-sidebar-bg dark:bg-inverse-surface shadow-sm dark:bg-inverse-surface transform -translate-x-full md:translate-x-0 transition-transform duration-300 md:static"
+      id="sidebar"
+    >
+      <div class="px-gutter mb-8 flex items-center gap-3">
+        <div>
+          <h1
+            class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary"
+          >
+            BrightPath
+          </h1>
+          <p class="font-label-sm text-label-sm text-on-surface-variant">
+            Admin Portal
+          </p>
+        </div>
+      </div>
+      <nav class="flex-1 overflow-y-auto px-4 space-y-1">
+        <a
+          class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200"
+          href="/admin/admin_dashboard.html"
+        >
+          <span class="material-symbols-outlined" data-icon="dashboard"
+            >dashboard</span
+          >
+          <span class="font-label-md text-label-md">Dashboard</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200"
+          href="/admin/student_list.html"
+        >
+          <span class="material-symbols-outlined" data-icon="school"
+            >school</span
+          >
+          <span class="font-label-md text-label-md">Students</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200"
+          href="/admin/course_list_admin.html"
+        >
+          <span class="material-symbols-outlined" data-icon="book">book</span>
+          <span class="font-label-md text-label-md">Courses</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container/10 text-primary border-l-4 border-primary font-bold hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200"
+          href="/admin/enrollment_list.html"
+        >
+          <span class="material-symbols-outlined" data-icon="person_add"
+            >person_add</span
+          >
+          <span class="font-label-md text-label-md">Enrollments</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200"
+          href="/admin/waitlist_management.html"
+        >
+          <span class="material-symbols-outlined" data-icon="hourglass_empty"
+            >hourglass_empty</span
+          >
+          <span class="font-label-md text-label-md">Waitlist</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200"
+          href="/admin/record_payment.html"
+        >
+          <span class="material-symbols-outlined" data-icon="payments"
+            >payments</span
+          >
+          <span class="font-label-md text-label-md">Payments</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200"
+          href="/admin/fee_setup.html"
+        >
+          <span class="material-symbols-outlined" data-icon="receipt_long"
+            >receipt_long</span
+          >
+          <span class="font-label-md text-label-md">Fee Setup</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200"
+          href="/admin/notifications_panel.html"
+        >
+          <span class="material-symbols-outlined" data-icon="notifications"
+            >notifications</span
+          >
+          <span class="font-label-md text-label-md">Notifications</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200"
+          href="/admin/users_roles_rbac.html"
+        >
+          <span class="material-symbols-outlined" data-icon="manage_accounts"
+            >manage_accounts</span
+          >
+          <span class="font-label-md text-label-md">Users &amp; Roles</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200"
+          href="/admin/enrollment_report.html"
+        >
+          <span class="material-symbols-outlined" data-icon="analytics"
+            >analytics</span
+          >
+          <span class="font-label-md text-label-md">Reports</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200"
+          href="/admin/settings_page.html"
+        >
+          <span class="material-symbols-outlined" data-icon="settings"
+            >settings</span
+          >
+          <span class="font-label-md text-label-md">Settings</span>
+        </a>
+      </nav>
+      <div class="px-4 mt-auto md:hidden">
+        <div
+          class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-surface-container transition-colors"
+        >
+          <img
+            class="w-8 h-8 rounded-full object-cover"
+            data-alt="A professional headshot of a corporate administrator in a modern office setting, bright lighting, high quality."
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCY5iFBf7yeYKTuBuEtWDsN_7IaJKi-Q7V2baPI22Tbv7LuYSIEE40V18oKc_IgC2MRMl-lkysko0BJ4RCQ34Pi8D2lpsO_WevIUqh9sXwcvWJnewo0Dz4luc-Trf3VN8ZvH9zbkl5Cl44_b7Y-TlJoWE9OFHhzizoyoi0inWUPW6oQE4dr6GuJ96myW5ndcRsSArqOHbYyVPmx1ptKBhq-lQr-rgHUbbyai4Nv5beBGjqA-xSZia0IZo335xeNOqW3apZ_v0j29bpu"
+          />
+          <div>
+            <p class="font-label-md text-label-md">Admin User</p>
+            <p class="font-label-sm text-label-sm text-on-surface-variant">
+              Sign out
+            </p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col h-full overflow-hidden w-full relative">
+      <header
+        class="h-16 z-30 flex justify-between items-center px-gutter bg-surface dark:bg-surface-dim shrink-0"
+      >
+        <button
+          class="md:hidden text-on-surface hover:text-primary transition-colors mr-4 p-2"
+          id="mobile-menu-btn"
+        >
+          <span class="material-symbols-outlined" data-icon="menu">menu</span>
+        </button>
+        <div class="flex-1 flex items-center max-w-md">
+          <div class="relative w-full hidden md:block">
+            <span
+              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
+              data-icon="search"
+              >search</span
+            >
+            <input
+              class="w-full bg-white border border-outline-variant rounded-full py-2 pl-10 pr-4 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-3 focus:ring-primary/20 transition-all"
+              placeholder="Search enrollments..."
+              type="text"
+            />
+          </div>
+          <h1
+            class="md:hidden font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary"
+          >
+            BrightPath
+          </h1>
+        </div>
+        <div class="flex items-center gap-4">
+          <button
+            class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container relative"
+          >
+            <span class="material-symbols-outlined" data-icon="notifications"
+              >notifications</span
+            >
+            <span
+              class="absolute top-2 right-2 w-2 h-2 bg-danger rounded-full"
+            ></span>
+          </button>
+          <div
+            class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden cursor-pointer border border-outline-variant hidden md:block"
+          >
+            <img
+              alt="Admin Avatar"
+              class="w-full h-full object-cover"
+              data-alt="A professional headshot of a corporate administrator in a modern office setting, bright lighting, high quality."
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvrStnsCstn3-HtEJN03_jLT3AwmjtZjfdtHzg62gVUjVXNYW1IA-_XwmAQO3F00HnwsmqK67VihavhU-c0MNsOP3nLglYlmI_SIQc7nt6jcQNA68LYgHTs0ph6YXNntYyckx4Jn6EMILPWC0V8g8mtFP9IH39J1j0NEdT3ACZjoowFlKiMfmB2_2YR9OX6z_qP5wFRO1m6NM1P_zdPfoxqQHHUYjZPLWuzj5jHGOMT5oTz2OSg23IqOEgyWKLmTPGP4GmuGHiP7TY"
+            />
+          </div>
+        </div>
+      </header>
+
+      <main class="flex-1 overflow-y-auto p-4 md:p-gutter">
+        <div class="max-w-container-max-width mx-auto">
+          <div
+            class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8"
+          >
+            <div>
+              <h2
+                class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface"
+              >
+                Enrollment List
+              </h2>
+              <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+                Track enrollment records and payment progress across courses.
+              </p>
+            </div>
+            <div
+              class="flex items-center gap-3 w-full md:w-auto md:justify-end md:ml-auto"
+            >
+              <button
+                class="flex items-center justify-center p-2 border border-outline-variant text-on-surface rounded-lg hover:bg-surface-container-high transition-colors group bg-surface"
+              >
+                <span
+                  class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface"
+                  >filter_list</span
+                >
+              </button>
+              <button
+                class="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary-fixed-variant transition-colors whitespace-nowrap shadow-sm hover:shadow-md"
+              >
+                <a
+                  href="/admin/enroll_student.html"
+                  class="flex items-center gap-2"
+                >
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                New Enrollment
+              </button></a>
+            </div>
+          </div>
+
+          <div
+            class="bg-white rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden"
+          >
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse min-w-[1020px]">
+                <thead>
+                  <tr
+                    class="bg-surface-container-lowest border-b border-outline-variant/30 text-on-surface-variant font-label-sm text-label-sm"
+                  >
+                    <th class="px-4 py-3 font-semibold whitespace-nowrap">
+                      Enrollment ID
+                    </th>
+                    <th class="px-4 py-3 font-semibold whitespace-nowrap">
+                      Student
+                    </th>
+                    <th class="px-4 py-3 font-semibold min-w-[200px]">
+                      Course
+                    </th>
+                    <th class="px-4 py-3 font-semibold whitespace-nowrap">
+                      Batch
+                    </th>
+                    <th
+                      class="px-4 py-3 font-semibold text-right whitespace-nowrap"
+                    >
+                      Total Fee
+                    </th>
+                    <th
+                      class="px-4 py-3 font-semibold text-right whitespace-nowrap"
+                    >
+                      Paid
+                    </th>
+                    <th
+                      class="px-4 py-3 font-semibold text-right whitespace-nowrap"
+                    >
+                      Pending
+                    </th>
+                    <th
+                      class="px-4 py-3 font-semibold text-center whitespace-nowrap"
+                    >
+                      Status
+                    </th>
+                    <th
+                      class="px-4 py-3 font-semibold text-right whitespace-nowrap"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  class="font-body-md text-body-md text-on-surface divide-y divide-outline-variant/20"
+                >
+                  <tr
+                    class="hover:bg-surface-container/30 transition-colors group"
+                  >
+                    <td class="px-4 py-3 font-medium text-primary">ENR-102</td>
+                    <td class="px-4 py-3 flex items-center gap-3">
+                      <div
+                        class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm shrink-0"
+                      >
+                        AB
+                      </div>
+                      <span class="whitespace-nowrap">Albert Bell</span>
+                    </td>
+                    <td class="px-4 py-3">Python for Data Science</td>
+                    <td
+                      class="px-4 py-3 text-on-surface-variant whitespace-nowrap"
+                    >
+                      Winter 2024
+                    </td>
+                    <td class="px-4 py-3 text-right whitespace-nowrap">
+                      $1,500
+                    </td>
+                    <td
+                      class="px-4 py-3 text-right text-secondary whitespace-nowrap"
+                    >
+                      $1,500
+                    </td>
+                    <td
+                      class="px-4 py-3 text-right text-on-surface-variant whitespace-nowrap"
+                    >
+                      $0
+                    </td>
+                    <td class="px-4 py-3 text-center">
+                      <span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary-container/20 text-secondary border border-secondary-container"
+                        >Active</span
+                      >
+                    </td>
+                    <td class="px-4 py-3 text-right">
+                      <button
+                        class="text-on-surface-variant hover:text-primary transition-colors p-1 opacity-0 group-hover:opacity-100 focus:opacity-100"
+                      >
+                        <span class="material-symbols-outlined text-[20px]"
+                          >more_vert</span
+                        >
+                      </button>
+                    </td>
+                  </tr>
+                  <tr
+                    class="bg-surface-bright hover:bg-surface-container/30 transition-colors group"
+                  >
+                    <td class="px-4 py-3 font-medium text-primary">ENR-103</td>
+                    <td class="px-4 py-3 flex items-center gap-3">
+                      <div
+                        class="w-8 h-8 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center font-bold text-sm shrink-0"
+                      >
+                        SJ
+                      </div>
+                      <span class="whitespace-nowrap">Sarah Jenkins</span>
+                    </td>
+                    <td class="px-4 py-3">Advanced Web Development</td>
+                    <td
+                      class="px-4 py-3 text-on-surface-variant whitespace-nowrap"
+                    >
+                      Spring 2024
+                    </td>
+                    <td class="px-4 py-3 text-right whitespace-nowrap">
+                      $2,200
+                    </td>
+                    <td
+                      class="px-4 py-3 text-right text-secondary whitespace-nowrap"
+                    >
+                      $1,000
+                    </td>
+                    <td
+                      class="px-4 py-3 text-right text-tertiary whitespace-nowrap"
+                    >
+                      $1,200
+                    </td>
+                    <td class="px-4 py-3 text-center">
+                      <span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-tertiary-fixed/30 text-tertiary border border-tertiary-fixed"
+                        >Pending</span
+                      >
+                    </td>
+                    <td class="px-4 py-3 text-right">
+                      <button
+                        class="text-on-surface-variant hover:text-primary transition-colors p-1 opacity-0 group-hover:opacity-100 focus:opacity-100"
+                      >
+                        <span class="material-symbols-outlined text-[20px]"
+                          >more_vert</span
+                        >
+                      </button>
+                    </td>
+                  </tr>
+                  <tr
+                    class="hover:bg-surface-container/30 transition-colors group"
+                  >
+                    <td class="px-4 py-3 font-medium text-primary">ENR-104</td>
+                    <td class="px-4 py-3 flex items-center gap-3">
+                      <div
+                        class="w-8 h-8 rounded-full bg-error-container text-on-error-container flex items-center justify-center font-bold text-sm shrink-0"
+                      >
+                        MR
+                      </div>
+                      <span class="whitespace-nowrap">Marcus Reed</span>
+                    </td>
+                    <td class="px-4 py-3">UI/UX Design Fundamentals</td>
+                    <td
+                      class="px-4 py-3 text-on-surface-variant whitespace-nowrap"
+                    >
+                      Winter 2024
+                    </td>
+                    <td class="px-4 py-3 text-right whitespace-nowrap">
+                      $1,200
+                    </td>
+                    <td
+                      class="px-4 py-3 text-right text-secondary whitespace-nowrap"
+                    >
+                      $400
+                    </td>
+                    <td
+                      class="px-4 py-3 text-right text-error whitespace-nowrap font-medium"
+                    >
+                      $800
+                    </td>
+                    <td class="px-4 py-3 text-center">
+                      <span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error-container/40 text-error border border-error-container"
+                        >Overdue</span
+                      >
+                    </td>
+                    <td class="px-4 py-3 text-right">
+                      <button
+                        class="text-on-surface-variant hover:text-primary transition-colors p-1 opacity-0 group-hover:opacity-100 focus:opacity-100"
+                      >
+                        <span class="material-symbols-outlined text-[20px]"
+                          >more_vert</span
+                        >
+                      </button>
+                    </td>
+                  </tr>
+                  <tr
+                    class="bg-surface-bright hover:bg-surface-container/30 transition-colors group"
+                  >
+                    <td class="px-4 py-3 font-medium text-primary">ENR-105</td>
+                    <td class="px-4 py-3 flex items-center gap-3">
+                      <div
+                        class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm shrink-0"
+                      >
+                        LC
+                      </div>
+                      <span class="whitespace-nowrap">Linda Chen</span>
+                    </td>
+                    <td class="px-4 py-3">Machine Learning Basics</td>
+                    <td
+                      class="px-4 py-3 text-on-surface-variant whitespace-nowrap"
+                    >
+                      Fall 2024
+                    </td>
+                    <td class="px-4 py-3 text-right whitespace-nowrap">
+                      $1,800
+                    </td>
+                    <td
+                      class="px-4 py-3 text-right text-secondary whitespace-nowrap"
+                    >
+                      $1,800
+                    </td>
+                    <td
+                      class="px-4 py-3 text-right text-on-surface-variant whitespace-nowrap"
+                    >
+                      $0
+                    </td>
+                    <td class="px-4 py-3 text-center">
+                      <span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-container/20 text-primary border border-primary-container/50"
+                        >Waitlisted</span
+                      >
+                    </td>
+                    <td class="px-4 py-3 text-right">
+                      <button
+                        class="text-on-surface-variant hover:text-primary transition-colors p-1 opacity-0 group-hover:opacity-100 focus:opacity-100"
+                      >
+                        <span class="material-symbols-outlined text-[20px]"
+                          >more_vert</span
+                        >
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div
+              class="px-4 py-3 border-t border-outline-variant/20 bg-surface-container-lowest flex items-center justify-between gap-4"
+            >
+              <span class="font-body-md text-body-md text-on-surface-variant"
+                >Showing 1 to 4 of 24 entries</span
+              >
+              <div class="flex gap-1">
+                <button
+                  class="p-1 rounded text-on-surface-variant hover:bg-surface-container disabled:opacity-50"
+                  disabled=""
+                >
+                  <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button
+                  class="w-8 h-8 rounded bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center"
+                >
+                  1
+                </button>
+                <button
+                  class="w-8 h-8 rounded hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center"
+                >
+                  2
+                </button>
+                <button
+                  class="w-8 h-8 rounded hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center"
+                >
+                  3
+                </button>
+                <button
+                  class="p-1 rounded text-on-surface-variant hover:bg-surface-container"
+                >
+                  <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+      const sidebar = document.getElementById("sidebar");
+      const mobileNavOverlay = document.getElementById("mobile-nav-overlay");
+
+      function toggleSidebar() {
+        sidebar.classList.toggle("-translate-x-full");
+        mobileNavOverlay.classList.toggle("hidden");
+      }
+
+      if (mobileMenuBtn && mobileNavOverlay) {
+        mobileMenuBtn.addEventListener("click", toggleSidebar);
+        mobileNavOverlay.addEventListener("click", toggleSidebar);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,506 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BrightPath - Waitlist Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed": "#ffddb8",
+                      "surface-container": "#e5eeff",
+                      "on-surface": "#0b1c30",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "error": "#ba1a1a",
+                      "on-error-container": "#93000a",
+                      "surface-bright": "#f8f9ff",
+                      "on-secondary-container": "#00714d",
+                      "surface-variant": "#d3e4fe",
+                      "on-secondary-fixed-variant": "#005236",
+                      "secondary-fixed-dim": "#4edea3",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-background": "#0b1c30",
+                      "secondary-container": "#6cf8bb",
+                      "on-surface-variant": "#434655",
+                      "on-primary-container": "#eeefff",
+                      "surface-tint": "#0053db",
+                      "secondary": "#006c49",
+                      "inverse-primary": "#b4c5ff",
+                      "on-secondary-fixed": "#002113",
+                      "tertiary": "#784b00",
+                      "accent-purple": "#8B5CF6",
+                      "surface-container-lowest": "#ffffff",
+                      "on-error": "#ffffff",
+                      "secondary-fixed": "#6ffbbe",
+                      "primary": "#004ac6",
+                      "tertiary-container": "#996100",
+                      "surface-container-low": "#eff4ff",
+                      "surface-dim": "#cbdbf5",
+                      "primary-fixed": "#dbe1ff",
+                      "surface-container-high": "#dce9ff",
+                      "bg-main": "#F8FAFC",
+                      "primary-container": "#2563eb",
+                      "on-tertiary-fixed-variant": "#653e00",
+                      "tertiary-fixed-dim": "#ffb95f",
+                      "on-secondary": "#ffffff",
+                      "surface": "#f8f9ff",
+                      "waitlist-blue": "#3B82F6",
+                      "on-primary-fixed": "#00174b",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-fixed": "#2a1700",
+                      "on-tertiary-container": "#ffeedd",
+                      "outline": "#737686",
+                      "sidebar-bg": "#FFFFFF",
+                      "outline-variant": "#c3c6d7",
+                      "background": "#f8f9ff",
+                      "error-container": "#ffdad6",
+                      "danger": "#EF4444",
+                      "inverse-surface": "#213145",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-highest": "#d3e4fe"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sidebar-width": "260px",
+                      "sidebar-collapsed": "80px",
+                      "gutter": "24px",
+                      "container-max-width": "1440px",
+                      "stack-gap": "16px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "headline-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "500"
+                              }
+                      }
+            },
+          }
+      </script>
+</head>
+<body class="bg-bg-main text-on-surface antialiased min-h-screen">
+<!-- Mobile Navigation Toggle (Header) -->
+<header class="md:hidden fixed top-0 w-full h-16 bg-surface z-50 flex items-center justify-between px-margin-mobile shadow-sm border-b border-outline-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-2xl">school</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">BrightPath</span>
+</div>
+<button class="p-2 text-on-surface" id="mobile-menu-btn">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</header>
+<!-- SideNavBar (Shell) -->
+<nav class="fixed left-0 top-0 h-full w-[260px] z-40 flex flex-col py-6 bg-sidebar-bg dark:bg-inverse-surface shadow-sm dark:bg-inverse-surface transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out hidden md:flex" id="sidebar">
+<div class="px-6 mb-8 flex flex-col gap-1">
+<div class="flex items-center gap-3">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">BrightPath</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Admin Portal</span>
+</div>
+<div class="flex-1 overflow-y-auto px-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 0;">school</span>
+                Students
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 0;">book</span>
+                Courses
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 0;">person_add</span>
+                Enrollments
+            </a>
+<!-- Active State -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container/10 text-primary border-l-4 border-primary font-bold font-label-md text-label-md active:scale-[0.98] transition-transform duration-200" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">hourglass_empty</span>
+                Waitlist
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 0;">payments</span>
+                Payments
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 0;">receipt_long</span>
+                Fee Setup
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 0;">notifications</span>
+                Notifications
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 0;">manage_accounts</span>
+                Users &amp; Roles
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 0;">analytics</span>
+                Reports
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 0;">settings</span>
+                Settings
+            </a>
+</div>
+<div class="px-6 mt-auto pt-6 border-t border-outline-variant/30 flex items-center gap-3">
+<img class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A professional headshot of a corporate administrator in a modern office setting. The lighting is soft and bright, reflecting a clean, trusted enterprise aesthetic. The individual wears professional attire, smiling slightly against a soft blurred background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAq5kgDuk2VvuKZsPxw5Djka2R3tQskO5UW1u_JSLmiLUxhAuyGgr6kz3zviVHCEgOfpICredCPJZQ9Sw8aCnPyIYIvTsGcPRUgeXfLv8gQcc84dc7t6obWuN1DSFgOkrwPVbWg1yKtQPeJ27O296Cwuckx51_bMrQ-1eTyJkmHppQ6wmPN9x2YlEs9a57ubO9hu-fPsE7LfzTyUL8bWsLSaDs5eXc0jYM9M4Dgs34ACNYSLwspYIY0g52M21rKB7l_O0rMKuZA-PAG">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Admin User</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Log out</span>
+</div>
+</div>
+</nav>
+<!-- Mobile Drawer Overlay -->
+<div class="fixed inset-0 bg-black/50 z-30 hidden md:hidden" id="mobile-overlay"></div>
+<!-- TopNavBar (Web) -->
+<header class="hidden md:flex fixed top-0 right-0 left-[260px] h-16 z-30 justify-between items-center px-gutter bg-surface dark:bg-surface-dim">
+<div class="flex items-center">
+<!-- Search placeholder, nav usually sits here but sidebar covers main nav -->
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="w-full pl-9 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-full font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full text-on-surface-variant hover:bg-surface-container transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-danger rounded-full"></span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="md:ml-[260px] pt-20 md:pt-24 px-margin-mobile md:px-gutter pb-12 max-w-container-max-width mx-auto">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+<div>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">Waitlist Management</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">Monitor and manage student waitlists across courses. Promote students to active enrollment as seats become available.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-primary text-primary rounded-lg font-label-md text-label-md hover:bg-primary-container/10 transition-colors bg-transparent">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                    Filter
+                </button>
+</div>
+</div>
+<!-- Info Banner -->
+<div class="bg-surface-container-high border border-outline-variant/50 rounded-lg p-4 mb-stack-gap flex gap-3 items-start shadow-sm px-6">
+<span class="material-symbols-outlined text-primary shrink-0 mt-0.5">info</span>
+<div class="flex-1">
+<p class="font-body-md text-body-md text-on-surface">Students are automatically promoted when a seat becomes available, but manual override is allowed for priority cases.</p>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+<!-- Controls Area -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 p-6 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+<!-- Course Selector -->
+<div class="w-full md:w-1/3">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1.5" for="course-select">Select Course</label>
+<div class="relative">
+<select class="appearance-none w-full bg-white border border-outline-variant rounded-lg px-4 py-2.5 pr-10 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-3 focus:ring-primary-container/20 transition-all text-on-surface cursor-pointer shadow-sm" id="course-select">
+<option value="wd-bootcamp">Web Development Boot Camp</option>
+<option value="ds-intro">Introduction to Data Science</option>
+<option value="ux-design">UX/UI Design Fundamentals</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Stats/Summary for selected course -->
+<div class="flex gap-6 w-full md:w-auto">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Total Waitlisted</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">24</span>
+</div>
+<div class="w-px h-10 bg-outline-variant/50 self-center hidden md:block"></div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Available Seats</span>
+<span class="font-headline-sm text-headline-sm text-secondary font-semibold">3</span>
+</div>
+</div>
+</div>
+<!-- Waitlist Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant/50 bg-surface-container-low">
+<th class="py-3 px-6 font-label-sm text-label-sm text-on-surface-variant font-semibold w-20 text-center">Pos</th>
+<th class="py-3 px-6 font-label-sm text-label-sm text-on-surface-variant font-semibold">Student Name</th>
+<th class="py-3 px-6 font-label-sm text-label-sm text-on-surface-variant font-semibold text-left">Added Date</th>
+<th class="py-3 px-6 font-label-sm text-label-sm text-on-surface-variant font-semibold">Status</th>
+<th class="py-3 px-6 font-label-sm text-label-sm text-on-surface-variant font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md divide-y divide-outline-variant/30">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-variant/20 transition-colors group">
+<td class="py-4 px-6 text-center">
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-highest text-on-surface font-bold text-sm">1</span>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<img class="w-9 h-9 rounded-full object-cover" data-alt="Profile photo of a young male student in a bright educational environment, smiling, professional lighting, clean modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxYdr2_7Mmgg0bn3vS3BKS3dsV-vjtEXZLXAoSHyWB9-RVZU4B4auXLejFN2i70ZfX4s7a1cYMo6c_-r9KXdamHykdpY5e7D-2GYjevEEwHYhjr3QvzgDWZj3cnvp8JMNOP-FhoTxiH5Osk6O-R0D5sNZ4zOeI3mE1vtHc58OOd7ci-T2RyX2qX-STTEHDz15-hW2VhpTJ20U379aCuolmCZCN9C3yRg99c6SXHERAwc-NzgWlCU7m4nurUn5N7U2hbH5jgGd-WxUI">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Alex Mercer</span>
+<span class="text-xs text-on-surface-variant">ID: ST-8492</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-6 text-on-surface-variant">
+                                Oct 12, 2023<br><span class="text-xs">09:14 AM</span>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-waitlist-blue/15 text-waitlist-blue">
+                                    Waitlisted
+                                </span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="inline-flex items-center justify-center px-4 py-2 text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary/90 transition-colors shadow-sm bg-primary-container">
+                                    Promote Now
+                                </button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-variant/20 transition-colors group">
+<td class="py-4 px-6 text-center">
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-highest text-on-surface font-bold text-sm">2</span>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<img class="w-9 h-9 rounded-full object-cover" data-alt="Profile photo of a female student with glasses looking thoughtfully, bright light mode educational setting, corporate trust aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEv4YKTO3NMHNmwtMVko4O7WyMh6tBol9euXpWj0DibkdCB4EM0DCLGBzXq3XmdV0e_tZ1mbI5bURQlMeE4FU_ZmHspIHOIphbGWOp0W-0nXpGJxNVXYGNxKpDj_qB5CJyovCkIkLAMvujqPB7bjoEbCSyyuoRsdWMGWkr7vhO74pWZGc8YdVYZdkfjfvF6w-GAXPKoZAeGZH4NR7LfpS49C7xt76MjfBTlLwRyzyUOEPyUrYPmzb_kHLszjkuhAeMvuOIG1FbiWwf">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Sarah Jenkins</span>
+<span class="text-xs text-on-surface-variant">ID: ST-9102</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-6 text-on-surface-variant">
+                                Oct 13, 2023<br><span class="text-xs">14:30 PM</span>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-waitlist-blue/15 text-waitlist-blue">
+                                    Waitlisted
+                                </span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="inline-flex items-center justify-center px-4 py-2 text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary/90 transition-colors shadow-sm bg-primary-container">
+                                    Promote Now
+                                </button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-variant/20 transition-colors group">
+<td class="py-4 px-6 text-center">
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-highest text-on-surface font-bold text-sm">3</span>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-bold text-sm">
+                                        MJ
+                                    </div>
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Marcus Johnson</span>
+<span class="text-xs text-on-surface-variant">ID: ST-9311</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-6 text-on-surface-variant">
+                                Oct 14, 2023<br><span class="text-xs">08:45 AM</span>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-waitlist-blue/15 text-waitlist-blue">
+                                    Waitlisted
+                                </span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="inline-flex items-center justify-center px-4 py-2 text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary/90 transition-colors shadow-sm bg-primary-container">
+                                    Promote Now
+                                </button>
+</td>
+</tr>
+<!-- Row 4 (Example of slightly different status if needed, but keeping waitlisted as per spec) -->
+<tr class="hover:bg-surface-variant/20 transition-colors group">
+<td class="py-4 px-6 text-center">
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-highest text-on-surface font-bold text-sm">4</span>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<img class="w-9 h-9 rounded-full object-cover" data-alt="Profile photo of an older male professional looking directly at the camera, clean corporate educational background, light mode palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQ33rlUIFPIRML9UGcZDlU-Xvj5dfDVVEVD485DK6LSDuHA3s3JRJwbfDiXktV7zF1tjLveQG76iycnKlqS9oPX_7gSD-UvbUsQ3-TIulcKIXF1zMqz_sR0wB03tcn2YVlkVvGwFGYQTmA52V_HBQy1rYbRm7X6GdKtJoDc1H1LP4AORl0iMTAEfA7afBLjnCNeWxPSWet3UOagwclCCJfYTPjPFzb9ERyQvxn3T-wn0MR1efxW2m1kO-INm7A6-8mP_eZi85L7nUT">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">David Chen</span>
+<span class="text-xs text-on-surface-variant">ID: ST-9442</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-6 text-on-surface-variant">
+                                Oct 15, 2023<br><span class="text-xs">11:20 AM</span>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-waitlist-blue/15 text-waitlist-blue">
+                                    Waitlisted
+                                </span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="inline-flex items-center justify-center px-4 py-2 border border-outline-variant text-on-surface-variant rounded-lg font-label-md text-label-md hover:bg-surface-container transition-colors shadow-sm opacity-50 cursor-not-allowed" disabled="" title="No seats available beyond position 3">
+                                    Promote Now
+                                </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-lowest">
+<span class="font-body-md text-body-md text-on-surface-variant">Showing 1 to 4 of 24 entries</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-50">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded text-on-primary font-label-sm bg-primary-container">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors font-label-sm">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors font-label-sm">3</button>
+<span class="w-8 h-8 flex items-center justify-center text-on-surface-variant">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-50">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<script>
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('mobile-overlay');
+
+        function toggleMenu() {
+            const isClosed = sidebar.classList.contains('-translate-x-full');
+            if (isClosed) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.remove('hidden');
+                overlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+                document.body.style.overflow = '';
+                // Wait for animation to finish before hiding
+                setTimeout(() => {
+                    sidebar.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        mobileBtn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+        
+        // Ensure sidebar is visible on desktop resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                sidebar.classList.remove('-translate-x-full', 'hidden');
+                overlay.classList.add('hidden');
+                document.body.style.overflow = '';
+            } else if (!overlay.classList.contains('hidden')) {
+                // If menu was open when resizing to mobile, keep it open
+            } else {
+                sidebar.classList.add('-translate-x-full', 'hidden');
+            }
+        });
+    </script>
+
+
+</body></html>

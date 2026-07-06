@@ -1,0 +1,285 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BrightPath - Course Catalog</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "waitlist-blue": "#3B82F6",
+                      "surface-variant": "#d3e4fe",
+                      "tertiary": "#784b00",
+                      "outline": "#737686",
+                      "danger": "#EF4444",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "tertiary-fixed": "#ffddb8",
+                      "surface-container-highest": "#d3e4fe",
+                      "on-secondary-fixed": "#002113",
+                      "secondary-fixed": "#6ffbbe",
+                      "surface": "#f8f9ff",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "on-error": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "tertiary-container": "#996100",
+                      "on-secondary": "#ffffff",
+                      "inverse-primary": "#b4c5ff",
+                      "surface-tint": "#0053db",
+                      "on-primary": "#ffffff",
+                      "outline-variant": "#c3c6d7",
+                      "on-tertiary": "#ffffff",
+                      "secondary-fixed-dim": "#4edea3",
+                      "surface-container-lowest": "#ffffff",
+                      "sidebar-bg": "#FFFFFF",
+                      "on-secondary-fixed-variant": "#005236",
+                      "accent-purple": "#8B5CF6",
+                      "on-surface-variant": "#434655",
+                      "on-background": "#0b1c30",
+                      "surface-container-high": "#dce9ff",
+                      "on-surface": "#0b1c30",
+                      "surface-container-low": "#eff4ff",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-tertiary-fixed-variant": "#653e00",
+                      "on-tertiary-fixed": "#2a1700",
+                      "error": "#ba1a1a",
+                      "surface-bright": "#f8f9ff",
+                      "primary-fixed": "#dbe1ff",
+                      "tertiary-fixed-dim": "#ffb95f",
+                      "bg-main": "#F8FAFC",
+                      "background": "#f8f9ff",
+                      "inverse-surface": "#213145",
+                      "primary-container": "#2563eb",
+                      "primary": "#004ac6",
+                      "on-primary-container": "#eeefff",
+                      "on-secondary-container": "#00714d",
+                      "secondary": "#006c49",
+                      "secondary-container": "#6cf8bb",
+                      "on-error-container": "#93000a",
+                      "surface-container": "#e5eeff",
+                      "on-primary-fixed": "#00174b",
+                      "surface-dim": "#cbdbf5",
+                      "on-tertiary-container": "#ffeedd"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sidebar-width": "260px",
+                      "sidebar-collapsed": "80px",
+                      "margin-mobile": "16px",
+                      "stack-gap": "16px",
+                      "gutter": "24px",
+                      "container-max-width": "1440px"
+              },
+              "fontFamily": {
+                      "label-sm": ["Inter"],
+                      "label-md": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "headline-sm": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-bg-main text-on-surface antialiased min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-[260px] h-16 z-30 flex justify-between items-center px-gutter bg-surface dark:bg-surface-dim shadow-sm hidden md:flex">
+<div class="flex items-center">
+<!-- Search bar could go here -->
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-variant transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-md">
+                SA
+            </div>
+</div>
+</header>
+<!-- SideNavBar (Adapted for Student View based on JSON structure, mapping to Courses) -->
+<nav class="fixed left-0 top-0 h-full w-[260px] z-40 flex flex-col py-6 bg-sidebar-bg dark:bg-inverse-surface shadow-sm hidden md:flex">
+<div class="px-6 mb-8">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">BrightPath</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Student Portal</div>
+</div>
+<div class="flex-1 overflow-y-auto flex flex-col gap-1 px-4">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container/10 text-primary border-l-4 border-primary font-bold hover:bg-surface-container transition-colors transform scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">book</span>
+<span class="font-label-md text-label-md">Courses</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+<span class="font-label-md text-label-md">Fees</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+<span class="font-label-md text-label-md">Grades</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="md:ml-[260px] pt-16 md:pt-24 px-4 md:px-gutter pb-12 max-w-container-max-width mx-auto">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+<div>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Course Catalog</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Explore and enroll in upcoming courses for the Fall 2024 semester.</p>
+</div>
+<!-- Filters -->
+<div class="flex gap-2 w-full md:w-auto">
+<div class="relative w-full md:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface border border-outline-variant rounded-lg font-body-md text-body-md focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="Search courses..." type="text">
+</div>
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg hover:bg-surface-container text-on-surface font-label-md text-label-md transition-colors bg-surface">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+<span class="hidden sm:inline">Filters</span>
+</button>
+</div>
+</div>
+<!-- Course Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Course Card 1: Available -->
+<div class="bg-surface rounded-xl p-5 border border-outline-variant shadow-[0px_1px_3px_rgba(0,0,0,0.1)] flex flex-col h-full hover:shadow-[0px_4px_12px_rgba(0,0,0,0.05)] transition-shadow">
+<div class="flex justify-between items-start mb-3">
+<div class="bg-secondary/15 text-secondary px-2.5 py-1 rounded-full font-label-sm text-label-sm inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Available: 12 Seats
+                    </div>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1 line-clamp-2">Introduction to Data Science</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">CS-101 • Fall 2024</p>
+<div class="space-y-2 mb-6 flex-1">
+<div class="flex items-center gap-2 text-on-surface font-body-md text-body-md">
+<span class="material-symbols-outlined text-[18px] text-outline">schedule</span>
+<span class="">12 Weeks (Mon/Wed)</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface font-body-md text-body-md">
+<span class="material-symbols-outlined text-[18px] text-outline">payments</span>
+<span class="">$450.00</span>
+</div>
+</div>
+<button class="w-full text-on-primary py-2.5 rounded-lg font-label-md text-label-md hover:bg-primary/90 transition-colors bg-primary-container">
+                    Enroll Now
+                </button>
+</div>
+<!-- Course Card 2: Full / Waitlist -->
+<div class="bg-surface rounded-xl p-5 border border-outline-variant shadow-[0px_1px_3px_rgba(0,0,0,0.1)] flex flex-col h-full hover:shadow-[0px_4px_12px_rgba(0,0,0,0.05)] transition-shadow">
+<div class="flex justify-between items-start mb-3">
+<div class="bg-tertiary-container/20 text-tertiary-container px-2.5 py-1 rounded-full font-label-sm text-label-sm inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></span> Class Full
+                    </div>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1 line-clamp-2">Advanced Machine Learning</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">CS-405 • Fall 2024</p>
+<div class="space-y-2 mb-6 flex-1">
+<div class="flex items-center gap-2 text-on-surface font-body-md text-body-md">
+<span class="material-symbols-outlined text-[18px] text-outline">schedule</span>
+<span class="">16 Weeks (Tue/Thu)</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface font-body-md text-body-md">
+<span class="material-symbols-outlined text-[18px] text-outline">payments</span>
+<span class="">$850.00</span>
+</div>
+<div class="mt-2 inline-block bg-surface-container text-on-surface-variant px-2 py-1 rounded text-[11px] font-medium border border-outline-variant/50 w-max">
+                        Prereq: CS-101
+                    </div>
+</div>
+<button class="w-full border-2 border-waitlist-blue text-waitlist-blue py-2.5 rounded-lg font-label-md text-label-md hover:bg-waitlist-blue/5 transition-colors">
+                    Join Waitlist
+                </button>
+</div>
+<!-- Course Card 3: Prereq Not Met (Disabled) -->
+<div class="bg-surface rounded-xl p-5 border border-outline-variant shadow-[0px_1px_3px_rgba(0,0,0,0.1)] flex flex-col h-full opacity-75 hover:shadow-[0px_4px_12px_rgba(0,0,0,0.05)] transition-shadow">
+<div class="flex justify-between items-start mb-3">
+<div class="bg-secondary/15 text-secondary px-2.5 py-1 rounded-full font-label-sm text-label-sm inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Available: 5 Seats
+                    </div>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1 line-clamp-2">Quantum Computing Basics</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">PHYS-302 • Fall 2024</p>
+<div class="space-y-2 mb-6 flex-1">
+<div class="flex items-center gap-2 text-on-surface font-body-md text-body-md">
+<span class="material-symbols-outlined text-[18px] text-outline">schedule</span>
+<span class="">10 Weeks (Friday)</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface font-body-md text-body-md">
+<span class="material-symbols-outlined text-[18px] text-outline">payments</span>
+<span class="">$600.00</span>
+</div>
+<div class="mt-2 inline-flex items-center gap-1 bg-error/10 text-error px-2 py-1 rounded text-[11px] font-medium border border-error/20">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+                        Prereq Not Met: PHYS-201
+                    </div>
+</div>
+<div class="relative group cursor-not-allowed">
+<button class="w-full bg-surface-variant text-outline py-2.5 rounded-lg font-label-md text-label-md cursor-not-allowed" disabled="">
+                        Enroll
+                    </button>
+<!-- Tooltip -->
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-max bg-inverse-surface text-inverse-on-surface text-[12px] py-1 px-2 rounded shadow-lg z-10">
+                        You must complete PHYS-201 first.
+                    </div>
+</div>
+</div>
+<!-- Course Card 4: Available -->
+<div class="bg-surface rounded-xl p-5 border border-outline-variant shadow-[0px_1px_3px_rgba(0,0,0,0.1)] flex flex-col h-full hover:shadow-[0px_4px_12px_rgba(0,0,0,0.05)] transition-shadow">
+<div class="flex justify-between items-start mb-3">
+<div class="bg-secondary/15 text-secondary px-2.5 py-1 rounded-full font-label-sm text-label-sm inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Available: 24 Seats
+                    </div>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1 line-clamp-2">Web Development Bootcamp</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">IT-210 • Fall 2024</p>
+<div class="space-y-2 mb-6 flex-1">
+<div class="flex items-center gap-2 text-on-surface font-body-md text-body-md">
+<span class="material-symbols-outlined text-[18px] text-outline">schedule</span>
+<span class="">8 Weeks (Online)</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface font-body-md text-body-md">
+<span class="material-symbols-outlined text-[18px] text-outline">payments</span>
+<span class="">$350.00</span>
+</div>
+</div>
+<button class="w-full text-on-primary py-2.5 rounded-lg font-label-md text-label-md hover:bg-primary/90 transition-colors bg-primary-container">
+                    Enroll Now
+                </button>
+</div>
+</div>
+</main>
+
+
+</body></html>

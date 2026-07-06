@@ -1,0 +1,422 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Users &amp; Roles</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#ffddb8",
+                        "surface-container": "#e5eeff",
+                        "on-surface": "#0b1c30",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f8f9ff",
+                        "on-secondary-container": "#00714d",
+                        "surface-variant": "#d3e4fe",
+                        "on-secondary-fixed-variant": "#005236",
+                        "secondary-fixed-dim": "#4edea3",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-background": "#0b1c30",
+                        "secondary-container": "#6cf8bb",
+                        "on-surface-variant": "#434655",
+                        "on-primary-container": "#eeefff",
+                        "surface-tint": "#0053db",
+                        "secondary": "#006c49",
+                        "inverse-primary": "#b4c5ff",
+                        "on-secondary-fixed": "#002113",
+                        "tertiary": "#784b00",
+                        "accent-purple": "#8B5CF6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#6ffbbe",
+                        "primary": "#004ac6",
+                        "tertiary-container": "#996100",
+                        "surface-container-low": "#eff4ff",
+                        "surface-dim": "#cbdbf5",
+                        "primary-fixed": "#dbe1ff",
+                        "surface-container-high": "#dce9ff",
+                        "bg-main": "#F8FAFC",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "waitlist-blue": "#3B82F6",
+                        "on-primary-fixed": "#00174b",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-tertiary-container": "#ffeedd",
+                        "outline": "#737686",
+                        "sidebar-bg": "#FFFFFF",
+                        "outline-variant": "#c3c6d7",
+                        "background": "#f8f9ff",
+                        "error-container": "#ffdad6",
+                        "danger": "#EF4444",
+                        "inverse-surface": "#213145",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-highest": "#d3e4fe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-width": "260px",
+                        "sidebar-collapsed": "80px",
+                        "gutter": "24px",
+                        "container-max-width": "1440px",
+                        "stack-gap": "16px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }]
+                    }
+                },
+            },
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .fill-icon { font-variation-settings: 'FILL' 1; }
+    </style>
+</head>
+<body class="bg-bg-main text-on-surface">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 left-[260px] h-16 z-30 flex justify-between items-center px-gutter bg-surface dark:bg-surface-dim hidden md:flex">
+<!-- Brand / Title (from nav config search_bar: on_left implication for layout if needed, but per json search_bar is on_left) -->
+<div class="flex-1 flex items-center">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">BrightPath</span>
+<div class="ml-8 relative text-on-surface-variant">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50">search</span>
+<input class="bg-surface-container-lowest border border-outline/30 rounded-lg pl-10 pr-4 py-2 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 w-64 transition-all" placeholder="Search..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-primary/20">
+<img alt="Admin Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a school administrator in a bright, modern office setting. The lighting is soft and natural, emphasizing a trustworthy and approachable demeanor. Corporate modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5fKF2Sk1ygQzQcw8PiviLE_7lqAGt8d3eCIGfwTR0zI4NLUSFiYc092CdwThDTaVDP_meGOr__D3dpSxgc6eIeadTab47fOUK_ci-KLc2hU2Wf6JBktHz0ThE9mI16AZEikJVUdsJWz2XfqJlxa8gPCk-4RGOXgYv_LQf_6TNFNRscQBin4x2im_SL2uLGHU161jU_zMM5eN8ecBMeyXpQ3j3lbGZSouRMrTl5AKSWqcJmyt9xJQxaZWBOkfyowMNmjZUrbjlXKMv">
+</div>
+</div>
+</header>
+<!-- Side Navigation Bar -->
+<nav class="fixed left-0 top-0 h-full w-[260px] z-40 flex flex-col py-6 bg-sidebar-bg dark:bg-inverse-surface shadow-sm hidden md:flex">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-lg bg-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-on-primary fill-icon">school</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary leading-tight">BrightPath</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Admin Portal</p>
+</div>
+</div>
+</div>
+<ul class="flex-1 px-4 space-y-1 overflow-y-auto font-label-md text-label-md">
+<li class="">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">dashboard</span>
+<span class="">Dashboard</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">school</span>
+<span class="">Students</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">book</span>
+<span class="">Courses</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">person_add</span>
+<span class="">Enrollments</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">hourglass_empty</span>
+<span class="">Waitlist</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">payments</span>
+<span class="">Payments</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">receipt_long</span>
+<span class="">Fee Setup</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">notifications</span>
+<span class="">Notifications</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary-container/10 text-primary border-l-4 border-primary font-bold group" href="#">
+<span class="material-symbols-outlined fill-icon text-primary">manage_accounts</span>
+<span class="">Users &amp; Roles</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">analytics</span>
+<span class="">Reports</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">settings</span>
+<span class="">Settings</span>
+</a>
+</li>
+</ul>
+<div class="px-6 mt-auto">
+<div class="flex items-center gap-3 p-3 bg-surface-container-lowest rounded-lg border border-outline-variant/30 shadow-sm">
+<img alt="Admin Avatar" class="h-8 w-8 rounded-full object-cover" data-alt="A professional headshot of a school administrator in a bright, modern office setting. The lighting is soft and natural, emphasizing a trustworthy and approachable demeanor. Corporate modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmBNCHu_c4peeKEqBcRFUVpVOoXALUHtvRR9UbWJM0gTdf76VyzGt0oqwNhBjVUapYs9oBRqA_CwDuaEt-tjDSjd6mn5P9I5jN3bCQ8KF6298Apk6T6splUWDrKtJgQROapYBK0T9wFAwXn1TbrbWh0NCJ3IVpfxRfkJlwt8ifG9Vdt2amL10bNNvzEiMlAlnbZU8f3s7uFUcVZ_V8VgYi_rejDmhEcBSSHpVoeCtP80tST_1ZKyNIrZwz9EkFOjGDHYmBE0qtXnXx">
+<div class="flex-1 overflow-hidden">
+<p class="font-label-md text-label-md text-on-surface truncate">Admin User</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant truncate">admin@brightpath.edu</p>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="md:ml-[260px] md:pt-16 min-h-screen">
+<div class="max-w-[1440px] mx-auto p-4 md:p-gutter">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+<div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Users &amp; Roles</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Manage system access and role-based permissions.</p>
+</div>
+<button class="flex items-center justify-center gap-2 text-on-primary px-4 py-2 rounded-lg font-label-md text-label-md hover:bg-primary/90 transition-colors shadow-sm w-full sm:w-auto bg-primary-container" onclick="document.getElementById('add-user-modal').classList.remove('hidden')">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                    Add User
+                </button>
+</div>
+<!-- Content Canvas: Users Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/40 overflow-hidden">
+<!-- Toolbar -->
+<div class="p-4 border-b border-outline-variant/40 flex flex-col sm:flex-row gap-4 justify-between items-center bg-surface-bright">
+<div class="relative w-full sm:w-72">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-[20px]">search</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-lg pl-9 pr-4 py-2 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search users by name or email..." type="text">
+</div>
+<div class="flex gap-2 w-full sm:w-auto">
+<button class="flex-1 sm:flex-none flex items-center justify-center gap-2 border border-outline-variant text-on-surface-variant px-3 py-2 rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+                            Filter
+                        </button>
+</div>
+</div>
+<!-- Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant/40 bg-surface-container-low/50 font-label-md text-label-md text-on-surface-variant">
+<th class="py-3 px-6 font-semibold">User</th>
+<th class="py-3 px-6 font-semibold">Email</th>
+<th class="py-3 px-6 font-semibold">Role</th>
+<th class="py-3 px-6 font-semibold">Status</th>
+<th class="py-3 px-6 font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface divide-y divide-outline-variant/20">
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-surface-container overflow-hidden shrink-0">
+<img alt="Sarah Jenkins" class="w-full h-full object-cover" data-alt="Portrait of a female professional in a modern corporate setting, soft lighting, sharp focus, business casual attire." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmxoqiNAVrgHjSs0hEylFv0YF7708Tg_arN4RwpnGvOZEX_LrQ_9GpNzMG5QEDOIkhntDbHgMGrQy_t4rgp3BjNOQl_ckrXCGPICr3CLMeEDJK7EYC9ZAVPq61CPCLT7zggpZMQY92MPaEsu3JbD-xfmd2xDIswt3KUjyRocBzEWeRUZ7cTrsorgqGr1ymFA_RuN2Mbuj8R4O33Vrhjb3y-QAbJ3HIGuJ8aSpJ3KTqlHqALpk-ZlqaUCvdOnamZeE61GUCmG20za4z">
+</div>
+<span class="font-medium">Sarah Jenkins</span>
+</div>
+</td>
+<td class="py-4 px-6 text-on-surface-variant">s.jenkins@brightpath.edu</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full font-label-sm text-label-sm bg-primary-container/10 text-primary-container border border-primary-container/20">Admin</span>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 rounded-full font-label-sm text-label-sm bg-secondary-container/20 text-secondary border border-secondary/20 px-3 py-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                        Active
+                                    </span>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary-container/10 rounded-md transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-danger hover:bg-error-container/50 rounded-md transition-colors" title="Deactivate">
+<span class="material-symbols-outlined text-[20px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-surface-container overflow-hidden shrink-0">
+<img alt="Michael Chang" class="w-full h-full object-cover" data-alt="Portrait of a male teacher in a bright classroom setting, wearing a lanyard, friendly expression, natural lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCp1HGV_jsgvw5z882mTZP4D4jeLlb0VjGSqgVSSckZPc50skfOtXkyY2Or4H1npUAtuAeweFCtwq3dhKcKRNHGgH58IJ82fwekdUOGLgCw5_ogMuqlp1ELQbdoElx0qrleWHl7OZHvZ41eZIUkxL41knNsSybeiQWsetckoWbW7_truJAMDwbMxM0b13zyqIV_mckOw1sWsqOPvY6D5FquGHGKimhpqpf4787Z7QL8ThXovNOy82o02-_8pstbupYuJSmZLPGZqO87">
+</div>
+<span class="font-medium">Michael Chang</span>
+</div>
+</td>
+<td class="py-4 px-6 text-on-surface-variant">m.chang@brightpath.edu</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full font-label-sm text-label-sm bg-tertiary-container/10 text-tertiary border border-tertiary/20">Faculty</span>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 rounded-full font-label-sm text-label-sm bg-secondary-container/20 text-secondary border border-secondary/20 px-3 py-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                        Active
+                                    </span>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary-container/10 rounded-md transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-danger hover:bg-error-container/50 rounded-md transition-colors" title="Deactivate">
+<span class="material-symbols-outlined text-[20px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="bg-surface-container-low/20 hover:bg-surface-container-low/30 transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-surface-container overflow-hidden shrink-0">
+<span class="material-symbols-outlined w-full h-full flex items-center justify-center text-on-surface-variant/50 bg-surface-container-highest">person</span>
+</div>
+<span class="font-medium text-on-surface-variant">Elena Rodriguez</span>
+</div>
+</td>
+<td class="py-4 px-6 text-on-surface-variant">e.rodriguez@brightpath.edu</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full font-label-sm text-label-sm bg-surface-variant text-on-surface-variant border border-outline-variant/30">Accounts</span>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 rounded-full font-label-sm text-label-sm bg-surface-variant text-on-surface-variant border border-outline-variant/30 px-3 py-1">
+<span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant/50"></span>
+                                        Inactive
+                                    </span>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary-container/10 rounded-md transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-secondary hover:bg-secondary-container/20 rounded-md transition-colors" title="Reactivate">
+<span class="material-symbols-outlined text-[20px]">restore</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="p-4 border-t border-outline-variant/40 flex items-center justify-between text-on-surface-variant font-body-md text-body-md">
+<div class="">Showing 1 to 3 of 42 entries</div>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded-md hover:bg-surface-container transition-colors disabled:opacity-50"><span class="material-symbols-outlined text-[20px]">chevron_left</span></button>
+<button class="w-8 h-8 rounded-md bg-primary-container/10 text-primary font-medium flex items-center justify-center">1</button>
+<button class="w-8 h-8 rounded-md hover:bg-surface-container transition-colors flex items-center justify-center">2</button>
+<button class="w-8 h-8 rounded-md hover:bg-surface-container transition-colors flex items-center justify-center">3</button>
+<button class="p-1 rounded-md hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-[20px]">chevron_right</span></button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Overlay Modal: Add User (Hidden by default) -->
+<div class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-on-background/40 backdrop-blur-sm transition-opacity hidden" id="add-user-modal">
+<div class="bg-surface-container-lowest w-full max-w-md rounded-xl shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1)] border border-outline-variant/30 flex flex-col max-h-[90vh]">
+<!-- Modal Header -->
+<div class="flex items-center justify-between p-6 border-b border-outline-variant/30">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Add New User</h3>
+<button class="text-on-surface-variant hover:bg-surface-container p-1 rounded-full transition-colors" onclick="document.getElementById('add-user-modal').classList.add('hidden')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Body -->
+<div class="p-6 overflow-y-auto space-y-5">
+<!-- Input: Name -->
+<div class="space-y-1.5">
+<label class="block font-label-md text-label-md text-on-surface">Full Name</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2.5 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all shadow-sm" placeholder="e.g. Jane Doe" type="text">
+</div>
+<!-- Input: Email -->
+<div class="space-y-1.5">
+<label class="block font-label-md text-label-md text-on-surface">Email Address</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2.5 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all shadow-sm" placeholder="jane.doe@brightpath.edu" type="email">
+</div>
+<!-- Dropdown: Role -->
+<div class="space-y-1.5">
+<label class="block font-label-md text-label-md text-on-surface">Role</label>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2.5 appearance-none font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all shadow-sm">
+<option disabled="" selected="" value="">Select a role...</option>
+<option value="admin">Admin</option>
+<option value="faculty">Faculty</option>
+<option value="accounts">Accounts</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+<p class="font-body-md text-label-sm text-on-surface-variant mt-1">Defines the level of access within the Admin Portal.</p>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="p-6 border-t border-outline-variant/30 flex justify-end gap-3 bg-surface-bright rounded-b-xl">
+<button class="px-4 py-2 rounded-lg font-label-md text-label-md text-primary border border-primary/30 hover:bg-primary-container/10 transition-colors" onclick="document.getElementById('add-user-modal').classList.add('hidden')">
+                    Cancel
+                </button>
+<button class="px-4 py-2 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:bg-primary/90 transition-colors shadow-sm" onclick="document.getElementById('add-user-modal').classList.add('hidden')">
+                    Save User
+                </button>
+</div>
+</div>
+</div>
+
+
+</body></html>

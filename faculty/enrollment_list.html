@@ -1,0 +1,246 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Enrollment List - BrightPath</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary-fixed": "#00174b",
+                        "secondary-fixed-dim": "#4edea3",
+                        "inverse-on-surface": "#eaf1ff",
+                        "secondary": "#006c49",
+                        "secondary-fixed": "#6ffbbe",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#0b1c30",
+                        "tertiary-container": "#996100",
+                        "surface-bright": "#f8f9ff",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary-container": "#eeefff",
+                        "outline-variant": "#c3c6d7",
+                        "on-tertiary": "#ffffff",
+                        "sidebar-bg": "#FFFFFF",
+                        "primary": "#004ac6",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "secondary-container": "#6cf8bb",
+                        "surface": "#f8f9ff",
+                        "on-tertiary-container": "#ffeedd",
+                        "on-error-container": "#93000a",
+                        "background": "#f8f9ff",
+                        "tertiary": "#784b00",
+                        "surface-container-high": "#dce9ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-secondary-container": "#00714d",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-container": "#e5eeff",
+                        "surface-container-highest": "#d3e4fe",
+                        "waitlist-blue": "#3B82F6",
+                        "surface-tint": "#0053db",
+                        "bg-main": "#F8FAFC",
+                        "on-background": "#0b1c30",
+                        "on-error": "#ffffff",
+                        "danger": "#EF4444",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-secondary-fixed-variant": "#005236",
+                        "error": "#ba1a1a",
+                        "accent-purple": "#8B5CF6",
+                        "on-surface-variant": "#434655",
+                        "surface-dim": "#cbdbf5",
+                        "surface-container-low": "#eff4ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "outline": "#737686",
+                        "surface-variant": "#d3e4fe",
+                        "on-tertiary-fixed-variant": "#653e00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "container-max-width": "1440px",
+                        "margin-mobile": "16px",
+                        "stack-gap": "16px",
+                        "sidebar-width": "260px",
+                        "sidebar-collapsed": "80px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .fill-icon { font-variation-settings: 'FILL' 1; }
+        
+        /* Subtle scrollbar for table */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c3c6d7; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #737686; }
+    </style>
+</head>
+<body class="text-on-background flex h-screen overflow-hidden">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full w-[260px] z-40 flex flex-col py-6 bg-sidebar-bg dark:bg-inverse-surface shadow-sm dark:bg-inverse-surface hidden md:flex">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined fill-icon text-[20px]">school</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary leading-tight">BrightPath</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Admin Portal</p>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto px-4 space-y-1"><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#"><span class="material-symbols-outlined">dashboard</span><span class="">Dashboard</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container/10 text-primary border-l-4 border-primary font-bold font-label-md text-label-md active:scale-[0.98] transition-transform duration-200" href="#"><span class="material-symbols-outlined fill-icon">person_add</span><span class="">Enrollments</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#"><span class="material-symbols-outlined">payments</span><span class="">Payments</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#"><span class="material-symbols-outlined">receipt_long</span><span class="">Fee Setup</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#"><span class="material-symbols-outlined">analytics</span><span class="">Reports</span></a><a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md" href="#"><span class="material-symbols-outlined">settings</span><span class="">Settings</span></a></div>
+<div class="px-6 mt-auto">
+<div class="flex items-center gap-3 p-3 rounded-lg border border-outline-variant/30">
+<img alt="BrightPath Admin Profile" class="w-10 h-10 rounded-full object-cover bg-surface-variant" data-alt="A small, professional headshot of an administrative staff member smiling warmly against a bright, modern office background. High-key lighting, crisp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj7_eq1uTprQqGP6YJ4e6NrV3kC428P87XSLwk-PZlh-en5j31I0mGkliot9l19lx8T0N6TNSpNlxY8-o4gVlQee-F5JfEIkiwHB3by7m8XeGAmXJovKvX5GfFTaJ6W7-oLowetHUcriiWzfXfx40mYHIopWBeJa9xzB-dEeDQ_XLdKCs_1ogKP4H44cLnZWnessCfJK2n_BYhWZkmhZ2SHjQCxRFlO_wS6hya-3SJTN5BJA3FsX5oskUZd1X1i9HvvaoxAW5xhpg_">
+<div class="flex-1 min-w-0">
+<p class="font-label-md text-label-md text-on-surface truncate">Admin User</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant truncate">Accounts</p>
+</div>
+</div>
+</div>
+</nav>
+<!-- TopNavBar (Mobile) -->
+<header class="md:hidden fixed top-0 w-full h-16 z-30 bg-surface dark:bg-surface-dim flex justify-between items-center px-4 shadow-sm">
+<div class="flex items-center gap-3">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">BrightPath</h1>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col md:ml-[260px] pt-16 md:pt-0 h-full overflow-hidden">
+<!-- TopAppBar (Desktop) -->
+<header class="hidden md:flex h-16 bg-surface dark:bg-surface-dim items-center justify-between px-gutter sticky top-0 z-20 shadow-sm border-b border-outline-variant/20">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Enrollments</h2>
+<div class="flex items-center gap-4">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full h-10 pl-10 pr-4 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none bg-surface-container-lowest font-body-md text-body-md text-on-surface transition-all" placeholder="Search..." type="text">
+</div>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="flex-1 overflow-y-auto p-4 md:p-gutter">
+<div class="max-w-container-max-width mx-auto space-y-6">
+<!-- Page Header & Actions -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Enrollment List</h1>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg border border-primary text-primary hover:bg-primary/5 transition-colors font-label-md text-label-md bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                            Filter
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-on-primary hover:bg-primary/90 transition-colors font-label-md text-label-md shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                            New Enrollment
+                        </button>
+</div>
+</div>
+<!-- Filters & Search Bar (In-page) -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.1)] border border-outline-variant/20 flex flex-col md:flex-row gap-4 items-center justify-between">
+<div class="relative w-full md:w-96">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full h-10 pl-10 pr-4 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none bg-surface font-body-md text-body-md text-on-surface transition-all" placeholder="Search by student, ID, or course..." type="text">
+</div>
+<div class="flex gap-3 w-full md:w-auto">
+<select class="h-10 px-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none bg-surface font-body-md text-body-md text-on-surface w-full md:w-auto">
+<option value="">All Courses</option>
+<option value="python">Python for Data Science</option>
+<option value="web">Web Development</option>
+</select>
+<select class="h-10 px-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none bg-surface font-body-md text-body-md text-on-surface w-full md:w-auto">
+<option value="">All Statuses</option>
+<option value="active">Active</option>
+<option value="pending">Pending</option>
+<option value="overdue">Overdue</option>
+</select>
+</div>
+</div>
+<!-- Table Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.1)] border border-outline-variant/20 overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container/50 border-b border-outline-variant/30">
+<th class="px-4 py-3 font-label-md text-label-md text-on-surface-variant whitespace-nowrap">Enrollment ID</th>
+<th class="px-4 py-3 font-label-md text-label-md text-on-surface-variant whitespace-nowrap">Student</th>
+<th class="px-4 py-3 font-label-md text-label-md text-on-surface-variant min-w-[200px]">Course</th>
+<th class="px-4 py-3 font-label-md text-label-md text-on-surface-variant whitespace-nowrap">Batch</th>
+<th class="px-4 py-3 font-label-md text-label-md text-on-surface-variant text-right whitespace-nowrap">Total Fee</th>
+<th class="px-4 py-3 font-label-md text-label-md text-on-surface-variant text-right whitespace-nowrap">Paid</th>
+<th class="px-4 py-3 font-label-md text-label-md text-on-surface-variant text-right whitespace-nowrap">Pending</th>
+<th class="px-4 py-3 font-label-md text-label-md text-on-surface-variant whitespace-nowrap text-center">Status</th>
+<th class="px-4 py-3 font-label-md text-label-md text-on-surface-variant whitespace-nowrap text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface divide-y divide-outline-variant/20"><tr class="hover:bg-surface-container/30 transition-colors group"><td class="px-4 py-3 font-medium text-primary">ENR-102</td><td class="px-4 py-3 flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm shrink-0">AB</div><span class="whitespace-nowrap">Albert Bell</span></td><td class="px-4 py-3">Python for Data Science</td><td class="px-4 py-3 text-on-surface-variant whitespace-nowrap">Winter 2024</td><td class="px-4 py-3 text-right whitespace-nowrap">$1,500</td><td class="px-4 py-3 text-right text-secondary whitespace-nowrap">$1,500</td><td class="px-4 py-3 text-right text-on-surface-variant whitespace-nowrap">$0</td><td class="px-4 py-3 text-center"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary-container/20 text-secondary border border-secondary-container">Active</span></td><td class="px-4 py-3 text-right"><button class="text-on-surface-variant hover:text-primary transition-colors p-1 opacity-0 group-hover:opacity-100 focus:opacity-100"><span class="material-symbols-outlined text-[20px]">more_vert</span></button></td></tr><tr class="bg-surface-bright hover:bg-surface-container/30 transition-colors group"><td class="px-4 py-3 font-medium text-primary">ENR-103</td><td class="px-4 py-3 flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center font-bold text-sm shrink-0">SJ</div><span class="whitespace-nowrap">Sarah Jenkins</span></td><td class="px-4 py-3">Advanced Web Development</td><td class="px-4 py-3 text-on-surface-variant whitespace-nowrap">Spring 2024</td><td class="px-4 py-3 text-right whitespace-nowrap">$2,200</td><td class="px-4 py-3 text-right text-secondary whitespace-nowrap">$1,000</td><td class="px-4 py-3 text-right text-tertiary whitespace-nowrap">$1,200</td><td class="px-4 py-3 text-center"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-tertiary-fixed/30 text-tertiary border border-tertiary-fixed">Pending</span></td><td class="px-4 py-3 text-right"><button class="text-on-surface-variant hover:text-primary transition-colors p-1 opacity-0 group-hover:opacity-100 focus:opacity-100"><span class="material-symbols-outlined text-[20px]">more_vert</span></button></td></tr><tr class="hover:bg-surface-container/30 transition-colors group"><td class="px-4 py-3 font-medium text-primary">ENR-104</td><td class="px-4 py-3 flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-error-container text-on-error-container flex items-center justify-center font-bold text-sm shrink-0">MR</div><span class="whitespace-nowrap">Marcus Reed</span></td><td class="px-4 py-3">UI/UX Design Fundamentals</td><td class="px-4 py-3 text-on-surface-variant whitespace-nowrap">Winter 2024</td><td class="px-4 py-3 text-right whitespace-nowrap">$1,200</td><td class="px-4 py-3 text-right text-secondary whitespace-nowrap">$400</td><td class="px-4 py-3 text-right text-error whitespace-nowrap font-medium">$800</td><td class="px-4 py-3 text-center"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error-container/40 text-error border border-error-container">Overdue</span></td><td class="px-4 py-3 text-right"><button class="text-on-surface-variant hover:text-primary transition-colors p-1 opacity-0 group-hover:opacity-100 focus:opacity-100"><span class="material-symbols-outlined text-[20px]">more_vert</span></button></td></tr><tr class="bg-surface-bright hover:bg-surface-container/30 transition-colors group"><td class="px-4 py-3 font-medium text-primary">ENR-105</td><td class="px-4 py-3 flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm shrink-0">LC</div><span class="whitespace-nowrap">Linda Chen</span></td><td class="px-4 py-3">Machine Learning Basics</td><td class="px-4 py-3 text-on-surface-variant whitespace-nowrap">Fall 2024</td><td class="px-4 py-3 text-right whitespace-nowrap">$1,800</td><td class="px-4 py-3 text-right text-secondary whitespace-nowrap">$1,800</td><td class="px-4 py-3 text-right text-on-surface-variant whitespace-nowrap">$0</td><td class="px-4 py-3 text-center"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-container/20 text-primary border border-primary-container/50">Waitlisted</span></td><td class="px-4 py-3 text-right"><button class="text-on-surface-variant hover:text-primary transition-colors p-1 opacity-0 group-hover:opacity-100 focus:opacity-100"><span class="material-symbols-outlined text-[20px]">more_vert</span></button></td></tr></tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-4 py-3 border-t border-outline-variant/20 bg-surface-container-lowest flex items-center justify-between">
+<span class="font-body-md text-body-md text-on-surface-variant">Showing 1 to 4 of 24 entries</span>
+<div class="flex gap-1">
+<button class="p-1 rounded text-on-surface-variant hover:bg-surface-container disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center">1</button>
+<button class="w-8 h-8 rounded hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center">2</button>
+<button class="w-8 h-8 rounded hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center">3</button>
+<button class="p-1 rounded text-on-surface-variant hover:bg-surface-container">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+
+</body></html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Pending Fees Report - BrightPath</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed": "#ffddb8",
+                      "surface-container": "#e5eeff",
+                      "on-surface": "#0b1c30",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "error": "#ba1a1a",
+                      "on-error-container": "#93000a",
+                      "surface-bright": "#f8f9ff",
+                      "on-secondary-container": "#00714d",
+                      "surface-variant": "#d3e4fe",
+                      "on-secondary-fixed-variant": "#005236",
+                      "secondary-fixed-dim": "#4edea3",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-background": "#0b1c30",
+                      "secondary-container": "#6cf8bb",
+                      "on-surface-variant": "#434655",
+                      "on-primary-container": "#eeefff",
+                      "surface-tint": "#0053db",
+                      "secondary": "#006c49",
+                      "inverse-primary": "#b4c5ff",
+                      "on-secondary-fixed": "#002113",
+                      "tertiary": "#784b00",
+                      "accent-purple": "#8B5CF6",
+                      "surface-container-lowest": "#ffffff",
+                      "on-error": "#ffffff",
+                      "secondary-fixed": "#6ffbbe",
+                      "primary": "#004ac6",
+                      "tertiary-container": "#996100",
+                      "surface-container-low": "#eff4ff",
+                      "surface-dim": "#cbdbf5",
+                      "primary-fixed": "#dbe1ff",
+                      "surface-container-high": "#dce9ff",
+                      "bg-main": "#F8FAFC",
+                      "primary-container": "#2563eb",
+                      "on-tertiary-fixed-variant": "#653e00",
+                      "tertiary-fixed-dim": "#ffb95f",
+                      "on-secondary": "#ffffff",
+                      "surface": "#f8f9ff",
+                      "waitlist-blue": "#3B82F6",
+                      "on-primary-fixed": "#00174b",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-fixed": "#2a1700",
+                      "on-tertiary-container": "#ffeedd",
+                      "outline": "#737686",
+                      "sidebar-bg": "#FFFFFF",
+                      "outline-variant": "#c3c6d7",
+                      "background": "#f8f9ff",
+                      "error-container": "#ffdad6",
+                      "danger": "#EF4444",
+                      "inverse-surface": "#213145",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-highest": "#d3e4fe"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sidebar-width": "260px",
+                      "sidebar-collapsed": "80px",
+                      "gutter": "24px",
+                      "container-max-width": "1440px",
+                      "stack-gap": "16px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "headline-sm": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "label-md": ["Inter"],
+                      "label-sm": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        /* Base styles to ensure consistency */
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Table hover overlay simulation based on specs */
+        .table-row-hover:hover {
+            position: relative;
+        }
+        .table-row-hover:hover::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-color: var(--tw-colors-on-surface);
+            opacity: 0.02;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-bg-main text-on-surface min-h-screen flex">
+<!-- JSON Component: SideNavBar -->
+<nav class="hidden md:flex bg-sidebar-bg dark:bg-inverse-surface shadow-sm docked left-0 w-[260px] h-full fixed top-0 z-40 flex-col py-6">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">school</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">BrightPath</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Admin Portal</p>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto px-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-label-md text-label-md">Students</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined">book</span>
+<span class="font-label-md text-label-md">Courses</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined">person_add</span>
+<span class="font-label-md text-label-md">Enrollments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined">hourglass_empty</span>
+<span class="font-label-md text-label-md">Waitlist</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md">Payments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-md text-label-md">Fee Setup</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-md text-label-md">Notifications</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined">manage_accounts</span>
+<span class="font-label-md text-label-md">Users &amp; Roles</span>
+</a>
+<!-- Active Tab: Reports -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-r-lg bg-primary-container/10 text-primary border-l-4 border-primary font-bold active:scale-[0.98] duration-200 transition-transform" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors active:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+<div class="px-6 mt-auto">
+<div class="flex items-center gap-3 border-t border-outline-variant pt-4">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Admin Avatar Profile Picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOghUJ7KW4TxydLBjEzhFry1eyROApIQxgG43zHOifgr07Rg0lLvIBjCQUGaGDISFeHy-IeBAXNqHfcGwukOmPgCG7blXnxCIe2aB1F99NwAJiTuPc51ns2PwG0pWmZyU_E4DrPxHXafDGmiFDk2wphYk_qUJ1ERqN7IwFDN-Koo7CWq5mxjG6ambrcmSf4uNe7GGkB8DL7V_nfRWr1cgfmNR-Irsx8HJ8kakKIvKCkv1FA3OFectFqkP6SfCYWKyA3dGDlVh57Rno">
+<div class="flex-1 min-w-0">
+<p class="font-label-md text-label-md text-on-surface truncate">Admin User</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant truncate">admin@brightpath.edu</p>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 md:ml-[260px] flex flex-col min-h-screen">
+<!-- JSON Component: TopNavBar -->
+<header class="bg-surface dark:bg-surface-dim docked top-0 w-full h-16 fixed right-0 md:left-[260px] z-30 flex justify-between items-center px-gutter">
+<!-- Mobile Menu Trigger -->
+<button class="md:hidden p-2 text-on-surface-variant rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Search (on_left configuration) -->
+<div class="flex-1 max-w-md hidden md:block">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full h-10 pl-10 pr-4 rounded-full bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-body-md text-body-md text-on-surface outline-none" placeholder="Search students, courses..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-2 ml-auto">
+<button class="p-2 text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary transition-colors active:opacity-80 rounded-full hover:bg-surface-container relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-danger border-2 border-surface"></span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant ml-2 hidden md:block">
+<img class="w-full h-full object-cover" data-alt="Admin Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCT9L1hYGnD3XXjPgfnXW_x5VJqJDOC0xG3ZkuJQsij1KwK3OZj0BB_X_83V6Dj5aVEQ1D7TCeotJYug7I3d_01Z75RzmNtS5YSki8r9sKB1a_44Cy-_8ABenU7zHBtWsMuBHeJq7AbOLIOxm6Eq7ZWQJ2wogz8aF9o9XAdtk7f315iI4wM92niF8ofQJ_KhFts31hDGxWxlX62kxW1tOCU2oiiarY6ShKH8PLN-gRDQAOzsSfp7IztoyQLHVDLZvAlVSwbyhJewaJn">
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 mt-16 p-gutter flex flex-col gap-stack-gap overflow-x-hidden">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Pending Fees Report</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Review and manage outstanding student balances across all courses.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="h-10 px-4 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface font-label-md text-label-md flex items-center gap-2 hover:bg-surface-container transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                        Export PDF
+                    </button>
+</div>
+</div>
+<!-- Filters Section (Bento style card) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-5 border border-outline-variant/50">
+<div class="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
+<!-- Overdue Bucket Filter -->
+<div class="flex flex-col gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Overdue Bucket</span>
+<div class="flex flex-wrap gap-2 gap-3">
+<button class="px-4 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md transition-colors shadow-sm">All</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:bg-surface-container font-label-md text-label-md transition-colors">0-30 Days</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:bg-surface-container font-label-md text-label-md transition-colors">31-60 Days</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:bg-surface-container font-label-md text-label-md transition-colors">61-90 Days</button>
+<button class="px-4 py-2 rounded-full border border-danger/30 text-danger hover:bg-error-container/20 font-label-md text-label-md transition-colors">90+ Days</button>
+</div>
+</div>
+<!-- Additional Filters (Course) -->
+<div class="flex flex-col gap-2 w-full lg:w-auto">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Course Filter</span>
+<div class="relative">
+<select class="w-full lg:w-64 h-10 pl-4 pr-10 rounded-lg bg-surface border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 appearance-none font-body-md text-body-md text-on-surface outline-none cursor-pointer">
+<option>All Courses</option>
+<option>Introduction to Computer Science</option>
+<option>Advanced Mathematics</option>
+<option>Graphic Design Principles</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">arrow_drop_down</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Data Table Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden flex-1 flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant bg-surface">
+<th class="py-4 px-6 font-label-md text-label-md text-on-surface-variant font-medium">Student</th>
+<th class="py-4 px-6 font-label-md text-label-md text-on-surface-variant font-medium">Course</th>
+<th class="py-4 px-6 font-label-md text-label-md text-on-surface-variant font-medium text-right">Total Fee</th>
+<th class="py-4 px-6 font-label-md text-label-md text-on-surface-variant font-medium text-right">Pending Amount</th>
+<th class="py-4 px-6 font-label-md text-label-md text-on-surface-variant font-medium">Due Date</th>
+<th class="py-4 px-6 font-label-md text-label-md text-on-surface-variant font-medium text-center">Status</th>
+<th class="py-4 px-6 font-label-md text-label-md text-on-surface-variant font-medium text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30 font-body-md text-body-md text-on-surface">
+<!-- Row 1: Overdue -->
+<tr class="table-row-hover transition-colors even:bg-surface/50">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary font-label-md">SJ</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Sarah Jenkins</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">ID: STU-8921</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">Advanced Mathematics</td>
+<td class="py-4 px-6 text-right font-medium">$1,200.00</td>
+<td class="py-4 px-6 text-right font-semibold text-on-surface">$450.00</td>
+<td class="py-4 px-6 text-on-surface-variant">Oct 15, 2023</td>
+<td class="py-4 px-6 text-center">
+<div class="inline-flex flex-col items-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error-container text-on-error-container">
+                                            Overdue
+                                        </span>
+<span class="font-label-sm text-label-sm text-danger mt-1 font-semibold">45 Days</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="h-9 px-4 rounded-lg text-on-primary font-label-md text-label-md hover:bg-surface-tint transition-colors shadow-sm inline-flex items-center gap-2 bg-primary-container">
+<span class="material-symbols-outlined text-[18px]">send</span>
+                                        Send Reminder
+                                    </button>
+</td>
+</tr>
+<!-- Row 2: Due Soon -->
+<tr class="table-row-hover transition-colors even:bg-surface/50">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary font-label-md">MC</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Michael Chang</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">ID: STU-7734</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">Graphic Design Principles</td>
+<td class="py-4 px-6 text-right font-medium">$850.00</td>
+<td class="py-4 px-6 text-right font-semibold text-on-surface">$200.00</td>
+<td class="py-4 px-6 text-on-surface-variant">Nov 05, 2023</td>
+<td class="py-4 px-6 text-center">
+<div class="inline-flex flex-col items-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-tertiary-fixed text-on-tertiary-fixed-variant">
+                                            Due Soon
+                                        </span>
+<span class="font-label-sm text-label-sm text-tertiary mt-1">in 5 Days</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="h-9 px-4 rounded-lg text-on-primary font-label-md text-label-md hover:bg-surface-tint transition-colors shadow-sm inline-flex items-center gap-2 bg-primary-container">
+<span class="material-symbols-outlined text-[18px]">send</span>
+                                        Send Reminder
+                                    </button>
+</td>
+</tr>
+<!-- Row 3: Severely Overdue -->
+<tr class="table-row-hover transition-colors even:bg-surface/50">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary font-label-md">EL</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Emma Lawson</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">ID: STU-9012</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">Introduction to Computer Science</td>
+<td class="py-4 px-6 text-right font-medium">$1,500.00</td>
+<td class="py-4 px-6 text-right font-semibold text-on-surface">$1,500.00</td>
+<td class="py-4 px-6 text-on-surface-variant">Aug 01, 2023</td>
+<td class="py-4 px-6 text-center">
+<div class="inline-flex flex-col items-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error-container text-on-error-container">
+                                            Overdue
+                                        </span>
+<span class="font-label-sm text-label-sm text-danger mt-1 font-bold font-semibold">92 Days</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="h-9 px-4 rounded-lg text-on-primary font-label-md text-label-md hover:bg-surface-tint transition-colors shadow-sm inline-flex items-center gap-2 bg-primary-container">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+                                        Escalate
+                                    </button>
+</td>
+</tr>
+<!-- Row 4: Overdue -->
+<tr class="table-row-hover transition-colors even:bg-surface/50">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary font-label-md">DR</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">David Rodriguez</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">ID: STU-6541</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">Advanced Mathematics</td>
+<td class="py-4 px-6 text-right font-medium">$1,200.00</td>
+<td class="py-4 px-6 text-right font-semibold text-on-surface">$150.00</td>
+<td class="py-4 px-6 text-on-surface-variant">Oct 20, 2023</td>
+<td class="py-4 px-6 text-center">
+<div class="inline-flex flex-col items-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error-container text-on-error-container">
+                                            Overdue
+                                        </span>
+<span class="font-label-sm text-label-sm text-danger mt-1 font-semibold">11 Days</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="h-9 px-4 rounded-lg text-on-primary font-label-md text-label-md hover:bg-surface-tint transition-colors shadow-sm inline-flex items-center gap-2 bg-primary-container">
+<span class="material-symbols-outlined text-[18px]">send</span>
+                                        Send Reminder
+                                    </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination (Footer of table) -->
+<div class="border-t border-outline-variant/50 p-4 flex items-center justify-between bg-surface-container-lowest mt-auto">
+<p class="font-body-md text-body-md text-on-surface-variant">Showing 1 to 4 of 24 overdue accounts</p>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+
+</body></html>

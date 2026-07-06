@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings - BrightPath Admin</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Inter Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with specific configuration -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f8f9ff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "background": "#f8f9ff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface-container-high": "#dce9ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "surface-variant": "#d3e4fe",
+                        "on-surface-variant": "#434655",
+                        "primary-container": "#2563eb",
+                        "primary": "#004ac6",
+                        "on-primary-container": "#eeefff",
+                        "surface-tint": "#0053db",
+                        "on-background": "#0b1c30",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#00174b",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-dim": "#cbdbf5",
+                        "on-secondary-fixed": "#002113",
+                        "on-error": "#ffffff",
+                        "outline": "#737686",
+                        "secondary-container": "#6cf8bb",
+                        "on-secondary-container": "#00714d",
+                        "on-surface": "#0b1c30",
+                        "waitlist-blue": "#3B82F6",
+                        "primary-fixed": "#dbe1ff",
+                        "on-secondary-fixed-variant": "#005236",
+                        "danger": "#EF4444",
+                        "surface-container-highest": "#d3e4fe",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "on-tertiary-container": "#ffeedd",
+                        "tertiary-container": "#996100",
+                        "secondary-fixed": "#6ffbbe",
+                        "accent-purple": "#8B5CF6",
+                        "tertiary-fixed": "#ffddb8",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#784b00",
+                        "sidebar-bg": "#FFFFFF",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "secondary-fixed-dim": "#4edea3",
+                        "bg-main": "#F8FAFC",
+                        "surface-container-low": "#eff4ff",
+                        "inverse-primary": "#b4c5ff",
+                        "inverse-surface": "#213145",
+                        "surface-bright": "#f8f9ff",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#006c49",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap": "16px",
+                        "sidebar-width": "260px",
+                        "gutter": "24px",
+                        "sidebar-collapsed": "80px",
+                        "margin-mobile": "16px",
+                        "container-max-width": "1440px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #2563eb;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #2563eb;
+        }
+        .toggle-checkbox {
+            right: 0;
+            z-index: 1;
+            border-color: #e2e8f0;
+            transition: all 0.3s;
+        }
+        .toggle-label {
+            width: 3rem;
+            height: 1.5rem;
+            background-color: #cbd5e1;
+            border-radius: 9999px;
+            transition: all 0.3s;
+        }
+        .toggle-dot {
+            top: 0.125rem;
+            left: 0.125rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            background-color: white;
+            border-radius: 9999px;
+            transition: all 0.3s;
+        }
+        .toggle-checkbox:checked ~ .toggle-dot {
+            transform: translateX(100%);
+        }
+    </style>
+</head>
+<body class="bg-bg-main h-full antialiased text-on-background font-body-md text-body-md md:pl-sidebar-width pt-16">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface-dim docked top-0 w-full h-16 bg-surface dark:bg-surface-dim flat no shadows fixed top-0 right-0 md:left-[260px] left-0 h-16 z-30 flex justify-between items-center px-gutter">
+<!-- Mobile Menu Button (Hamburger) -->
+<button class="md:hidden text-primary dark:text-inverse-primary p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Brand/Product Name (Mobile only, hidden on Desktop since Sidebar has it) -->
+<div class="md:hidden font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">
+            BrightPath
+        </div>
+<!-- Desktop Search - Left Aligned as per JSON -->
+<div class="hidden md:flex items-center w-64">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" style="font-variation-settings: 'FILL' 0;">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-2 focus:ring-primary-container focus:ring-opacity-50 transition-all font-body-md text-body-md text-on-surface" placeholder="Search..." type="text"/>
+</div>
+</div>
+<!-- Actions Container -->
+<div class="flex items-center space-x-4">
+<!-- Trailing Icon Action: notifications -->
+<button class="relative p-2 text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary transition-colors focus:outline-none">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+<!-- Optional notification badge could go here -->
+</button>
+<!-- Profile Avatar -->
+<button class="focus:outline-none relative">
+<img alt="Admin Avatar" class="w-8 h-8 rounded-full object-cover border border-outline-variant hover:ring-2 hover:ring-primary-container transition-all" data-alt="A small, circular professional headshot photograph of an educational administrator. The lighting is bright and modern. The background is a soft, solid light blue. The tone is professional, trustworthy, and clean, fitting a modern corporate SaaS UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGIEYHXWv1f5x2uAMbdjcwAi14SbOgM1W1h8GyTdb34jBi0VS-PIxuxm574i4bZ--dda7QQ9T_VP6zYoacjvuwwGMA9h4MHcrBR7-Btr0OvMr2ahmmFMq_KSgd0uKyMlVIlDD7vbaVnI-BX6_2Vy82_ivzE9XY3Q5_g3Io5ryixd5QZXiSdBNdyplr57ZholDT4hexHnFwhFmjMwTitDMzr_sh1tJxfq0vNNCAaE6_HoikTTfErjgymu11Esfdv9_S-UuUmMqKEHb6"/>
+</button>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="bg-sidebar-bg dark:bg-inverse-surface docked left-0 w-[260px] h-full shadow-sm dark:bg-inverse-surface shadow-sm fixed left-0 top-0 h-full w-[260px] z-40 flex flex-col py-6 hidden md:flex">
+<!-- Brand Header -->
+<div class="px-gutter mb-8 flex items-center space-x-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container">
+<img alt="BrightPath Admin Profile" class="w-8 h-8 object-contain" data-alt="A minimalist, flat vector logo for an educational platform named BrightPath. The logo features abstract geometric shapes forming a stylized path or book, using a vibrant primary blue and soft secondary colors. Clean lines, corporate aesthetic, isolated on a transparent or solid white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaeiU2vdRRdIpLyBzTADsN9Bd5nVb6GLAJQLBx1g0PYQYLjwEKW2Ku8X5RFlpTZ9gHNLIzIUwHlJT7wTJv0mYfrG7BH-rFNLZdIcjyatpjjNbIzdC7FMGI2jmf6ETWbVwcPWqA9WLdPSTuzMrRXaH3Nhcn8dA3B6qKStKXJLN-oUm5jasRTN7FsZSPT6mpaOGkbbKhqRb8ItXlt_XZ8uwdad6lPS_JERKzxfdZkvelFxvhW7UJeuARNSkSy1f-JtbGskLwDuxEIjiq"/>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary tracking-tight leading-tight">BrightPath</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Admin Portal</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-1 overflow-y-auto px-4 space-y-1">
+<!-- Inactive -->
+<a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">school</span>
+<span>Students</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">book</span>
+<span>Courses</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">person_add</span>
+<span>Enrollments</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">hourglass_empty</span>
+<span>Waitlist</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">payments</span>
+<span>Payments</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">receipt_long</span>
+<span>Fee Setup</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">notifications</span>
+<span>Notifications</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">manage_accounts</span>
+<span>Users &amp; Roles</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-colors font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">analytics</span>
+<span>Reports</span>
+</a>
+<!-- Active: Settings -->
+<a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg bg-primary-container/10 text-primary border-l-4 border-primary font-bold transition-all transform scale-100 hover:scale-[0.98] duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="max-w-container-max-width mx-auto px-gutter md:px-8 py-8 h-full overflow-y-auto">
+<!-- Page Header -->
+<div class="mb-stack-gap md:mb-8">
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background font-bold tracking-tight">Settings</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-2xl">Manage your profile, account security, and notification preferences.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Profile & Security -->
+<div class="lg:col-span-8 flex flex-col gap-stack-gap">
+<!-- Profile Section Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.1)] p-6 md:p-8">
+<h3 class="font-headline-sm text-headline-sm text-on-background mb-6 flex items-center">
+<span class="material-symbols-outlined mr-3 text-primary" style="font-variation-settings: 'FILL' 0;">person</span>
+                        Profile Information
+                    </h3>
+<div class="flex flex-col md:flex-row md:items-start gap-8">
+<!-- Avatar Edit -->
+<div class="flex flex-col items-center space-y-4">
+<div class="relative group cursor-pointer">
+<img alt="Alex Mercer Profile Picture" class="w-24 h-24 rounded-full object-cover border-2 border-surface-container-high group-hover:border-primary transition-colors" data-alt="A larger, high-quality, circular professional headshot photograph of an educational administrator (Alex Mercer). Bright, modern lighting against a soft blue background. The image is clean and corporate, suitable for a SaaS user profile page." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrXQN8-IuBUz2-qcudgkCfuHk78LXd8ow0sSyWbH0H32SbGPO-u8HHFMhSzox2Z5M5fWKtKWt-6oCNmDpyVPpgR_6Bfz1mos84WRHvvucsQBpm934DYuQKfF9Ge6LZn5Fqdc8Nw2TWGElKimDBPb7soJFntw6fSarNwO8eEZ7W-UjcgbJ-tB4SiCZh-ONkMWjKOXNRRgx_rSn63ht45JKnhJGkqGaKsEs9O109z1b60_i6QErWQBQoPJl9IQr85Ydx-TgS9OZKCWgX"/>
+<div class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">edit</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant text-center block">JPG, GIF or PNG. Max size of 800K</span>
+</div>
+<!-- Form Fields -->
+<div class="flex-1 space-y-5">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-on-surface">Full Name</label>
+<input class="w-full px-4 py-2.5 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-2 focus:ring-primary-container/20 transition-all font-body-md text-body-md text-on-surface" placeholder="e.g. Jane Doe" type="text" value="Alex Mercer"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-on-surface">Email Address</label>
+<input class="w-full px-4 py-2.5 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-2 focus:ring-primary-container/20 transition-all font-body-md text-body-md text-on-surface" placeholder="name@institution.edu" type="email" value="alex.m@brightpath.edu"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-on-surface">Role</label>
+<input class="w-full px-4 py-2.5 bg-surface-container border border-outline-variant rounded font-body-md text-body-md text-on-surface-variant cursor-not-allowed opacity-75" disabled="" type="text" value="System Administrator"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-on-surface">Department</label>
+<input class="w-full px-4 py-2.5 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-2 focus:ring-primary-container/20 transition-all font-body-md text-body-md text-on-surface" type="text" value="IT Operations"/>
+</div>
+</div>
+<div class="pt-4 flex justify-end">
+<button class="bg-primary hover:bg-surface-tint text-on-primary font-label-md text-label-md px-6 py-2.5 rounded transition-colors shadow-sm">
+                                    Save Profile Changes
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Security Section Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.1)] p-6 md:p-8">
+<h3 class="font-headline-sm text-headline-sm text-on-background mb-6 flex items-center">
+<span class="material-symbols-outlined mr-3 text-primary" style="font-variation-settings: 'FILL' 0;">security</span>
+                        Account Security
+                    </h3>
+<div class="flex flex-col md:flex-row items-start justify-between gap-6 pb-6 border-b border-surface-container-high">
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">Password</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Last changed 3 months ago. We recommend updating your password every 6 months.</p>
+</div>
+<button class="border border-primary text-primary hover:bg-surface-container font-label-md text-label-md px-5 py-2.5 rounded transition-colors whitespace-nowrap">
+                            Change Password
+                        </button>
+</div>
+<div class="flex flex-col md:flex-row items-start justify-between gap-6 pt-6">
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">Two-Factor Authentication (2FA)</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Add an extra layer of security to your account. Currently using Authenticator App.</p>
+</div>
+<button class="bg-surface-container-high text-on-surface hover:bg-surface-variant font-label-md text-label-md px-5 py-2.5 rounded transition-colors whitespace-nowrap border border-outline-variant">
+                            Manage 2FA
+                        </button>
+</div>
+</div>
+</div>
+<!-- Right Column: Notifications & Danger Zone -->
+<div class="lg:col-span-4 flex flex-col gap-stack-gap">
+<!-- Notifications Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.1)] p-6 md:p-8">
+<h3 class="font-headline-sm text-headline-sm text-on-background mb-6 flex items-center">
+<span class="material-symbols-outlined mr-3 text-primary" style="font-variation-settings: 'FILL' 0;">campaign</span>
+                        Notification Preferences
+                    </h3>
+<div class="space-y-6">
+<!-- Toggle Item 1 -->
+<div class="flex items-center justify-between">
+<div class="pr-4">
+<h4 class="font-label-md text-label-md text-on-surface">Email Notifications</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Receive daily summaries for fee alerts and new enrollments.</p>
+</div>
+<!-- Custom Toggle -->
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in flex-shrink-0">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer outline-none opacity-0" id="toggle1" name="toggle1" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle1"></label>
+<div class="toggle-dot absolute block w-5 h-5 rounded-full bg-white shadow inset-y-0 left-0 pointer-events-none mt-[2px] ml-[2px]"></div>
+</div>
+</div>
+<!-- Toggle Item 2 -->
+<div class="flex items-center justify-between">
+<div class="pr-4">
+<h4 class="font-label-md text-label-md text-on-surface">System Alerts</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Immediate in-app alerts for critical system updates or downtime.</p>
+</div>
+<!-- Custom Toggle -->
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in flex-shrink-0">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer outline-none opacity-0" id="toggle2" name="toggle2" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle2"></label>
+<div class="toggle-dot absolute block w-5 h-5 rounded-full bg-white shadow inset-y-0 left-0 pointer-events-none mt-[2px] ml-[2px]"></div>
+</div>
+</div>
+<!-- Toggle Item 3 -->
+<div class="flex items-center justify-between opacity-75">
+<div class="pr-4">
+<h4 class="font-label-md text-label-md text-on-surface">Marketing Updates</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">News about new BrightPath features and educational webinars.</p>
+</div>
+<!-- Custom Toggle (Off state) -->
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in flex-shrink-0">
+<input class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer outline-none opacity-0" id="toggle3" name="toggle3" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle3"></label>
+<div class="toggle-dot absolute block w-5 h-5 rounded-full bg-white shadow inset-y-0 left-0 pointer-events-none mt-[2px] ml-[2px]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Danger Zone Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.1)] p-6 border-t-4 border-danger/80">
+<h3 class="font-headline-sm text-headline-sm text-on-background mb-2 flex items-center text-danger">
+<span class="material-symbols-outlined mr-2" style="font-variation-settings: 'FILL' 0;">warning</span>
+                        Account Actions
+                    </h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">
+                        Logging out will end your current administrative session across all tabs.
+                    </p>
+<button class="w-full bg-danger hover:bg-error-container hover:text-on-error-container text-on-error font-label-md text-label-md px-6 py-3 rounded transition-colors shadow-sm flex items-center justify-center space-x-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">logout</span>
+<span>Secure Logout</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>
