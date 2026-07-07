@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CEFTS - Reports</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link rel="stylesheet" href="../css/styles.css?v=1.1" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/charts.js"></script>
+  </head>
+  <body>
+    <div id="app-shell"></div>
+
+    <script src="../js/db.js"></script>
+    <script src="../js/seed.js"></script>
+    <script src="../js/validators.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+      (async () => {
+        await initSeed();
+        const user = renderShell("reports.html");
+        if (!user) return;
+        if (user.role !== "admin") {
+          window.location.href = "dashboard.html";
+          return;
+        }
+        renderReportsPage();
+      })();
+
+      function renderReportsPage() {
+        const main = document.getElementById("main-content");
+        main.innerHTML = `
+        <h2 class="page-title">Reports</h2>
+        <div class="tabs">
+          <button class="tab-btn tab-active" data-tab="pendingfees">Pending Fees / Defaulters</button>
+          <button class="tab-btn" data-tab="enrollmentreport">Course-wise Enrollment</button>
+        </div>
+        <div id="reportTabContent"></div>
+      `;
+        document.querySelectorAll(".tab-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            document
+              .querySelectorAll(".tab-btn")
+              .forEach((b) => b.classList.remove("tab-active"));
+            btn.classList.add("tab-active");
+            renderReportTab(btn.dataset.tab);
+          });
+        });
+        renderReportTab("pendingfees");
+      }
+
+      function renderReportTab(tab) {
+        const wrap = document.getElementById("reportTabContent");
+        if (tab === "pendingfees") {
+          const enrollments = DB.get("enrollments").filter(
+            (e) => e.status !== "Cancelled",
+          );
+          const defaulters = enrollments.filter(
+            (e) => e.totalFee - (e.paidAmount || 0) > 0,
+          );
+          if (!defaulters.length) {
+            wrap.innerHTML = `<p class="empty-state">No pending fees.</p>`;
+            return;
+          }
+          const rows = defaulters
+            .map((e) => {
+              const student = DB.getById("students", e.studentId);
+              const course = DB.getById("courses", e.courseId);
+              const pending = e.totalFee - (e.paidAmount || 0);
+              const daysSince = Math.floor(
+                (Date.now() - new Date(e.enrollDate)) / (1000 * 60 * 60 * 24),
+              );
+              const status = daysSince > 30 ? "Overdue" : "Due Soon";
+              return `<tr>
+            <td>${student ? student.name : "-"}</td>
+            <td>${course ? course.name : "-"}</td>
+            <td>${formatCurrency(e.totalFee)}</td>
+            <td>${formatCurrency(pending)}</td>
+            <td>${daysSince} days</td>
+            <td>${statusPill(status)}</td>
+            <td><button class="btn btn-secondary btn-sm send-reminder" data-eid="${e.id}" data-sid="${e.studentId}">Send Reminder</button></td>
+          </tr>`;
+            })
+            .join("");
+          wrap.innerHTML = `
+          <div class="chart-grid">
+            <div class="chart-card">
+              <h3>Pending Fees by Aging Bucket</h3>
+              <div class="chart-container">
+                <canvas id="pendingFeesAgingChart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="section">
+            <h3>Defaulters List</h3>
+            <table class="data-table">
+              <thead><tr><th>Student</th><th>Course</th><th>Total Fee</th><th>Pending</th><th>Days Since Enroll</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        `;
+          initPendingFeesAgingChart();
+          wrap.querySelectorAll(".send-reminder").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const studentUser = DB.get("users").find(
+                (u) => u.studentId === btn.dataset.sid,
+              );
+              if (studentUser)
+                pushNotification(
+                  studentUser.id,
+                  "Reminder: You have a pending fee balance. Please clear it soon.",
+                  "alert",
+                );
+              alert("Reminder sent to student.");
+            });
+          });
+        } else {
+          const courses = DB.get("courses");
+          const rows = courses
+            .map((c) => {
+              const enrolledCount = DB.get("enrollments").filter(
+                (e) => e.courseId === c.id && e.status !== "Cancelled",
+              ).length;
+              const waitlistCount = DB.get("waitlist").filter(
+                (w) => w.courseId === c.id,
+              ).length;
+              return `<tr><td>${c.name}</td><td>${enrolledCount}</td><td>${c.capacity}</td><td>${waitlistCount}</td></tr>`;
+            })
+            .join("");
+          wrap.innerHTML = `
+          <div class="chart-grid">
+            <div class="chart-card">
+              <h3>Course-wise Enrollment Report (Enrollments vs Capacity vs Waitlist)</h3>
+              <div class="chart-container">
+                <canvas id="courseEnrollmentReportChart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="section">
+            <h3>Course Details</h3>
+            <table class="data-table">
+              <thead><tr><th>Course</th><th>Enrollments</th><th>Capacity</th><th>Waitlist</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        `;
+          initCourseEnrollmentReportChart();
+        }
+      }
+    </script>
+  </body>
+</html>

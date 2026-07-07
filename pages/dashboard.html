@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CEFTS - Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link rel="stylesheet" href="../css/styles.css?v=1.1" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/charts.js"></script>
+  </head>
+  <body>
+    <div id="app-shell"></div>
+
+    <script src="../js/db.js"></script>
+    <script src="../js/seed.js"></script>
+    <script src="../js/validators.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+      (async () => {
+        await initSeed();
+        const user = renderShell("dashboard.html");
+        if (!user) return;
+        renderDashboard(user);
+      })();
+
+      function renderDashboard(user) {
+        const main = document.getElementById("main-content");
+
+        if (user.role === "admin") {
+          const students = DB.get("students");
+          const courses = DB.get("courses");
+          const enrollments = DB.get("enrollments");
+          const payments = DB.get("payments");
+          const totalCollected = payments.reduce(
+            (s, p) => s + Number(p.amount),
+            0,
+          );
+          const totalFeeExpected = enrollments.reduce(
+            (s, e) => s + Number(e.totalFee),
+            0,
+          );
+          const pending = totalFeeExpected - totalCollected;
+
+          main.innerHTML = `
+          <h2 class="page-title">Admin Dashboard</h2>
+          <div class="stat-grid">
+            ${statCard("group", students.length, "Total Students")}
+            ${statCard("menu_book", courses.length, "Total Courses")}
+            ${statCard("assignment_turned_in", enrollments.length, "Total Enrollments")}
+            ${statCard("payments", formatCurrency(pending), "Pending Fees")}
+          </div>
+          <div class="chart-grid">
+            <div class="chart-card">
+              <h3>Enrollment Trend (Last 8 Weeks)</h3>
+              <div class="chart-container">
+                <canvas id="enrollmentTrendChart"></canvas>
+              </div>
+            </div>
+            <div class="chart-card">
+              <h3>Fee Collection Overview</h3>
+              <div class="chart-container">
+                <canvas id="feeCollectionChart"></canvas>
+              </div>
+            </div>
+            <div class="chart-card">
+              <h3>Top Courses by Enrollment</h3>
+              <div class="chart-container">
+                <canvas id="topCoursesChart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="section">
+            <h3>Recent Enrollments</h3>
+            ${enrollmentTable(enrollments.slice(-5).reverse())}
+          </div>
+        `;
+          initAdminCharts();
+        } else if (user.role === "faculty") {
+          const courses = DB.get("courses").filter(
+            (c) => c.facultyId === user.id,
+          );
+          const courseIds = courses.map((c) => c.id);
+          const enrollments = DB.get("enrollments").filter((e) =>
+            courseIds.includes(e.courseId),
+          );
+          const students = new Set(enrollments.map((e) => e.studentId));
+
+          main.innerHTML = `
+          <h2 class="page-title">Faculty Dashboard</h2>
+          <div class="stat-grid">
+            ${statCard("menu_book", courses.length, "My Courses")}
+            ${statCard("group", students.size, "Total Students")}
+            ${statCard("assignment_turned_in", enrollments.length, "Total Enrollments")}
+          </div>
+          <div class="chart-grid">
+            <div class="chart-card">
+              <h3>My Courses — Seats Filled vs Available</h3>
+              <div class="chart-container">
+                <canvas id="facultySeatsChart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="section">
+            <h3>Recent Enrollments</h3>
+            ${enrollmentTable(enrollments.slice(-5).reverse())}
+          </div>
+        `;
+          initFacultyCharts(user);
+        } else {
+          const student = DB.getById("students", user.studentId);
+          const enrollments = DB.get("enrollments").filter(
+            (e) => e.studentId === user.studentId,
+          );
+          const totalFee = enrollments.reduce(
+            (s, e) => s + Number(e.totalFee),
+            0,
+          );
+          const paid = enrollments.reduce(
+            (s, e) => s + Number(e.paidAmount || 0),
+            0,
+          );
+          const dueEnrollments = enrollments.filter(
+            (e) => e.totalFee - (e.paidAmount || 0) > 0,
+          );
+
+          main.innerHTML = `
+          <h2 class="page-title">Welcome, ${student ? student.name : user.name}</h2>
+          <div class="stat-grid">
+            ${statCard("menu_book", enrollments.length, "Enrolled Courses")}
+            ${statCard("payments", formatCurrency(totalFee - paid), "Total Fee Due")}
+            ${statCard("event", dueEnrollments.length, "Pending Dues")}
+          </div>
+          <div class="chart-grid">
+            <div class="chart-card">
+              <h3>My Fee Payment Progress</h3>
+              <div class="chart-container">
+                <canvas id="studentPaymentChart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="section">
+            <h3>My Courses</h3>
+            ${myCoursesList(enrollments)}
+          </div>
+        `;
+          initStudentCharts(user);
+        }
+      }
+
+      function statCard(icon, value, label) {
+        return `
+        <div class="stat-card">
+          <span class="material-icons stat-icon">${icon}</span>
+          <div class="stat-value">${value}</div>
+          <div class="stat-label">${label}</div>
+        </div>
+      `;
+      }
+
+      function enrollmentTable(enrollments) {
+        if (!enrollments.length)
+          return `<p class="empty-state">No enrollments yet.</p>`;
+        const rows = enrollments
+          .map((e) => {
+            const student = DB.getById("students", e.studentId);
+            const course = DB.getById("courses", e.courseId);
+            return `<tr>
+          <td>${student ? student.name : "-"}</td>
+          <td>${course ? course.name : "-"}</td>
+          <td>${formatDate(e.enrollDate)}</td>
+          <td>${statusPill(e.status)}</td>
+        </tr>`;
+          })
+          .join("");
+        return `
+        <table class="data-table">
+          <thead><tr><th>Student</th><th>Course</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+      }
+
+      function myCoursesList(enrollments) {
+        if (!enrollments.length)
+          return `<p class="empty-state">You are not enrolled in any course. <a href="courses.html">Browse catalog</a></p>`;
+        const rows = enrollments
+          .map((e) => {
+            const course = DB.getById("courses", e.courseId);
+            return `<tr>
+          <td>${course ? course.name : "-"}</td>
+          <td>${statusPill(e.status)}</td>
+          <td>${formatCurrency(e.totalFee)}</td>
+          <td>${formatCurrency(e.paidAmount || 0)}</td>
+        </tr>`;
+          })
+          .join("");
+        return `
+        <table class="data-table">
+          <thead><tr><th>Course</th><th>Status</th><th>Total Fee</th><th>Paid</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+      }
+    </script>
+  </body>
+</html>

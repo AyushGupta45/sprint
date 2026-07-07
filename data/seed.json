@@ -1,0 +1,862 @@
+{
+  "users": [
+    {
+      "id": "u1",
+      "name": "Admin User",
+      "email": "admin@edu.com",
+      "phone": "9876543210",
+      "password": "Admin@123",
+      "role": "admin"
+    },
+    {
+      "id": "u2",
+      "name": "Faculty John",
+      "email": "faculty@edu.com",
+      "phone": "9876543211",
+      "password": "Faculty@123",
+      "role": "faculty"
+    },
+    {
+      "id": "u7",
+      "name": "Faculty Sarah",
+      "email": "sarah@edu.com",
+      "phone": "9876543216",
+      "password": "Sarah@123",
+      "role": "faculty"
+    },
+    {
+      "id": "u9",
+      "name": "Faculty Anil Mehta",
+      "email": "anil.mehta@edu.com",
+      "phone": "9876543220",
+      "password": "Anil@123",
+      "role": "faculty"
+    },
+    {
+      "id": "u3",
+      "name": "Ravi Kumar",
+      "email": "student@edu.com",
+      "phone": "9876543212",
+      "password": "Student@123",
+      "role": "student",
+      "studentId": "s1"
+    },
+    {
+      "id": "u4",
+      "name": "Priya Sharma",
+      "email": "priya.sharma@edu.com",
+      "phone": "9876543213",
+      "password": "Priya@123",
+      "role": "student",
+      "studentId": "s2"
+    },
+    {
+      "id": "u5",
+      "name": "Arjun Singh",
+      "email": "arjun.singh@edu.com",
+      "phone": "9876543214",
+      "password": "Arjun@123",
+      "role": "student",
+      "studentId": "s3"
+    },
+    {
+      "id": "u6",
+      "name": "Neha Patel",
+      "email": "neha.patel@edu.com",
+      "phone": "9876543215",
+      "password": "Neha@123",
+      "role": "student",
+      "studentId": "s4"
+    },
+    {
+      "id": "u8",
+      "name": "Vikram Reddy",
+      "email": "vikram.reddy@edu.com",
+      "phone": "9876543217",
+      "password": "Vikram@123",
+      "role": "student",
+      "studentId": "s5"
+    },
+    {
+      "id": "u10",
+      "name": "Sneha Iyer",
+      "email": "sneha.iyer@edu.com",
+      "phone": "9876543218",
+      "password": "Sneha@123",
+      "role": "student",
+      "studentId": "s6"
+    },
+    {
+      "id": "u11",
+      "name": "Karan Malhotra",
+      "email": "karan.malhotra@edu.com",
+      "phone": "9876543219",
+      "password": "Karan@123",
+      "role": "student",
+      "studentId": "s7"
+    },
+    {
+      "id": "u12",
+      "name": "Ananya Gupta",
+      "email": "ananya.gupta@edu.com",
+      "phone": "9876543221",
+      "password": "Ananya@123",
+      "role": "student",
+      "studentId": "s8"
+    },
+    {
+      "id": "u13",
+      "name": "Rohan Desai",
+      "email": "rohan.desai@edu.com",
+      "phone": "9876543222",
+      "password": "Rohan@123",
+      "role": "student",
+      "studentId": "s9"
+    },
+    {
+      "id": "u14",
+      "name": "Ishita Bose",
+      "email": "ishita.bose@edu.com",
+      "phone": "9876543223",
+      "password": "Ishita@123",
+      "role": "student",
+      "studentId": "s10"
+    }
+  ],
+  "students": [
+    {
+      "id": "s1",
+      "userId": "u3",
+      "name": "Ravi Kumar",
+      "email": "student@edu.com",
+      "phone": "9876543212",
+      "dob": "2002-05-10",
+      "gender": "Male",
+      "address": "Mumbai, Maharashtra",
+      "notes": "",
+      "status": "Active"
+    },
+    {
+      "id": "s2",
+      "userId": "u4",
+      "name": "Priya Sharma",
+      "email": "priya.sharma@edu.com",
+      "phone": "9876543213",
+      "dob": "2001-08-22",
+      "gender": "Female",
+      "address": "Bangalore, Karnataka",
+      "notes": "Merit student",
+      "status": "Active"
+    },
+    {
+      "id": "s3",
+      "userId": "u5",
+      "name": "Arjun Singh",
+      "email": "arjun.singh@edu.com",
+      "phone": "9876543214",
+      "dob": "2003-03-15",
+      "gender": "Male",
+      "address": "Delhi",
+      "notes": "",
+      "status": "Active"
+    },
+    {
+      "id": "s4",
+      "userId": "u6",
+      "name": "Neha Patel",
+      "email": "neha.patel@edu.com",
+      "phone": "9876543215",
+      "dob": "2002-11-30",
+      "gender": "Female",
+      "address": "Ahmedabad, Gujarat",
+      "notes": "Interested in AI",
+      "status": "Active"
+    },
+    {
+      "id": "s5",
+      "userId": "u8",
+      "name": "Vikram Reddy",
+      "email": "vikram.reddy@edu.com",
+      "phone": "9876543217",
+      "dob": "2001-12-05",
+      "gender": "Male",
+      "address": "Hyderabad, Telangana",
+      "notes": "Part-time student",
+      "status": "Active"
+    },
+    {
+      "id": "s6",
+      "userId": "u10",
+      "name": "Sneha Iyer",
+      "email": "sneha.iyer@edu.com",
+      "phone": "9876543218",
+      "dob": "2002-02-14",
+      "gender": "Female",
+      "address": "Chennai, Tamil Nadu",
+      "notes": "",
+      "status": "Active"
+    },
+    {
+      "id": "s7",
+      "userId": "u11",
+      "name": "Karan Malhotra",
+      "email": "karan.malhotra@edu.com",
+      "phone": "9876543219",
+      "dob": "2003-07-19",
+      "gender": "Male",
+      "address": "Chandigarh",
+      "notes": "Scholarship student",
+      "status": "Active"
+    },
+    {
+      "id": "s8",
+      "userId": "u12",
+      "name": "Ananya Gupta",
+      "email": "ananya.gupta@edu.com",
+      "phone": "9876543221",
+      "dob": "2002-09-25",
+      "gender": "Female",
+      "address": "Pune, Maharashtra",
+      "notes": "",
+      "status": "Active"
+    },
+    {
+      "id": "s9",
+      "userId": "u13",
+      "name": "Rohan Desai",
+      "email": "rohan.desai@edu.com",
+      "phone": "9876543222",
+      "dob": "2001-04-03",
+      "gender": "Male",
+      "address": "Surat, Gujarat",
+      "notes": "",
+      "status": "Active"
+    },
+    {
+      "id": "s10",
+      "userId": "u14",
+      "name": "Ishita Bose",
+      "email": "ishita.bose@edu.com",
+      "phone": "9876543223",
+      "dob": "2003-01-11",
+      "gender": "Female",
+      "address": "Kolkata, West Bengal",
+      "notes": "Transfer student",
+      "status": "Active"
+    }
+  ],
+  "courses": [
+    {
+      "id": "c1",
+      "name": "Data Structures",
+      "batch": "Batch A",
+      "duration": "12 weeks",
+      "schedule": "Mon-Wed 10:00-11:00",
+      "capacity": 4,
+      "fee": 5000,
+      "feePlanType": "One-Time",
+      "installments": [],
+      "prerequisite": null,
+      "facultyId": "u2",
+      "status": "Active"
+    },
+    {
+      "id": "c2",
+      "name": "Algorithms",
+      "batch": "Batch A",
+      "duration": "10 weeks",
+      "schedule": "Mon-Wed 11:00-12:00",
+      "capacity": 3,
+      "fee": 6000,
+      "feePlanType": "Installment",
+      "installments": [
+        {
+          "no": 1,
+          "amount": 3000,
+          "dueDate": "2026-08-01"
+        },
+        {
+          "no": 2,
+          "amount": 3000,
+          "dueDate": "2026-09-01"
+        }
+      ],
+      "prerequisite": "c1",
+      "facultyId": "u2",
+      "status": "Active"
+    },
+    {
+      "id": "c3",
+      "name": "Web Development",
+      "batch": "Batch B",
+      "duration": "8 weeks",
+      "schedule": "Tue-Thu 14:00-15:00",
+      "capacity": 3,
+      "fee": 4500,
+      "feePlanType": "One-Time",
+      "installments": [],
+      "prerequisite": null,
+      "facultyId": "u7",
+      "status": "Active"
+    },
+    {
+      "id": "c4",
+      "name": "Database Management Systems",
+      "batch": "Batch B",
+      "duration": "10 weeks",
+      "schedule": "Tue-Thu 15:00-16:00",
+      "capacity": 3,
+      "fee": 5500,
+      "feePlanType": "One-Time",
+      "installments": [],
+      "prerequisite": null,
+      "facultyId": "u7",
+      "status": "Active"
+    },
+    {
+      "id": "c5",
+      "name": "Machine Learning Fundamentals",
+      "batch": "Batch C",
+      "duration": "14 weeks",
+      "schedule": "Fri 09:00-11:00",
+      "capacity": 2,
+      "fee": 8000,
+      "feePlanType": "Installment",
+      "installments": [
+        {
+          "no": 1,
+          "amount": 4000,
+          "dueDate": "2026-08-05"
+        },
+        {
+          "no": 2,
+          "amount": 4000,
+          "dueDate": "2026-09-05"
+        }
+      ],
+      "prerequisite": "c2",
+      "facultyId": "u9",
+      "status": "Active"
+    },
+    {
+      "id": "c6",
+      "name": "Operating Systems",
+      "batch": "Batch A",
+      "duration": "10 weeks",
+      "schedule": "Wed-Fri 12:00-13:00",
+      "capacity": 3,
+      "fee": 5200,
+      "feePlanType": "One-Time",
+      "installments": [],
+      "prerequisite": "c1",
+      "facultyId": "u9",
+      "status": "Active"
+    },
+    {
+      "id": "c7",
+      "name": "Computer Networks",
+      "batch": "Batch C",
+      "duration": "9 weeks",
+      "schedule": "Mon-Fri 16:00-17:00",
+      "capacity": 3,
+      "fee": 4800,
+      "feePlanType": "One-Time",
+      "installments": [],
+      "prerequisite": null,
+      "facultyId": "u9",
+      "status": "Active"
+    },
+    {
+      "id": "c8",
+      "name": "Mobile App Development",
+      "batch": "Batch D",
+      "duration": "8 weeks",
+      "schedule": "Sat 10:00-13:00",
+      "capacity": 2,
+      "fee": 6500,
+      "feePlanType": "Installment",
+      "installments": [
+        {
+          "no": 1,
+          "amount": 3250,
+          "dueDate": "2026-08-10"
+        },
+        {
+          "no": 2,
+          "amount": 3250,
+          "dueDate": "2026-09-10"
+        }
+      ],
+      "prerequisite": "c3",
+      "facultyId": "u7",
+      "status": "Active"
+    }
+  ],
+  "enrollments": [
+    {
+      "id": "e1",
+      "studentId": "s1",
+      "courseId": "c1",
+      "enrollDate": "2026-07-01T10:00:00",
+      "status": "Active",
+      "totalFee": 5000,
+      "paidAmount": 5000
+    },
+    {
+      "id": "e2",
+      "studentId": "s2",
+      "courseId": "c1",
+      "enrollDate": "2026-07-02T09:30:00",
+      "status": "Active",
+      "totalFee": 5000,
+      "paidAmount": 5000
+    },
+    {
+      "id": "e8",
+      "studentId": "s3",
+      "courseId": "c3",
+      "enrollDate": "2026-07-03T08:45:00",
+      "status": "Active",
+      "totalFee": 4500,
+      "paidAmount": 4500
+    },
+    {
+      "id": "e11",
+      "studentId": "s2",
+      "courseId": "c4",
+      "enrollDate": "2026-07-05T09:00:00",
+      "status": "Active",
+      "totalFee": 5500,
+      "paidAmount": 5500
+    },
+    {
+      "id": "e16",
+      "studentId": "s5",
+      "courseId": "c6",
+      "enrollDate": "2026-07-06T12:00:00",
+      "status": "Active",
+      "totalFee": 5200,
+      "paidAmount": 5200
+    },
+    {
+      "id": "e18",
+      "studentId": "s9",
+      "courseId": "c7",
+      "enrollDate": "2026-07-05T16:30:00",
+      "status": "Active",
+      "totalFee": 4800,
+      "paidAmount": 4800
+    },
+    {
+      "id": "e3",
+      "studentId": "s3",
+      "courseId": "c1",
+      "enrollDate": "2026-07-02T11:00:00",
+      "status": "Active",
+      "totalFee": 5000,
+      "paidAmount": 2000
+    },
+    {
+      "id": "e5",
+      "studentId": "s1",
+      "courseId": "c2",
+      "enrollDate": "2026-07-05T10:15:00",
+      "status": "Active",
+      "totalFee": 6000,
+      "paidAmount": 3000
+    },
+    {
+      "id": "e6",
+      "studentId": "s4",
+      "courseId": "c2",
+      "enrollDate": "2026-07-04T14:00:00",
+      "status": "Active",
+      "totalFee": 6000,
+      "paidAmount": 3000
+    },
+    {
+      "id": "e9",
+      "studentId": "s8",
+      "courseId": "c3",
+      "enrollDate": "2026-07-04T09:20:00",
+      "status": "Active",
+      "totalFee": 4500,
+      "paidAmount": 1500
+    },
+    {
+      "id": "e12",
+      "studentId": "s5",
+      "courseId": "c4",
+      "enrollDate": "2026-07-06T10:00:00",
+      "status": "Active",
+      "totalFee": 5500,
+      "paidAmount": 2000
+    },
+    {
+      "id": "e14",
+      "studentId": "s4",
+      "courseId": "c5",
+      "enrollDate": "2026-07-06T15:00:00",
+      "status": "Active",
+      "totalFee": 8000,
+      "paidAmount": 4000
+    },
+    {
+      "id": "e19",
+      "studentId": "s10",
+      "courseId": "c7",
+      "enrollDate": "2026-07-06T16:00:00",
+      "status": "Active",
+      "totalFee": 4800,
+      "paidAmount": 1800
+    },
+    {
+      "id": "e20",
+      "studentId": "s8",
+      "courseId": "c8",
+      "enrollDate": "2026-07-04T10:00:00",
+      "status": "Active",
+      "totalFee": 6500,
+      "paidAmount": 3250
+    },
+    {
+      "id": "e4",
+      "studentId": "s6",
+      "courseId": "c1",
+      "enrollDate": "2026-07-03T09:00:00",
+      "status": "Active",
+      "totalFee": 5000,
+      "paidAmount": 0
+    },
+    {
+      "id": "e7",
+      "studentId": "s7",
+      "courseId": "c2",
+      "enrollDate": "2026-07-06T10:00:00",
+      "status": "Active",
+      "totalFee": 6000,
+      "paidAmount": 0
+    },
+    {
+      "id": "e13",
+      "studentId": "s6",
+      "courseId": "c4",
+      "enrollDate": "2026-07-06T11:30:00",
+      "status": "Active",
+      "totalFee": 5500,
+      "paidAmount": 0
+    },
+    {
+      "id": "e15",
+      "studentId": "s10",
+      "courseId": "c5",
+      "enrollDate": "2026-07-07T10:00:00",
+      "status": "Active",
+      "totalFee": 8000,
+      "paidAmount": 0
+    },
+    {
+      "id": "e17",
+      "studentId": "s7",
+      "courseId": "c6",
+      "enrollDate": "2026-07-07T09:00:00",
+      "status": "Active",
+      "totalFee": 5200,
+      "paidAmount": 0
+    },
+    {
+      "id": "e10",
+      "studentId": "s9",
+      "courseId": "c3",
+      "enrollDate": "2026-05-20T13:00:00",
+      "status": "Active",
+      "totalFee": 4500,
+      "paidAmount": 0
+    },
+    {
+      "id": "e22",
+      "studentId": "s10",
+      "courseId": "c8",
+      "enrollDate": "2026-05-25T09:00:00",
+      "status": "Active",
+      "totalFee": 6500,
+      "paidAmount": 1000
+    },
+    {
+      "id": "e21",
+      "studentId": "s3",
+      "courseId": "c8",
+      "enrollDate": "2026-06-15T10:00:00",
+      "status": "Cancelled",
+      "totalFee": 6500,
+      "paidAmount": 0
+    }
+  ],
+  "waitlist": [
+    {
+      "id": "w1",
+      "studentId": "s10",
+      "courseId": "c1",
+      "position": 1,
+      "addedDate": "2026-07-07T09:00:00"
+    },
+    {
+      "id": "w2",
+      "studentId": "s6",
+      "courseId": "c5",
+      "position": 1,
+      "addedDate": "2026-07-07T11:00:00"
+    },
+    {
+      "id": "w3",
+      "studentId": "s9",
+      "courseId": "c8",
+      "position": 1,
+      "addedDate": "2026-07-06T17:00:00"
+    }
+  ],
+  "payments": [
+    {
+      "id": "p1",
+      "enrollmentId": "e1",
+      "amount": 5000,
+      "date": "2026-07-01",
+      "mode": "Card",
+      "reference": "TXN0001"
+    },
+    {
+      "id": "p2",
+      "enrollmentId": "e2",
+      "amount": 5000,
+      "date": "2026-07-02",
+      "mode": "UPI",
+      "reference": "TXN0002"
+    },
+    {
+      "id": "p3",
+      "enrollmentId": "e8",
+      "amount": 4500,
+      "date": "2026-07-03",
+      "mode": "Online",
+      "reference": "TXN0003"
+    },
+    {
+      "id": "p4",
+      "enrollmentId": "e11",
+      "amount": 5500,
+      "date": "2026-07-05",
+      "mode": "Card",
+      "reference": "TXN0004"
+    },
+    {
+      "id": "p5",
+      "enrollmentId": "e16",
+      "amount": 5200,
+      "date": "2026-07-06",
+      "mode": "Online",
+      "reference": "TXN0005"
+    },
+    {
+      "id": "p6",
+      "enrollmentId": "e18",
+      "amount": 4800,
+      "date": "2026-07-05",
+      "mode": "Card",
+      "reference": "TXN0006"
+    },
+    {
+      "id": "p7",
+      "enrollmentId": "e3",
+      "amount": 2000,
+      "date": "2026-07-02",
+      "mode": "Cash",
+      "reference": "TXN0007"
+    },
+    {
+      "id": "p8",
+      "enrollmentId": "e5",
+      "amount": 3000,
+      "date": "2026-07-05",
+      "mode": "UPI",
+      "reference": "TXN0008"
+    },
+    {
+      "id": "p9",
+      "enrollmentId": "e6",
+      "amount": 3000,
+      "date": "2026-07-04",
+      "mode": "Card",
+      "reference": "TXN0009"
+    },
+    {
+      "id": "p10",
+      "enrollmentId": "e9",
+      "amount": 1000,
+      "date": "2026-07-04",
+      "mode": "UPI",
+      "reference": "TXN0010"
+    },
+    {
+      "id": "p11",
+      "enrollmentId": "e9",
+      "amount": 500,
+      "date": "2026-07-06",
+      "mode": "Cash",
+      "reference": "TXN0011"
+    },
+    {
+      "id": "p12",
+      "enrollmentId": "e12",
+      "amount": 2000,
+      "date": "2026-07-06",
+      "mode": "Cash",
+      "reference": "TXN0012"
+    },
+    {
+      "id": "p13",
+      "enrollmentId": "e14",
+      "amount": 4000,
+      "date": "2026-07-06",
+      "mode": "UPI",
+      "reference": "TXN0013"
+    },
+    {
+      "id": "p14",
+      "enrollmentId": "e19",
+      "amount": 1800,
+      "date": "2026-07-06",
+      "mode": "UPI",
+      "reference": "TXN0014"
+    },
+    {
+      "id": "p15",
+      "enrollmentId": "e20",
+      "amount": 3250,
+      "date": "2026-07-04",
+      "mode": "Card",
+      "reference": "TXN0015"
+    },
+    {
+      "id": "p16",
+      "enrollmentId": "e22",
+      "amount": 1000,
+      "date": "2026-05-26",
+      "mode": "Cash",
+      "reference": "TXN0016"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "n1",
+      "userId": "u3",
+      "message": "Welcome to CEFTS! Browse the course catalog to enroll.",
+      "type": "info",
+      "read": true,
+      "timestamp": "2026-07-01T10:00:00"
+    },
+    {
+      "id": "n2",
+      "userId": "u3",
+      "message": "Payment of \u20b95000 received for Data Structures. Receipt generated.",
+      "type": "info",
+      "read": true,
+      "timestamp": "2026-07-01T10:30:00"
+    },
+    {
+      "id": "n3",
+      "userId": "u4",
+      "message": "You have been enrolled in Data Structures. Invoice generated for \u20b95000.",
+      "type": "info",
+      "read": true,
+      "timestamp": "2026-07-02T09:15:00"
+    },
+    {
+      "id": "n4",
+      "userId": "u4",
+      "message": "Payment of \u20b95000 received for Data Structures. Receipt generated.",
+      "type": "info",
+      "read": true,
+      "timestamp": "2026-07-02T09:45:00"
+    },
+    {
+      "id": "n5",
+      "userId": "u5",
+      "message": "You have been enrolled in Data Structures. Invoice generated for \u20b95000.",
+      "type": "info",
+      "read": false,
+      "timestamp": "2026-07-02T11:00:00"
+    },
+    {
+      "id": "n6",
+      "userId": "u14",
+      "message": "Course full. You've been added to waitlist for Data Structures (position 1).",
+      "type": "info",
+      "read": false,
+      "timestamp": "2026-07-07T09:00:00"
+    },
+    {
+      "id": "n7",
+      "userId": "u10",
+      "message": "Course full. You've been added to waitlist for Machine Learning Fundamentals (position 1).",
+      "type": "info",
+      "read": false,
+      "timestamp": "2026-07-07T11:00:00"
+    },
+    {
+      "id": "n8",
+      "userId": "u13",
+      "message": "Course full. You've been added to waitlist for Mobile App Development (position 1).",
+      "type": "info",
+      "read": false,
+      "timestamp": "2026-07-06T17:00:00"
+    },
+    {
+      "id": "n9",
+      "userId": "u5",
+      "message": "Reminder: You have a pending fee balance. Please clear it soon.",
+      "type": "alert",
+      "read": false,
+      "timestamp": "2026-07-07T12:00:00"
+    },
+    {
+      "id": "n10",
+      "userId": "u6",
+      "message": "Reminder: You have a pending fee balance. Please clear it soon.",
+      "type": "alert",
+      "read": false,
+      "timestamp": "2026-07-07T12:05:00"
+    },
+    {
+      "id": "n11",
+      "userId": "u9",
+      "message": "Reminder: You have a pending fee balance. Please clear it soon.",
+      "type": "alert",
+      "read": false,
+      "timestamp": "2026-07-07T12:10:00"
+    },
+    {
+      "id": "n12",
+      "userId": "u8",
+      "message": "Payment of \u20b91500 received for Web Development. Receipt generated.",
+      "type": "info",
+      "read": false,
+      "timestamp": "2026-07-04T09:20:00"
+    },
+    {
+      "id": "n13",
+      "userId": "u13",
+      "message": "Reminder: Your fee for Web Development is overdue. Please clear it immediately.",
+      "type": "alert",
+      "read": false,
+      "timestamp": "2026-07-07T13:00:00"
+    },
+    {
+      "id": "n14",
+      "userId": "u14",
+      "message": "Reminder: Your fee for Mobile App Development is overdue. Please clear it immediately.",
+      "type": "alert",
+      "read": false,
+      "timestamp": "2026-07-07T13:05:00"
+    }
+  ]
+}

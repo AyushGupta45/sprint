@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CEFTS - Login</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link rel="stylesheet" href="css/styles.css?v=1.1" />
+  </head>
+  <body>
+    <div class="auth-page">
+      <div class="auth-card">
+        <div class="auth-brand">
+          <span class="material-icons brand-icon">school</span>
+          <h1>EduTrack</h1>
+          <p class="auth-subtitle">
+            Course Enrollment &amp; Fee Tracking System
+          </p>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <form id="loginForm" class="auth-form">
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input
+              type="text"
+              id="loginEmail"
+              name="email"
+              placeholder="you@edu.com"
+              autocomplete="username"
+            />
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="password-input-wrapper">
+              <input
+                type="password"
+                id="loginPassword"
+                name="password"
+                placeholder="Enter password"
+                autocomplete="current-password"
+              />
+              <span class="password-toggle" data-target="loginPassword">
+                <span class="material-icons">visibility</span>
+              </span>
+            </div>
+          </div>
+          <div id="loginError" class="form-error hidden"></div>
+          <button type="submit" class="btn btn-primary btn-block">
+            <span class="material-icons">login</span> Login
+          </button>
+          <p class="auth-switch">
+            New student? <a href="#" id="showSignup">Register here</a>
+          </p>
+          <div class="demo-hint">
+            <p><strong>Demo Logins</strong></p>
+            <p>Admin: admin@edu.com / Admin@123</p>
+            <p>Faculty: faculty@edu.com / Faculty@123</p>
+            <p>Student: student@edu.com / Student@123</p>
+          </div>
+        </form>
+
+        <!-- SIGNUP FORM (Student Registration - US-001) -->
+        <form id="signupForm" class="auth-form hidden">
+          <div class="form-group">
+            <label for="suName">Full Name</label>
+            <input
+              type="text"
+              id="suName"
+              name="name"
+              placeholder="Full name"
+            />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="suEmail">Email</label>
+              <input
+                type="text"
+                id="suEmail"
+                name="email"
+                placeholder="you@edu.com"
+              />
+            </div>
+            <div class="form-group">
+              <label for="suPhone">Phone</label>
+              <input
+                type="text"
+                id="suPhone"
+                name="phone"
+                placeholder="10-digit mobile"
+                maxlength="10"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="suDob">Date of Birth</label>
+              <input type="date" id="suDob" name="dob" />
+            </div>
+            <div class="form-group">
+              <label for="suGender">Gender</label>
+              <select id="suGender" name="gender">
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="suAddress">Address</label>
+            <input
+              type="text"
+              id="suAddress"
+              name="address"
+              placeholder="Address"
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="suPassword">Password</label>
+              <div class="password-input-wrapper">
+                <input
+                  type="password"
+                  id="suPassword"
+                  name="password"
+                  placeholder="Create password"
+                />
+                <span class="password-toggle" data-target="suPassword">
+                  <span class="material-icons">visibility</span>
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="suConfirmPassword">Confirm Password</label>
+              <div class="password-input-wrapper">
+                <input
+                  type="password"
+                  id="suConfirmPassword"
+                  name="confirmPassword"
+                  placeholder="Confirm password"
+                />
+                <span class="password-toggle" data-target="suConfirmPassword">
+                  <span class="material-icons">visibility</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div id="pwStrengthBar" class="pw-strength-bar">
+              <span></span>
+            </div>
+            <span id="pwStrengthLabel" class="pw-strength-label"></span>
+          </div>
+          <div id="signupError" class="form-error hidden"></div>
+          <div id="signupSuccess" class="form-success hidden"></div>
+          <button type="submit" class="btn btn-primary btn-block">
+            <span class="material-icons">person_add</span> Register
+          </button>
+          <p class="auth-switch">
+            Already have an account? <a href="#" id="showLogin">Login here</a>
+          </p>
+        </form>
+      </div>
+    </div>
+
+    <script src="js/db.js"></script>
+    <script src="js/seed.js"></script>
+    <script src="js/validators.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+      // Password visibility toggle
+      document.querySelectorAll(".password-toggle").forEach((toggle) => {
+        toggle.addEventListener("click", () => {
+          const targetId = toggle.dataset.target;
+          const input = document.getElementById(targetId);
+          const icon = toggle.querySelector(".material-icons");
+
+          if (input.type === "password") {
+            input.type = "text";
+            icon.textContent = "visibility_off";
+          } else {
+            input.type = "password";
+            icon.textContent = "visibility";
+          }
+        });
+      });
+
+      (async () => {
+        await initSeed();
+
+        const loginForm = document.getElementById("loginForm");
+        const signupForm = document.getElementById("signupForm");
+        document.getElementById("showSignup").addEventListener("click", (e) => {
+          e.preventDefault();
+          loginForm.classList.add("hidden");
+          signupForm.classList.remove("hidden");
+        });
+        document.getElementById("showLogin").addEventListener("click", (e) => {
+          e.preventDefault();
+          signupForm.classList.add("hidden");
+          loginForm.classList.remove("hidden");
+        });
+
+        // Redirect if already logged in
+        const existing = getCurrentUser();
+        if (existing) window.location.href = "pages/dashboard.html";
+
+        loginForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const email = document.getElementById("loginEmail").value.trim();
+          const password = document.getElementById("loginPassword").value;
+          const errorEl = document.getElementById("loginError");
+
+          if (!validateEmail(email)) {
+            errorEl.textContent = "Please enter a valid email address.";
+            errorEl.classList.remove("hidden");
+            return;
+          }
+          if (!validateRequired(password)) {
+            errorEl.textContent = "Password is required.";
+            errorEl.classList.remove("hidden");
+            return;
+          }
+          const user = login(email, password);
+          if (!user) {
+            errorEl.textContent = "Invalid email or password.";
+            errorEl.classList.remove("hidden");
+            return;
+          }
+          errorEl.classList.add("hidden");
+          window.location.href = "pages/dashboard.html";
+        });
+
+        // Live validation for signup
+        const phoneInput = document.getElementById("suPhone");
+        phoneInput.addEventListener("input", () => {
+          phoneInput.value = phoneInput.value.replace(/\D/g, "").slice(0, 10);
+          if (phoneInput.value.length === 10) {
+            setFieldError(
+              phoneInput,
+              validatePhone(phoneInput.value)
+                ? ""
+                : "Must start with 6/7/8/9 and be 10 digits.",
+            );
+          }
+        });
+
+        const emailInput = document.getElementById("suEmail");
+        emailInput.addEventListener("blur", () => {
+          setFieldError(
+            emailInput,
+            validateEmail(emailInput.value)
+              ? ""
+              : "Enter a valid email address.",
+          );
+        });
+
+        const pwInput = document.getElementById("suPassword");
+        const confirmInput = document.getElementById("suConfirmPassword");
+        const pwBarSpan = document.querySelector("#pwStrengthBar span");
+        const pwLabel = document.getElementById("pwStrengthLabel");
+
+        pwInput.addEventListener("input", () => {
+          const { score, label } = checkPasswordStrength(pwInput.value);
+          const pct = (score / 4) * 100;
+          pwBarSpan.style.width = pct + "%";
+          pwBarSpan.className = "";
+          pwBarSpan.classList.add(
+            score <= 1
+              ? "pw-weak"
+              : score === 2
+                ? "pw-medium"
+                : score === 3
+                  ? "pw-strong"
+                  : "pw-very-strong",
+          );
+          pwLabel.textContent = pwInput.value ? label : "";
+        });
+
+        confirmInput.addEventListener("input", () => {
+          setFieldError(
+            confirmInput,
+            passwordsMatch(pwInput.value, confirmInput.value)
+              ? ""
+              : "Passwords do not match.",
+          );
+        });
+
+        signupForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const name = document.getElementById("suName").value.trim();
+          const email = emailInput.value.trim();
+          const phone = phoneInput.value.trim();
+          const dob = document.getElementById("suDob").value;
+          const gender = document.getElementById("suGender").value;
+          const address = document.getElementById("suAddress").value.trim();
+          const password = pwInput.value;
+          const confirmPassword = confirmInput.value;
+          const errorEl = document.getElementById("signupError");
+          const successEl = document.getElementById("signupSuccess");
+          errorEl.classList.add("hidden");
+          successEl.classList.add("hidden");
+
+          if (!validateRequired(name))
+            return showErr(errorEl, "Full name is required.");
+          if (!validateEmail(email))
+            return showErr(errorEl, "Enter a valid email address.");
+          if (!validatePhone(phone))
+            return showErr(
+              errorEl,
+              "Phone must start with 6/7/8/9 and be 10 digits.",
+            );
+          if (!validateRequired(dob))
+            return showErr(errorEl, "Date of birth is required.");
+          const strength = checkPasswordStrength(password);
+          if (!strength.valid)
+            return showErr(
+              errorEl,
+              "Password must be 8+ chars with at least 3 of: uppercase, number, symbol.",
+            );
+          if (!passwordsMatch(password, confirmPassword))
+            return showErr(errorEl, "Passwords do not match.");
+
+          const result = signupStudent({
+            name,
+            email,
+            phone,
+            password,
+            dob,
+            gender,
+            address,
+          });
+          if (!result.success) return showErr(errorEl, result.message);
+
+          successEl.textContent = "Registration successful! You can now login.";
+          successEl.classList.remove("hidden");
+          signupForm.reset();
+          pwBarSpan.style.width = "0%";
+          pwLabel.textContent = "";
+        });
+
+        function showErr(el, msg) {
+          el.textContent = msg;
+          el.classList.remove("hidden");
+        }
+      })();
+    </script>
+  </body>
+</html>

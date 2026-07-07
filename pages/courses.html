@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CEFTS - Courses</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link rel="stylesheet" href="../css/styles.css?v=1.1" />
+  </head>
+  <body>
+    <div id="app-shell"></div>
+
+    <!-- Add/Edit Course Modal (Admin only) -->
+    <div id="courseModal" class="modal-overlay hidden">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3 id="courseModalTitle">Add Course</h3>
+          <button class="icon-btn" id="closeCourseModal">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <form id="courseForm" class="modal-form">
+          <input type="hidden" id="courseId" />
+          <div class="form-group">
+            <label for="crName">Course Name</label>
+            <input type="text" id="crName" />
+          </div>
+          <div class="form-group">
+            <label for="crBatch">Batch</label>
+            <input type="text" id="crBatch" />
+          </div>
+          <div class="form-group">
+            <label for="crDuration">Duration</label>
+            <input type="text" id="crDuration" placeholder="e.g. 10 weeks" />
+          </div>
+          <div class="form-group">
+            <label for="crSchedule">Schedule Slot</label>
+            <input
+              type="text"
+              id="crSchedule"
+              placeholder="e.g. Mon-Wed 10:00-11:00"
+            />
+          </div>
+          <div class="form-group">
+            <label for="crCapacity">Capacity</label>
+            <input type="number" id="crCapacity" min="1" />
+          </div>
+          <div class="form-group">
+            <label for="crFee">Base Fee (₹)</label>
+            <input type="number" id="crFee" min="0" />
+          </div>
+          <div class="form-group">
+            <label for="crPrerequisite">Prerequisite Course</label>
+            <select id="crPrerequisite">
+              <option value="">None</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="crFaculty">Assign Faculty</label>
+            <select id="crFaculty">
+              <option value="">Unassigned</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="crFeePlanType">Fee Plan Type</label>
+            <select id="crFeePlanType">
+              <option value="One-Time">One-Time</option>
+              <option value="Installment">Installment</option>
+            </select>
+          </div>
+          <div id="courseFormError" class="form-error hidden"></div>
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="cancelCourseForm"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">Save Course</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="../js/db.js"></script>
+    <script src="../js/seed.js"></script>
+    <script src="../js/validators.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+      let currentUser;
+      (async () => {
+        await initSeed();
+        currentUser = renderShell("courses.html");
+        if (!currentUser) return;
+        renderCoursesPage();
+      })();
+
+      function renderCoursesPage() {
+        const main = document.getElementById("main-content");
+
+        if (currentUser.role === "admin") {
+          main.innerHTML = `
+          <div class="page-header">
+            <h2 class="page-title">Courses</h2>
+            <button class="btn btn-primary" id="addCourseBtn"><span class="material-icons">add</span> Add Course</button>
+          </div>
+          <div id="coursesTableWrap"></div>
+        `;
+          document
+            .getElementById("addCourseBtn")
+            .addEventListener("click", () => openCourseModal());
+          renderAdminCourseTable();
+          setupCourseModal();
+        } else if (currentUser.role === "faculty") {
+          const courses = DB.get("courses").filter(
+            (c) => c.facultyId === currentUser.id,
+          );
+          main.innerHTML = `
+          <h2 class="page-title">My Courses</h2>
+          ${renderFacultyCourseTable(courses)}
+        `;
+        } else {
+          main.innerHTML = `
+          <h2 class="page-title">Course Catalog</h2>
+          <div class="card-grid" id="catalogGrid"></div>
+        `;
+          renderCatalog();
+        }
+      }
+
+      function renderAdminCourseTable() {
+        const wrap = document.getElementById("coursesTableWrap");
+        const courses = DB.get("courses");
+        if (!courses.length) {
+          wrap.innerHTML = `<p class="empty-state">No courses found.</p>`;
+          return;
+        }
+        const rows = courses
+          .map((c) => {
+            const enrolledCount = DB.get("enrollments").filter(
+              (e) => e.courseId === c.id && e.status !== "Cancelled",
+            ).length;
+            return `<tr>
+          <td>${c.id}</td>
+          <td>${c.name}</td>
+          <td>${c.batch}</td>
+          <td>${c.duration}</td>
+          <td>${enrolledCount}/${c.capacity}</td>
+          <td>${formatCurrency(c.fee)}</td>
+          <td>${statusPill(c.status)}</td>
+          <td class="actions-cell">
+            <button class="icon-btn edit-course" data-id="${c.id}"><span class="material-icons">edit</span></button>
+            <button class="icon-btn delete-course" data-id="${c.id}"><span class="material-icons">delete</span></button>
+          </td>
+        </tr>`;
+          })
+          .join("");
+        wrap.innerHTML = `
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Name</th><th>Batch</th><th>Duration</th><th>Seats</th><th>Fee</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+        wrap
+          .querySelectorAll(".edit-course")
+          .forEach((btn) =>
+            btn.addEventListener("click", () =>
+              openCourseModal(btn.dataset.id),
+            ),
+          );
+        wrap.querySelectorAll(".delete-course").forEach((btn) =>
+          btn.addEventListener("click", () => {
+            if (confirm("Delete this course?")) {
+              DB.remove("courses", btn.dataset.id);
+              renderAdminCourseTable();
+            }
+          }),
+        );
+      }
+
+      function renderFacultyCourseTable(courses) {
+        if (!courses.length)
+          return `<p class="empty-state">No courses assigned to you.</p>`;
+        const rows = courses
+          .map((c) => {
+            const enrolledCount = DB.get("enrollments").filter(
+              (e) => e.courseId === c.id && e.status !== "Cancelled",
+            ).length;
+            return `<tr><td>${c.name}</td><td>${c.batch}</td><td>${c.schedule}</td><td>${enrolledCount}/${c.capacity}</td><td>${statusPill(c.status)}</td></tr>`;
+          })
+          .join("");
+        return `<table class="data-table"><thead><tr><th>Name</th><th>Batch</th><th>Schedule</th><th>Seats</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>`;
+      }
+
+      function renderCatalog() {
+        const grid = document.getElementById("catalogGrid");
+        const courses = DB.get("courses").filter((c) => c.status === "Active");
+        const myEnrollments = DB.get("enrollments").filter(
+          (e) => e.studentId === currentUser.studentId,
+        );
+        const myCourseIds = myEnrollments
+          .filter((e) => e.status !== "Cancelled")
+          .map((e) => e.courseId);
+
+        grid.innerHTML = courses
+          .map((c) => {
+            const enrolledCount = DB.get("enrollments").filter(
+              (e) => e.courseId === c.id && e.status !== "Cancelled",
+            ).length;
+            const seatsLeft = c.capacity - enrolledCount;
+            const alreadyEnrolled = myCourseIds.includes(c.id);
+            const prereqCourse = c.prerequisite
+              ? DB.getById("courses", c.prerequisite)
+              : null;
+            const prereqMet =
+              !c.prerequisite ||
+              myEnrollments.some(
+                (e) =>
+                  (e.courseId === c.prerequisite && e.status === "Completed") ||
+                  e.status === "Active",
+              );
+
+            let actionBtn;
+            if (alreadyEnrolled) {
+              actionBtn = `<button class="btn btn-secondary" disabled>Already Enrolled</button>`;
+            } else if (!prereqMet) {
+              actionBtn = `<button class="btn btn-secondary" disabled title="Prerequisite not met">Prerequisite Required</button>`;
+            } else if (seatsLeft > 0) {
+              actionBtn = `<button class="btn btn-primary enroll-btn" data-id="${c.id}">Enroll</button>`;
+            } else {
+              actionBtn = `<button class="btn btn-warning join-waitlist-btn" data-id="${c.id}">Join Waitlist</button>`;
+            }
+
+            return `
+          <div class="course-card">
+            <h4>${c.name}</h4>
+            <p class="course-meta">${c.batch} • ${c.duration}</p>
+            <p class="course-meta">${c.schedule}</p>
+            <p class="course-fee">${formatCurrency(c.fee)}</p>
+            ${prereqCourse ? `<span class="pill pill-blue">Requires: ${prereqCourse.name}</span>` : ""}
+            <span class="pill ${seatsLeft > 0 ? "pill-green" : "pill-red"}">${seatsLeft > 0 ? seatsLeft + " seats left" : "Full"}</span>
+            <div class="course-actions">${actionBtn}</div>
+          </div>
+        `;
+          })
+          .join("");
+
+        grid
+          .querySelectorAll(".enroll-btn")
+          .forEach((btn) =>
+            btn.addEventListener("click", () => enrollSelf(btn.dataset.id)),
+          );
+        grid
+          .querySelectorAll(".join-waitlist-btn")
+          .forEach((btn) =>
+            btn.addEventListener("click", () =>
+              joinWaitlistSelf(btn.dataset.id),
+            ),
+          );
+      }
+
+      function enrollSelf(courseId) {
+        const course = DB.getById("courses", courseId);
+        const enrollment = DB.add("enrollments", {
+          studentId: currentUser.studentId,
+          courseId: courseId,
+          enrollDate: new Date().toISOString(),
+          status: "Active",
+          totalFee: course.fee,
+          paidAmount: 0,
+        });
+        pushNotification(
+          currentUser.id,
+          `You have been enrolled in ${course.name}. Invoice generated for ${formatCurrency(course.fee)}.`,
+          "info",
+        );
+        alert("Enrolled successfully! Invoice generated.");
+        renderCatalog();
+      }
+
+      function joinWaitlistSelf(courseId) {
+        const course = DB.getById("courses", courseId);
+        const position =
+          DB.get("waitlist").filter((w) => w.courseId === courseId).length + 1;
+        DB.add("waitlist", {
+          studentId: currentUser.studentId,
+          courseId,
+          position,
+          addedDate: new Date().toISOString(),
+        });
+        pushNotification(
+          currentUser.id,
+          `You have been added to the waitlist for ${course.name} (position ${position}).`,
+          "info",
+        );
+        alert("Added to waitlist.");
+        renderCatalog();
+      }
+
+      function openCourseModal(id) {
+        const modal = document.getElementById("courseModal");
+        const title = document.getElementById("courseModalTitle");
+        document.getElementById("courseForm").reset();
+        document.getElementById("courseFormError").classList.add("hidden");
+
+        const prereqSelect = document.getElementById("crPrerequisite");
+        const allCourses = DB.get("courses").filter((c) => c.id !== id);
+        prereqSelect.innerHTML =
+          '<option value="">None</option>' +
+          allCourses
+            .map((c) => `<option value="${c.id}">${c.name}</option>`)
+            .join("");
+
+        const facultySelect = document.getElementById("crFaculty");
+        const facultyUsers = DB.get("users").filter(
+          (u) => u.role === "faculty",
+        );
+        facultySelect.innerHTML =
+          '<option value="">Unassigned</option>' +
+          facultyUsers
+            .map((u) => `<option value="${u.id}">${u.name}</option>`)
+            .join("");
+
+        if (id) {
+          const c = DB.getById("courses", id);
+          title.textContent = "Edit Course";
+          document.getElementById("courseId").value = c.id;
+          document.getElementById("crName").value = c.name;
+          document.getElementById("crBatch").value = c.batch;
+          document.getElementById("crDuration").value = c.duration;
+          document.getElementById("crSchedule").value = c.schedule;
+          document.getElementById("crCapacity").value = c.capacity;
+          document.getElementById("crFee").value = c.fee;
+          prereqSelect.value = c.prerequisite || "";
+          facultySelect.value = c.facultyId || "";
+          document.getElementById("crFeePlanType").value =
+            c.feePlanType || "One-Time";
+        } else {
+          title.textContent = "Add Course";
+          document.getElementById("courseId").value = "";
+        }
+        modal.classList.remove("hidden");
+      }
+
+      function closeCourseModal() {
+        document.getElementById("courseModal").classList.add("hidden");
+      }
+
+      function setupCourseModal() {
+        document
+          .getElementById("closeCourseModal")
+          .addEventListener("click", closeCourseModal);
+        document
+          .getElementById("cancelCourseForm")
+          .addEventListener("click", closeCourseModal);
+
+        document
+          .getElementById("courseForm")
+          .addEventListener("submit", (e) => {
+            e.preventDefault();
+            const id = document.getElementById("courseId").value;
+            const name = document.getElementById("crName").value.trim();
+            const capacity = Number(
+              document.getElementById("crCapacity").value,
+            );
+            const fee = Number(document.getElementById("crFee").value);
+            const errorEl = document.getElementById("courseFormError");
+
+            if (!validateRequired(name))
+              return showFormErr(errorEl, "Course name is required.");
+            if (!capacity || capacity < 1)
+              return showFormErr(errorEl, "Capacity must be at least 1.");
+            if (fee < 0 || isNaN(fee))
+              return showFormErr(errorEl, "Fee must be a valid number.");
+            errorEl.classList.add("hidden");
+
+            const payload = {
+              name,
+              batch: document.getElementById("crBatch").value.trim(),
+              duration: document.getElementById("crDuration").value.trim(),
+              schedule: document.getElementById("crSchedule").value.trim(),
+              capacity,
+              fee,
+              prerequisite:
+                document.getElementById("crPrerequisite").value || null,
+              facultyId: document.getElementById("crFaculty").value || null,
+              feePlanType: document.getElementById("crFeePlanType").value,
+              installments: [],
+              status: "Active",
+            };
+
+            if (id) DB.update("courses", id, payload);
+            else DB.add("courses", payload);
+
+            closeCourseModal();
+            renderAdminCourseTable();
+          });
+      }
+
+      function showFormErr(el, msg) {
+        el.textContent = msg;
+        el.classList.remove("hidden");
+      }
+    </script>
+  </body>
+</html>

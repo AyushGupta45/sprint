@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CEFTS - Students</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link rel="stylesheet" href="../css/styles.css?v=1.1" />
+  </head>
+  <body>
+    <div id="app-shell"></div>
+
+    <!-- Add/Edit Student Modal -->
+    <div id="studentModal" class="modal-overlay hidden">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3 id="studentModalTitle">Add Student</h3>
+          <button class="icon-btn" id="closeStudentModal">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <form id="studentForm" class="modal-form">
+          <input type="hidden" id="studentId" />
+          <div class="form-group">
+            <label for="stName">Full Name</label>
+            <input type="text" id="stName" />
+          </div>
+          <div class="form-group">
+            <label for="stEmail">Email</label>
+            <input type="text" id="stEmail" />
+          </div>
+          <div class="form-group">
+            <label for="stPhone">Phone</label>
+            <input type="text" id="stPhone" maxlength="10" />
+          </div>
+          <div class="form-group">
+            <label for="stDob">Date of Birth</label>
+            <input type="date" id="stDob" />
+          </div>
+          <div class="form-group">
+            <label for="stGender">Gender</label>
+            <select id="stGender">
+              <option value="">Select</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="stAddress">Address</label>
+            <textarea id="stAddress"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="stNotes">Notes</label>
+            <textarea id="stNotes"></textarea>
+          </div>
+          <div id="studentFormError" class="form-error hidden"></div>
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="cancelStudentForm"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">Save Student</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="../js/db.js"></script>
+    <script src="../js/seed.js"></script>
+    <script src="../js/validators.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+      let currentUser;
+      (async () => {
+        await initSeed();
+        currentUser = renderShell("students.html");
+        if (!currentUser) return;
+        if (currentUser.role === "student") {
+          window.location.href = "dashboard.html";
+          return;
+        }
+        renderStudentsPage();
+      })();
+
+      function renderStudentsPage() {
+        const main = document.getElementById("main-content");
+        const isReadOnly = currentUser.role === "faculty";
+
+        main.innerHTML = `
+        <div class="page-header">
+          <h2 class="page-title">Students</h2>
+          ${isReadOnly ? "" : `<button class="btn btn-primary" id="addStudentBtn"><span class="material-icons">add</span> Add Student</button>`}
+        </div>
+        <div class="toolbar">
+          <input type="text" id="studentSearch" placeholder="Search by name or email...">
+        </div>
+        <div id="studentsTableWrap"></div>
+      `;
+
+        if (!isReadOnly) {
+          document
+            .getElementById("addStudentBtn")
+            .addEventListener("click", () => openStudentModal());
+        }
+        document
+          .getElementById("studentSearch")
+          .addEventListener("input", (e) => {
+            renderStudentsTable(e.target.value, isReadOnly);
+          });
+
+        renderStudentsTable("", isReadOnly);
+        setupStudentModal();
+      }
+
+      function renderStudentsTable(query, isReadOnly) {
+        const wrap = document.getElementById("studentsTableWrap");
+        let students = DB.get("students");
+        if (query) {
+          const q = query.toLowerCase();
+          students = students.filter(
+            (s) =>
+              s.name.toLowerCase().includes(q) ||
+              s.email.toLowerCase().includes(q),
+          );
+        }
+        if (!students.length) {
+          wrap.innerHTML = `<p class="empty-state">No students found.</p>`;
+          return;
+        }
+        const rows = students
+          .map((s) => {
+            const courseCount = DB.get("enrollments").filter(
+              (e) => e.studentId === s.id,
+            ).length;
+            return `<tr>
+          <td>${s.id}</td>
+          <td>${s.name}</td>
+          <td>${s.email}</td>
+          <td>${s.phone}</td>
+          <td>${courseCount}</td>
+          <td>${statusPill(s.status)}</td>
+          <td class="actions-cell">
+            ${
+              isReadOnly
+                ? ""
+                : `
+              <button class="icon-btn edit-student" data-id="${s.id}"><span class="material-icons">edit</span></button>
+              <button class="icon-btn delete-student" data-id="${s.id}"><span class="material-icons">delete</span></button>
+            `
+            }
+          </td>
+        </tr>`;
+          })
+          .join("");
+
+        wrap.innerHTML = `
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Courses</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+
+        if (!isReadOnly) {
+          wrap.querySelectorAll(".edit-student").forEach((btn) => {
+            btn.addEventListener("click", () =>
+              openStudentModal(btn.dataset.id),
+            );
+          });
+          wrap.querySelectorAll(".delete-student").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              if (confirm("Delete this student? This cannot be undone.")) {
+                DB.remove("students", btn.dataset.id);
+                renderStudentsTable(
+                  document.getElementById("studentSearch").value,
+                  isReadOnly,
+                );
+              }
+            });
+          });
+        }
+      }
+
+      function openStudentModal(id) {
+        const modal = document.getElementById("studentModal");
+        const title = document.getElementById("studentModalTitle");
+        document.getElementById("studentForm").reset();
+        document.getElementById("studentFormError").classList.add("hidden");
+        clearStudentFieldErrors();
+
+        if (id) {
+          const s = DB.getById("students", id);
+          title.textContent = "Edit Student";
+          document.getElementById("studentId").value = s.id;
+          document.getElementById("stName").value = s.name;
+          document.getElementById("stEmail").value = s.email;
+          document.getElementById("stPhone").value = s.phone;
+          document.getElementById("stDob").value = s.dob || "";
+          document.getElementById("stGender").value = s.gender || "";
+          document.getElementById("stAddress").value = s.address || "";
+          document.getElementById("stNotes").value = s.notes || "";
+        } else {
+          title.textContent = "Add Student";
+          document.getElementById("studentId").value = "";
+        }
+        modal.classList.remove("hidden");
+      }
+
+      function closeStudentModal() {
+        document.getElementById("studentModal").classList.add("hidden");
+      }
+
+      function clearStudentFieldErrors() {
+        ["stEmail", "stPhone"].forEach((id) => {
+          const el = document.getElementById(id);
+          setFieldError(el, "");
+        });
+      }
+
+      function setupStudentModal() {
+        document
+          .getElementById("closeStudentModal")
+          .addEventListener("click", closeStudentModal);
+        document
+          .getElementById("cancelStudentForm")
+          .addEventListener("click", closeStudentModal);
+
+        const phoneInput = document.getElementById("stPhone");
+        phoneInput.addEventListener("input", () => {
+          phoneInput.value = phoneInput.value.replace(/\D/g, "").slice(0, 10);
+        });
+
+        document
+          .getElementById("studentForm")
+          .addEventListener("submit", (e) => {
+            e.preventDefault();
+            const id = document.getElementById("studentId").value;
+            const name = document.getElementById("stName").value.trim();
+            const email = document.getElementById("stEmail").value.trim();
+            const phone = phoneInput.value.trim();
+            const errorEl = document.getElementById("studentFormError");
+
+            if (!validateRequired(name))
+              return showFormErr(errorEl, "Full name is required.");
+            if (!validateEmail(email)) {
+              setFieldError(
+                document.getElementById("stEmail"),
+                "Invalid email.",
+              );
+              return;
+            }
+            setFieldError(document.getElementById("stEmail"), "");
+            if (!validatePhone(phone)) {
+              setFieldError(phoneInput, "Must start with 6/7/8/9, 10 digits.");
+              return;
+            }
+            setFieldError(phoneInput, "");
+
+            const payload = {
+              name,
+              email,
+              phone,
+              dob: document.getElementById("stDob").value,
+              gender: document.getElementById("stGender").value,
+              address: document.getElementById("stAddress").value.trim(),
+              notes: document.getElementById("stNotes").value.trim(),
+              status: "Active",
+            };
+
+            if (id) {
+              DB.update("students", id, payload);
+            } else {
+              DB.add("students", payload);
+            }
+            closeStudentModal();
+            renderStudentsTable(
+              document.getElementById("studentSearch").value,
+              currentUser.role === "faculty",
+            );
+          });
+      }
+
+      function showFormErr(el, msg) {
+        el.textContent = msg;
+        el.classList.remove("hidden");
+      }
+    </script>
+  </body>
+</html>

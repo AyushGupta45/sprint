@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CEFTS - Enrollments</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link rel="stylesheet" href="../css/styles.css?v=1.1" />
+  </head>
+  <body>
+    <div id="app-shell"></div>
+
+    <!-- Enroll Student Modal (Admin/Faculty use case: Admin only creates) -->
+    <div id="enrollModal" class="modal-overlay hidden">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3>Enroll Student</h3>
+          <button class="icon-btn" id="closeEnrollModal">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <form id="enrollForm" class="modal-form">
+          <div class="form-group">
+            <label for="enStudent">Select Student</label>
+            <select id="enStudent"></select>
+          </div>
+          <div class="form-group">
+            <label for="enCourse">Select Course</label>
+            <select id="enCourse"></select>
+          </div>
+          <div id="enrollValidationBanner" class="form-error hidden"></div>
+          <div id="enrollInfoBanner" class="form-info hidden"></div>
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="cancelEnrollForm"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">
+              Enroll Student
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="../js/db.js"></script>
+    <script src="../js/seed.js"></script>
+    <script src="../js/validators.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+      let currentUser;
+      let activeTab = "enrollments";
+      (async () => {
+        await initSeed();
+        currentUser = renderShell("enrollments.html");
+        if (!currentUser) return;
+        renderEnrollmentsPage();
+      })();
+
+      function renderEnrollmentsPage() {
+        const main = document.getElementById("main-content");
+        const title =
+          currentUser.role === "student" ? "My Enrollments" : "Enrollments";
+
+        main.innerHTML = `
+        <div class="page-header">
+          <h2 class="page-title">${title}</h2>
+          ${currentUser.role === "admin" ? `<button class="btn btn-primary" id="enrollBtn"><span class="material-icons">add</span> Enroll Student</button>` : ""}
+        </div>
+        <div class="tabs">
+          <button class="tab-btn tab-active" data-tab="enrollments">Enrollments</button>
+          <button class="tab-btn" data-tab="waitlist">Waitlist</button>
+        </div>
+        <div id="tabContent"></div>
+      `;
+
+        if (currentUser.role === "admin") {
+          document
+            .getElementById("enrollBtn")
+            .addEventListener("click", openEnrollModal);
+          setupEnrollModal();
+        }
+
+        document.querySelectorAll(".tab-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            document
+              .querySelectorAll(".tab-btn")
+              .forEach((b) => b.classList.remove("tab-active"));
+            btn.classList.add("tab-active");
+            activeTab = btn.dataset.tab;
+            renderTabContent();
+          });
+        });
+
+        renderTabContent();
+      }
+
+      function getScopedEnrollments() {
+        let enrollments = DB.get("enrollments");
+        if (currentUser.role === "student") {
+          enrollments = enrollments.filter(
+            (e) => e.studentId === currentUser.studentId,
+          );
+        } else if (currentUser.role === "faculty") {
+          const courseIds = DB.get("courses")
+            .filter((c) => c.facultyId === currentUser.id)
+            .map((c) => c.id);
+          enrollments = enrollments.filter((e) =>
+            courseIds.includes(e.courseId),
+          );
+        }
+        return enrollments;
+      }
+
+      function getScopedWaitlist() {
+        let waitlist = DB.get("waitlist");
+        if (currentUser.role === "student") {
+          waitlist = waitlist.filter(
+            (w) => w.studentId === currentUser.studentId,
+          );
+        } else if (currentUser.role === "faculty") {
+          const courseIds = DB.get("courses")
+            .filter((c) => c.facultyId === currentUser.id)
+            .map((c) => c.id);
+          waitlist = waitlist.filter((w) => courseIds.includes(w.courseId));
+        }
+        return waitlist;
+      }
+
+      function renderTabContent() {
+        const wrap = document.getElementById("tabContent");
+        if (activeTab === "enrollments") {
+          const enrollments = getScopedEnrollments();
+          if (!enrollments.length) {
+            wrap.innerHTML = `<p class="empty-state">No enrollments found.</p>`;
+            return;
+          }
+          const rows = enrollments
+            .map((e) => {
+              const student = DB.getById("students", e.studentId);
+              const course = DB.getById("courses", e.courseId);
+              const pending = e.totalFee - (e.paidAmount || 0);
+              return `<tr>
+            <td>${e.id}</td>
+            <td>${student ? student.name : "-"}</td>
+            <td>${course ? course.name : "-"}</td>
+            <td>${formatCurrency(e.totalFee)}</td>
+            <td>${formatCurrency(e.paidAmount || 0)}</td>
+            <td>${formatCurrency(pending)}</td>
+            <td>${statusPill(e.status)}</td>
+            <td class="actions-cell">
+              ${currentUser.role === "admin" && e.status !== "Cancelled" ? `<button class="icon-btn cancel-enrollment" data-id="${e.id}"><span class="material-icons">cancel</span></button>` : ""}
+            </td>
+          </tr>`;
+            })
+            .join("");
+          wrap.innerHTML = `
+          <table class="data-table">
+            <thead><tr><th>ID</th><th>Student</th><th>Course</th><th>Total Fee</th><th>Paid</th><th>Pending</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+          wrap.querySelectorAll(".cancel-enrollment").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              if (confirm("Cancel this enrollment? Seat will be released.")) {
+                DB.update("enrollments", btn.dataset.id, {
+                  status: "Cancelled",
+                });
+                promoteFromWaitlistIfSeatFree(
+                  DB.getById("enrollments", btn.dataset.id).courseId,
+                );
+                renderTabContent();
+              }
+            });
+          });
+        } else {
+          const waitlist = getScopedWaitlist();
+          if (!waitlist.length) {
+            wrap.innerHTML = `<p class="empty-state">Waitlist is empty.</p>`;
+            return;
+          }
+          const rows = waitlist
+            .map((w) => {
+              const student = DB.getById("students", w.studentId);
+              const course = DB.getById("courses", w.courseId);
+              return `<tr>
+            <td>${w.position}</td>
+            <td>${student ? student.name : "-"}</td>
+            <td>${course ? course.name : "-"}</td>
+            <td>${formatDate(w.addedDate)}</td>
+            <td class="actions-cell">
+              ${currentUser.role !== "student" ? `<button class="btn btn-secondary promote-btn" data-id="${w.id}">Promote Now</button>` : ""}
+            </td>
+          </tr>`;
+            })
+            .join("");
+          wrap.innerHTML = `
+          <table class="data-table">
+            <thead><tr><th>Position</th><th>Student</th><th>Course</th><th>Added Date</th><th>Actions</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+          wrap.querySelectorAll(".promote-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const w = DB.getById("waitlist", btn.dataset.id);
+              promoteWaitlistEntry(w);
+              renderTabContent();
+            });
+          });
+        }
+      }
+
+      function promoteWaitlistEntry(w) {
+        const course = DB.getById("courses", w.courseId);
+        DB.add("enrollments", {
+          studentId: w.studentId,
+          courseId: w.courseId,
+          enrollDate: new Date().toISOString(),
+          status: "Active",
+          totalFee: course.fee,
+          paidAmount: 0,
+        });
+        DB.remove("waitlist", w.id);
+        const studentUser = DB.get("users").find(
+          (u) => u.studentId === w.studentId,
+        );
+        if (studentUser)
+          pushNotification(
+            studentUser.id,
+            `Good news! You have been promoted from waitlist to ${course.name}.`,
+            "info",
+          );
+      }
+
+      function promoteFromWaitlistIfSeatFree(courseId) {
+        const course = DB.getById("courses", courseId);
+        const activeCount = DB.get("enrollments").filter(
+          (e) => e.courseId === courseId && e.status !== "Cancelled",
+        ).length;
+        if (activeCount < course.capacity) {
+          const waitlist = DB.get("waitlist")
+            .filter((w) => w.courseId === courseId)
+            .sort((a, b) => a.position - b.position);
+          if (waitlist.length) promoteWaitlistEntry(waitlist[0]);
+        }
+      }
+
+      function openEnrollModal() {
+        document.getElementById("enrollForm").reset();
+        document
+          .getElementById("enrollValidationBanner")
+          .classList.add("hidden");
+        document.getElementById("enrollInfoBanner").classList.add("hidden");
+
+        const studentSelect = document.getElementById("enStudent");
+        const students = DB.get("students");
+        studentSelect.innerHTML = students
+          .map((s) => `<option value="${s.id}">${s.name}</option>`)
+          .join("");
+
+        const courseSelect = document.getElementById("enCourse");
+        const courses = DB.get("courses").filter((c) => c.status === "Active");
+        courseSelect.innerHTML = courses
+          .map((c) => `<option value="${c.id}">${c.name}</option>`)
+          .join("");
+
+        document.getElementById("enrollModal").classList.remove("hidden");
+        checkEnrollValidation();
+        studentSelect.addEventListener("change", checkEnrollValidation);
+        courseSelect.addEventListener("change", checkEnrollValidation);
+      }
+
+      function checkEnrollValidation() {
+        const studentId = document.getElementById("enStudent").value;
+        const courseId = document.getElementById("enCourse").value;
+        const banner = document.getElementById("enrollValidationBanner");
+        const info = document.getElementById("enrollInfoBanner");
+        banner.classList.add("hidden");
+        info.classList.add("hidden");
+
+        const course = DB.getById("courses", courseId);
+        if (!course) return;
+
+        const alreadyEnrolled = DB.get("enrollments").some(
+          (e) =>
+            e.studentId === studentId &&
+            e.courseId === courseId &&
+            e.status !== "Cancelled",
+        );
+        if (alreadyEnrolled) {
+          banner.textContent = "Student is already enrolled in this course.";
+          banner.classList.remove("hidden");
+          return;
+        }
+
+        if (course.prerequisite) {
+          const met = DB.get("enrollments").some(
+            (e) =>
+              e.studentId === studentId &&
+              e.courseId === course.prerequisite &&
+              e.status !== "Cancelled",
+          );
+          if (!met) {
+            banner.textContent = "Prerequisite not met for this course.";
+            banner.classList.remove("hidden");
+            return;
+          }
+        }
+
+        const studentEnrollments = DB.get("enrollments").filter(
+          (e) => e.studentId === studentId && e.status === "Active",
+        );
+        const conflict = studentEnrollments.some((e) => {
+          const c = DB.getById("courses", e.courseId);
+          return c && c.schedule === course.schedule;
+        });
+        if (conflict) {
+          banner.textContent =
+            "Schedule conflict detected with another enrolled course.";
+          banner.classList.remove("hidden");
+          return;
+        }
+
+        const enrolledCount = DB.get("enrollments").filter(
+          (e) => e.courseId === courseId && e.status !== "Cancelled",
+        ).length;
+        if (enrolledCount >= course.capacity) {
+          info.textContent =
+            "Course is full — student will be added to the waitlist instead.";
+          info.classList.remove("hidden");
+        }
+      }
+
+      function setupEnrollModal() {
+        document
+          .getElementById("closeEnrollModal")
+          .addEventListener("click", () =>
+            document.getElementById("enrollModal").classList.add("hidden"),
+          );
+        document
+          .getElementById("cancelEnrollForm")
+          .addEventListener("click", () =>
+            document.getElementById("enrollModal").classList.add("hidden"),
+          );
+
+        document
+          .getElementById("enrollForm")
+          .addEventListener("submit", (e) => {
+            e.preventDefault();
+            const studentId = document.getElementById("enStudent").value;
+            const courseId = document.getElementById("enCourse").value;
+            const course = DB.getById("courses", courseId);
+            const banner = document.getElementById("enrollValidationBanner");
+
+            if (!banner.classList.contains("hidden")) return;
+
+            const enrolledCount = DB.get("enrollments").filter(
+              (e) => e.courseId === courseId && e.status !== "Cancelled",
+            ).length;
+            const studentUser = DB.get("users").find(
+              (u) => u.studentId === studentId,
+            );
+
+            if (enrolledCount >= course.capacity) {
+              const position =
+                DB.get("waitlist").filter((w) => w.courseId === courseId)
+                  .length + 1;
+              DB.add("waitlist", {
+                studentId,
+                courseId,
+                position,
+                addedDate: new Date().toISOString(),
+              });
+              if (studentUser)
+                pushNotification(
+                  studentUser.id,
+                  `Course full. You've been added to waitlist for ${course.name}.`,
+                  "info",
+                );
+              alert("Course full — student added to waitlist.");
+            } else {
+              DB.add("enrollments", {
+                studentId,
+                courseId,
+                enrollDate: new Date().toISOString(),
+                status: "Active",
+                totalFee: course.fee,
+                paidAmount: 0,
+              });
+              if (studentUser)
+                pushNotification(
+                  studentUser.id,
+                  `Enrolled in ${course.name}. Invoice generated for ${formatCurrency(course.fee)}.`,
+                  "info",
+                );
+              alert("Student enrolled successfully. Invoice generated.");
+            }
+            document.getElementById("enrollModal").classList.add("hidden");
+            renderTabContent();
+          });
+      }
+    </script>
+  </body>
+</html>
