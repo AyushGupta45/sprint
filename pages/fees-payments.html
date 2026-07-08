@@ -1,114 +1,368 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>CEFTS - Fees & Payments</title>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-    />
-    <link rel="stylesheet" href="../css/styles.css?v=1.1" />
-  </head>
-  <body>
-    <div id="app-shell"></div>
 
-    <!-- Record Payment Modal -->
-    <div id="paymentModal" class="modal-overlay hidden">
-      <div class="modal-box">
-        <div class="modal-header">
-          <h3>Record Payment</h3>
-          <button class="icon-btn" id="closePaymentModal">
-            <span class="material-icons">close</span>
-          </button>
+<head>
+  <meta charset="UTF-8" />
+  <title>CEFTS - Fees & Payments</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="../css/styles.css?v=1.1" />
+</head>
+
+<body>
+  <div id="app-shell"></div>
+
+  <!-- Record Payment Modal (Admin Premium Redesign) -->
+  <div id="paymentModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3><span class="material-icons"
+            style="font-size:1.125rem;vertical-align:middle;margin-right:0.375rem;color:hsl(var(--primary))">receipt_long</span>Record
+          Payment</h3>
+        <button class="icon-btn" id="closePaymentModal">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <form id="paymentForm" class="modal-form">
+        <input type="hidden" id="payEnrollmentId" />
+
+        <!-- Student/Course Info Strip -->
+        <div id="payInfoStrip"
+          style="background:hsl(var(--primary-light));border:1px solid hsl(var(--primary)/0.15);border-radius:var(--radius);padding:0.875rem 1rem;margin-bottom:1.25rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;">
+          <div>
+            <div
+              style="font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;color:hsl(var(--muted-foreground));margin-bottom:0.15rem">
+              Total Fee</div>
+            <div id="paySummaryTotal" style="font-weight:700;font-size:1rem;color:hsl(var(--foreground))">-</div>
+          </div>
+          <div>
+            <div
+              style="font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;color:hsl(var(--muted-foreground));margin-bottom:0.15rem">
+              Paid So Far</div>
+            <div id="paySummaryPaid" style="font-weight:700;font-size:1rem;color:hsl(var(--success))">-</div>
+          </div>
+          <div>
+            <div
+              style="font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;color:hsl(var(--muted-foreground));margin-bottom:0.15rem">
+              Pending</div>
+            <div id="paySummaryPending" style="font-weight:700;font-size:1rem;color:hsl(var(--accent))">-</div>
+          </div>
         </div>
-        <form id="paymentForm" class="modal-form">
-          <input type="hidden" id="payEnrollmentId" />
-          <div class="form-group">
-            <label>Total Fee</label>
-            <p id="paySummaryTotal" class="summary-text">-</p>
-          </div>
-          <div class="form-group">
-            <label>Amount Paid So Far</label>
-            <p id="paySummaryPaid" class="summary-text">-</p>
-          </div>
-          <div class="form-group">
-            <label>Amount Pending</label>
-            <p id="paySummaryPending" class="summary-text">-</p>
-          </div>
-          <div class="form-group">
-            <label for="payAmount">Amount to Pay</label>
-            <input type="number" id="payAmount" min="1" />
-          </div>
-          <div class="form-group">
-            <label for="payDate">Payment Date</label>
-            <input type="date" id="payDate" />
-          </div>
-          <div class="form-group">
-            <label for="payMode">Payment Mode</label>
-            <select id="payMode">
-              <option value="Cash">Cash</option>
-              <option value="UPI">UPI</option>
-              <option value="Card">Card</option>
-              <option value="Online">Online</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="payReference">Reference / Transaction No.</label>
-            <input type="text" id="payReference" />
-          </div>
-          <div id="paymentFormError" class="form-error hidden"></div>
-          <div class="modal-actions">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              id="cancelPaymentForm"
-            >
-              Cancel
+
+        <!-- Payment Mode Pill Selector -->
+        <div class="form-group">
+          <label>Payment Mode</label>
+          <div id="payModePills" style="display:flex;gap:0.375rem;flex-wrap:wrap;margin-top:0.25rem">
+            <button type="button" class="pay-mode-pill active" data-mode="Cash"
+              style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.375rem 0.75rem;border-radius:9999px;border:1px solid hsl(var(--border));background:hsl(var(--primary));color:#fff;font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.15s">
+              <span class="material-icons" style="font-size:0.875rem">payments</span>Cash
             </button>
-            <button type="submit" class="btn btn-primary">Save Payment</button>
+            <button type="button" class="pay-mode-pill" data-mode="UPI"
+              style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.375rem 0.75rem;border-radius:9999px;border:1px solid hsl(var(--border));background:hsl(var(--background));color:hsl(var(--foreground));font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.15s">
+              <span class="material-icons" style="font-size:0.875rem">qr_code_2</span>UPI
+            </button>
+            <button type="button" class="pay-mode-pill" data-mode="Card"
+              style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.375rem 0.75rem;border-radius:9999px;border:1px solid hsl(var(--border));background:hsl(var(--background));color:hsl(var(--foreground));font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.15s">
+              <span class="material-icons" style="font-size:0.875rem">credit_card</span>Card
+            </button>
+            <button type="button" class="pay-mode-pill" data-mode="Bank Transfer"
+              style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.375rem 0.75rem;border-radius:9999px;border:1px solid hsl(var(--border));background:hsl(var(--background));color:hsl(var(--foreground));font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.15s">
+              <span class="material-icons" style="font-size:0.875rem">account_balance</span>Bank
+            </button>
+            <button type="button" class="pay-mode-pill" data-mode="Online"
+              style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.375rem 0.75rem;border-radius:9999px;border:1px solid hsl(var(--border));background:hsl(var(--background));color:hsl(var(--foreground));font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.15s">
+              <span class="material-icons" style="font-size:0.875rem">language</span>Online
+            </button>
           </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Invoice/Receipt View Modal -->
-    <div id="invoiceModal" class="modal-overlay hidden">
-      <div class="modal-box">
-        <div class="modal-header">
-          <h3>Invoice / Receipt</h3>
-          <button class="icon-btn" id="closeInvoiceModal">
-            <span class="material-icons">close</span>
-          </button>
+          <select id="payMode" class="hidden">
+            <option value="Cash">Cash</option>
+            <option value="UPI">UPI</option>
+            <option value="Card">Card</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+            <option value="Online">Online</option>
+          </select>
         </div>
-        <div id="invoiceContent" class="invoice-content"></div>
-      </div>
+
+        <div class="form-group">
+          <label for="payAmount">Amount to Record (₹)</label>
+          <input type="number" id="payAmount" min="1" placeholder="Enter amount received" />
+          <div id="payAmountHint"
+            style="font-size:0.75rem;margin-top:0.375rem;color:hsl(var(--muted-foreground));min-height:1rem"></div>
+        </div>
+
+        <!-- MOCK GATEWAY (Hidden by default, shown for UPI/Card/Bank/Online) -->
+        <div id="adminMockGateway"
+          style="display:none; margin-bottom:1.25rem; border:1px solid hsl(var(--border)); padding:1rem; border-radius:var(--radius); background:hsl(var(--card));">
+
+          <!-- UPI TAB CONTENT -->
+          <div id="adminMockUpi" style="display:none; flex-direction:column; align-items:center; gap:0.5rem;">
+            <div class="qr-code">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://example.com" alt="QR Code"
+                width="100" height="100" />
+            </div>
+            <p style="font-size:0.75rem; color:hsl(var(--muted-foreground)); text-align:center;">Scan QR to record UPI
+              payment</p>
+            <div class="form-group" style="width: 100%;">
+              <label for="payUpiId">UPI ID</label>
+              <input type="text" id="payUpiId" placeholder="username@upi" />
+            </div>
+          </div>
+
+          <!-- CARD TAB CONTENT -->
+          <div id="adminMockCard" style="display:none;">
+            <div class="card-mockup-wrapper" style="perspective:1000px;margin-bottom:1rem">
+              <div class="card-mockup"
+                style="width:100%;height:140px;background:linear-gradient(135deg, #1e293b, #0f172a);color:#ffffff;border-radius:12px;padding:1rem;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow-sm);position:relative">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-size:0.75rem;font-weight:700;letter-spacing:1px">EduCard</span>
+                  <span class="material-icons" style="font-size:1.5rem">credit_card</span>
+                </div>
+                <div class="card-mockup-number"
+                  style="font-size:1rem;font-family:monospace;letter-spacing:2px;margin:0.5rem 0">•••• •••• •••• ••••
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:0.65rem">
+                  <div>
+                    <div style="color:rgba(255,255,255,0.5);text-transform:uppercase">Holder</div>
+                    <div class="card-mockup-name" style="font-weight:500;text-transform:uppercase">Student Name</div>
+                  </div>
+                  <div>
+                    <div style="color:rgba(255,255,255,0.5);text-transform:uppercase">Expires</div>
+                    <div class="card-mockup-expiry" style="font-weight:500">MM/YY</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="payCardNo">Card Number</label>
+              <input type="text" id="payCardNo" placeholder="4111 2222 3333 4444" maxlength="19" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="payCardExpiry">Expiry Date</label>
+                <input type="text" id="payCardExpiry" placeholder="MM/YY" maxlength="5" />
+              </div>
+              <div class="form-group">
+                <label for="payCardCvv">CVV</label>
+                <input type="password" id="payCardCvv" placeholder="•••" maxlength="3" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="payCardHolder">Card Holder Name</label>
+              <input type="text" id="payCardHolder" placeholder="John Doe" />
+            </div>
+          </div>
+
+          <!-- BANK TAB CONTENT -->
+          <div id="adminMockBank" style="display:none;">
+            <div class="form-group">
+              <label for="payBankAcc">Account Number</label>
+              <input type="text" id="payBankAcc" placeholder="e.g. 1234567890" />
+            </div>
+            <div class="form-group">
+              <label for="payBankIfsc">IFSC Code</label>
+              <input type="text" id="payBankIfsc" placeholder="e.g. ABCD0123456" />
+            </div>
+          </div>
+
+          <!-- ONLINE TAB CONTENT -->
+          <div id="adminMockOnline" style="display:none; text-align: center; padding: 1rem 0;">
+            <span class="material-icons" style="font-size: 2rem; color: hsl(var(--primary));">public</span>
+            <p style="font-size: 0.875rem; color: hsl(var(--muted-foreground)); margin-top: 0.5rem;">You will be
+              redirected to the secure payment gateway.</p>
+          </div>
+        </div>
+
+        <div id="paymentFormError" class="form-error hidden"></div>
+        <div id="paymentFormSuccess" class="form-success hidden"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelPaymentForm">Cancel</button>
+          <button type="submit" class="btn btn-primary"><span class="material-icons">check</span> Record
+            Payment</button>
+        </div>
+      </form>
     </div>
+  </div>
 
-    <script src="../js/db.js"></script>
-    <script src="../js/seed.js"></script>
-    <script src="../js/validators.js"></script>
-    <script src="../js/auth.js"></script>
-    <script src="../js/app.js"></script>
-    <script>
-      let currentUser;
-      let activeTab = "invoices";
-      (async () => {
-        await initSeed();
-        currentUser = renderShell("fees-payments.html");
-        if (!currentUser) return;
-        if (currentUser.role === "faculty") {
-          window.location.href = "dashboard.html";
-          return;
-        }
-        renderFeesPage();
-      })();
+  <!-- Student Self-Pay Modal (BUG 6) -->
+  <div id="studentPayModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Pay Online</h3>
+        <button class="icon-btn" id="closeStudentPayModal">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <form id="studentPayForm" class="modal-form">
+        <input type="hidden" id="spEnrollmentId" />
+        <div class="form-group" style="margin-bottom:0.75rem">
+          <label>Amount Due</label>
+          <p id="spAmountDue" class="summary-text" style="font-size:1.25rem;font-weight:700;color:hsl(var(--primary))">-
+          </p>
+        </div>
 
-      function renderFeesPage() {
-        const main = document.getElementById("main-content");
-        const isAdmin = currentUser.role === "admin";
+        <div class="form-group">
+          <label>Payment Mode</label>
+          <div id="spPayModePills" style="display:flex;gap:0.375rem;flex-wrap:wrap;margin-top:0.25rem">
+            <button type="button" class="sp-pay-mode-pill active" data-mode="UPI"
+              style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.375rem 0.75rem;border-radius:9999px;border:1px solid hsl(var(--border));background:hsl(var(--primary));color:#fff;font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.15s">
+              <span class="material-icons" style="font-size:0.875rem">qr_code_2</span>UPI
+            </button>
+            <button type="button" class="sp-pay-mode-pill" data-mode="Card"
+              style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.375rem 0.75rem;border-radius:9999px;border:1px solid hsl(var(--border));background:hsl(var(--background));color:hsl(var(--foreground));font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.15s">
+              <span class="material-icons" style="font-size:0.875rem">credit_card</span>Card
+            </button>
+            <button type="button" class="sp-pay-mode-pill" data-mode="Bank Transfer"
+              style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.375rem 0.75rem;border-radius:9999px;border:1px solid hsl(var(--border));background:hsl(var(--background));color:hsl(var(--foreground));font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.15s">
+              <span class="material-icons" style="font-size:0.875rem">account_balance</span>Bank
+            </button>
+            <button type="button" class="sp-pay-mode-pill" data-mode="Online"
+              style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.375rem 0.75rem;border-radius:9999px;border:1px solid hsl(var(--border));background:hsl(var(--background));color:hsl(var(--foreground));font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.15s">
+              <span class="material-icons" style="font-size:0.875rem">language</span>Online
+            </button>
+          </div>
+          <select id="spPayMode" class="hidden">
+            <option value="UPI">UPI</option>
+            <option value="Card">Card</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+            <option value="Online">Online</option>
+          </select>
+        </div>
 
-        main.innerHTML = `
-        <h2 class="page-title">Fees &amp; Payments</h2>
+        <!-- MOCK GATEWAY -->
+        <div id="studentMockGateway"
+          style="margin-bottom:1.25rem; border:1px solid hsl(var(--border)); padding:1rem; border-radius:var(--radius); background:hsl(var(--card));">
+
+          <!-- UPI TAB CONTENT -->
+          <div id="spMockUpi" style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+            <div class="qr-code">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://example.com" alt="QR Code"
+                width="100" height="100" />
+            </div>
+            <p style="font-size:0.75rem; color:hsl(var(--muted-foreground)); text-align:center;">Scan QR using any UPI
+              App</p>
+            <div class="form-group" style="width: 100%;">
+              <label for="spUpiId">UPI ID</label>
+              <input type="text" id="spUpiId" placeholder="username@upi" />
+            </div>
+          </div>
+
+          <!-- CARD TAB CONTENT -->
+          <div id="spMockCard" style="display:none;">
+            <div class="card-mockup-wrapper" style="perspective:1000px;margin-bottom:1rem">
+              <div class="card-mockup"
+                style="width:100%;height:140px;background:linear-gradient(135deg, #1e293b, #0f172a);color:#ffffff;border-radius:12px;padding:1rem;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow-sm);position:relative">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-size:0.75rem;font-weight:700;letter-spacing:1px">EduCard</span>
+                  <span class="material-icons" style="font-size:1.5rem">credit_card</span>
+                </div>
+                <div class="card-mockup-number"
+                  style="font-size:1rem;font-family:monospace;letter-spacing:2px;margin:0.5rem 0">•••• •••• •••• ••••
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:0.65rem">
+                  <div>
+                    <div style="color:rgba(255,255,255,0.5);text-transform:uppercase">Holder</div>
+                    <div class="card-mockup-name" style="font-weight:500;text-transform:uppercase">Your Name</div>
+                  </div>
+                  <div>
+                    <div style="color:rgba(255,255,255,0.5);text-transform:uppercase">Expires</div>
+                    <div class="card-mockup-expiry" style="font-weight:500">MM/YY</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="spCardNo">Card Number</label>
+              <input type="text" id="spCardNo" placeholder="4111 2222 3333 4444" maxlength="19" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="spCardExpiry">Expiry Date</label>
+                <input type="text" id="spCardExpiry" placeholder="MM/YY" maxlength="5" />
+              </div>
+              <div class="form-group">
+                <label for="spCardCvv">CVV</label>
+                <input type="password" id="spCardCvv" placeholder="•••" maxlength="3" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="spCardHolder">Card Holder Name</label>
+              <input type="text" id="spCardHolder" placeholder="John Doe" />
+            </div>
+          </div>
+
+          <!-- BANK TAB CONTENT -->
+          <div id="spMockBank" style="display:none;">
+            <div class="form-group">
+              <label for="spBankAcc">Account Number</label>
+              <input type="text" id="spBankAcc" placeholder="e.g. 1234567890" />
+            </div>
+            <div class="form-group">
+              <label for="spBankIfsc">IFSC Code</label>
+              <input type="text" id="spBankIfsc" placeholder="e.g. ABCD0123456" />
+            </div>
+          </div>
+
+          <!-- ONLINE TAB CONTENT -->
+          <div id="spMockOnline" style="display:none; text-align: center; padding: 1rem 0;">
+            <span class="material-icons" style="font-size: 2rem; color: hsl(var(--primary));">public</span>
+            <p style="font-size: 0.875rem; color: hsl(var(--muted-foreground)); margin-top: 0.5rem;">You will be
+              redirected to the secure payment gateway.</p>
+          </div>
+        </div>
+
+        <div id="studentPayError" class="form-error hidden"></div>
+        <div id="studentPaySuccess" class="form-success hidden"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelStudentPay">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="spPayNowBtn"><span class="material-icons">payments</span>
+            Pay Now</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Invoice/Receipt View Modal -->
+  <div id="invoiceModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Invoice / Receipt</h3>
+        <button class="icon-btn" id="closeInvoiceModal">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div id="invoiceContent" class="invoice-content"></div>
+    </div>
+  </div>
+
+  <script src="../js/db.js"></script>
+  <script src="../js/seed.js"></script>
+  <script src="../js/validators.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    let currentUser;
+    let activeTab = "invoices";
+    let currentInvoicesPage = 1;
+    let currentPaymentsPage = 1;
+
+    (async () => {
+      await initSeed();
+      currentUser = renderShell("fees-payments.html");
+      if (!currentUser) return;
+      if (currentUser.role === "faculty") {
+        window.location.href = "dashboard.html";
+        return;
+      }
+      renderFeesPage();
+    })();
+
+    function renderFeesPage() {
+      const main = document.getElementById("main-content");
+      const isAdmin = currentUser.role === "admin";
+
+      main.innerHTML = `
+        <div class="page-header">
+            <h2 class="page-title">Fees &amp; Payments</h2>
+          </div>
         <div class="tabs">
           <button class="tab-btn tab-active" data-tab="invoices">${isAdmin ? "Invoices" : "My Invoices"}</button>
           <button class="tab-btn" data-tab="payments">${isAdmin ? "Payment History" : "My Payments"}</button>
@@ -117,62 +371,141 @@
         <div id="feeTabContent"></div>
       `;
 
-        document.querySelectorAll(".tab-btn").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            document
-              .querySelectorAll(".tab-btn")
-              .forEach((b) => b.classList.remove("tab-active"));
-            btn.classList.add("tab-active");
-            activeTab = btn.dataset.tab;
-            renderFeeTabContent();
-          });
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tab-btn")
+            .forEach((b) => b.classList.remove("tab-active"));
+          btn.classList.add("tab-active");
+          activeTab = btn.dataset.tab;
+          currentInvoicesPage = 1;
+          currentPaymentsPage = 1;
+          renderFeeTabContent();
+        });
+      });
+
+      setupPaymentModal();
+      document
+        .getElementById("closeInvoiceModal")
+        .addEventListener("click", () =>
+          document.getElementById("invoiceModal").classList.add("hidden"),
+        );
+
+      renderFeeTabContent();
+    }
+
+    function scopedEnrollments() {
+      let enrollments = DB.get("enrollments").filter(
+        (e) => e.status !== "Cancelled",
+      );
+      if (currentUser.role === "student")
+        enrollments = enrollments.filter(
+          (e) => e.studentId === currentUser.studentId,
+        );
+      return enrollments;
+    }
+
+    function renderFeeTabContent() {
+      const wrap = document.getElementById("feeTabContent");
+      const isAdmin = currentUser.role === "admin";
+
+      if (activeTab === "invoices") {
+        let enrollments = scopedEnrollments();
+        if (typeof window.currentInvoiceFilter === 'undefined') window.currentInvoiceFilter = "All";
+        if (typeof window.currentInvoiceSearch === 'undefined') window.currentInvoiceSearch = "";
+
+        enrollments = enrollments.map(e => {
+          const pending = e.totalFee - (e.paidAmount || 0);
+          e._pending = pending;
+          e._status = pending <= 0 ? "Paid" : (e.paidAmount > 0 ? "Pending" : "Overdue");
+          return e;
         });
 
-        setupPaymentModal();
-        document
-          .getElementById("closeInvoiceModal")
-          .addEventListener("click", () =>
-            document.getElementById("invoiceModal").classList.add("hidden"),
-          );
+        if (window.currentInvoiceFilter !== "All") {
+          enrollments = enrollments.filter(e => e._status === window.currentInvoiceFilter);
+        }
 
-        renderFeeTabContent();
-      }
+        if (window.currentInvoiceSearch) {
+          const q = window.currentInvoiceSearch.toLowerCase();
+          enrollments = enrollments.filter(e => {
+            const s = DB.getById("students", e.studentId);
+            const c = DB.getById("courses", e.courseId);
+            const ref = formatInvoiceRef(e).toLowerCase();
+            return ref.includes(q) || (s && s.name.toLowerCase().includes(q)) || (c && c.name.toLowerCase().includes(q));
+          });
+        }
 
-      function scopedEnrollments() {
-        let enrollments = DB.get("enrollments").filter(
-          (e) => e.status !== "Cancelled",
-        );
-        if (currentUser.role === "student")
-          enrollments = enrollments.filter(
-            (e) => e.studentId === currentUser.studentId,
-          );
-        return enrollments;
-      }
+        // Sort: Pending/Overdue first, Paid last
+        enrollments.sort((a, b) => {
+          const aIsPaid = a._status === "Paid" ? 1 : 0;
+          const bIsPaid = b._status === "Paid" ? 1 : 0;
+          if (aIsPaid !== bIsPaid) return aIsPaid - bIsPaid;
+          return new Date(b.enrollDate) - new Date(a.enrollDate);
+        });
 
-      function renderFeeTabContent() {
-        const wrap = document.getElementById("feeTabContent");
-        const isAdmin = currentUser.role === "admin";
+        let filterHTML = `
+            <div style="display:flex;justify-content:space-between;margin-bottom:1.25rem;gap:1rem;align-items:center;flex-wrap:wrap">
+              <div style="position:relative; width:100%; max-width:320px;">
+                <span class="material-icons" style="position:absolute; left:0.875rem; top:50%; transform:translateY(-50%); color:hsl(var(--muted-foreground)); font-size:1.125rem; pointer-events:none;">search</span>
+                <input type="text" id="invoiceSearchInput" class="form-control" placeholder="Search invoices..." value="${window.currentInvoiceSearch}" style="padding-left:2.5rem; border-radius:10px; height:38px;">
+              </div>
+          `;
+        if (isAdmin) {
+          filterHTML += `
+              <div style="display:flex;gap:0.5rem;align-items:center">
+                <label style="font-size:0.875rem;font-weight:500;color:hsl(var(--muted-foreground))">Filter:</label>
+                <select id="invoiceFilterDropdown" class="form-control" style="width:auto;min-width:120px">
+                  <option value="All" ${window.currentInvoiceFilter === 'All' ? 'selected' : ''}>All Invoices</option>
+                  <option value="Overdue" ${window.currentInvoiceFilter === 'Overdue' ? 'selected' : ''}>Overdue</option>
+                  <option value="Pending" ${window.currentInvoiceFilter === 'Pending' ? 'selected' : ''}>Pending</option>
+                  <option value="Paid" ${window.currentInvoiceFilter === 'Paid' ? 'selected' : ''}>Paid</option>
+                </select>
+              </div>
+            `;
+        }
+        filterHTML += `</div>`;
 
-        if (activeTab === "invoices") {
-          const enrollments = scopedEnrollments();
-          if (!enrollments.length) {
-            wrap.innerHTML = `<p class="empty-state">No invoices found.</p>`;
-            return;
+        if (!enrollments.length) {
+          wrap.innerHTML = filterHTML + `<p class="empty-state">No invoices found.</p>`;
+          document.getElementById("invoiceSearchInput").addEventListener("input", (e) => {
+            window.currentInvoiceSearch = e.target.value;
+            currentInvoicesPage = 1;
+            renderFeeTabContent();
+            const inp = document.getElementById("invoiceSearchInput");
+            if (inp) { inp.focus(); inp.selectionStart = inp.selectionEnd = inp.value.length; }
+          });
+          if (isAdmin) {
+            document.getElementById("invoiceFilterDropdown").addEventListener("change", (e) => {
+              window.currentInvoiceFilter = e.target.value;
+              currentInvoicesPage = 1;
+              renderFeeTabContent();
+            });
           }
-          const rows = enrollments
-            .map((e) => {
-              const student = DB.getById("students", e.studentId);
-              const course = DB.getById("courses", e.courseId);
-              const pending = e.totalFee - (e.paidAmount || 0);
-              const status =
-                pending <= 0
-                  ? "Paid"
-                  : e.paidAmount > 0
-                    ? "Pending"
-                    : "Overdue";
-              return `<tr>
-            <td>${e.id}</td>
-            ${isAdmin ? `<td>${student ? student.name : "-"}</td>` : ""}
+          return;
+        }
+        const paginatedEnrollments = enrollments.slice((currentInvoicesPage - 1) * 6, currentInvoicesPage * 6);
+        const rows = paginatedEnrollments
+          .map((e) => {
+            const student = DB.getById("students", e.studentId);
+            const course = DB.getById("courses", e.courseId);
+            const pending = e.totalFee - (e.paidAmount || 0);
+            const status =
+              pending <= 0
+                ? "Paid"
+                : e.paidAmount > 0
+                  ? "Pending"
+                  : "Overdue";
+            const initials = student ? student.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() : "-";
+            return `<tr>
+            <td>${formatInvoiceRef(e)}</td>
+            ${isAdmin ? `
+            <td class="avatar-name-cell">
+              <div class="avatar-circle">${initials}</div>
+              <div class="avatar-details">
+                <span>${student ? student.name : "-"}</span>
+                <span class="avatar-subtext">${student ? student.email : "-"}</span>
+              </div>
+            </td>` : ""}
             <td>${course ? course.name : "-"}</td>
             <td>${formatCurrency(e.totalFee)}</td>
             <td>${formatCurrency(e.paidAmount || 0)}</td>
@@ -181,50 +514,123 @@
             <td class="actions-cell">
               <button class="icon-btn view-invoice" data-id="${e.id}"><span class="material-icons">receipt_long</span></button>
               ${isAdmin && pending > 0 ? `<button class="btn btn-primary btn-sm record-payment-btn" data-id="${e.id}">Record Payment</button>` : ""}
+              ${!isAdmin && currentUser.role === "student" && pending > 0 ? `<button class="btn btn-primary btn-sm student-pay-btn" data-id="${e.id}">Pay Now</button>` : ""}
             </td>
           </tr>`;
-            })
-            .join("");
-          wrap.innerHTML = `
+          })
+          .join("");
+        wrap.innerHTML = filterHTML + `
           <table class="data-table">
-            <thead><tr><th>ID</th>${isAdmin ? "<th>Student</th>" : ""}<th>Course</th><th>Total Fee</th><th>Paid</th><th>Pending</th><th>Status</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Invoice Ref</th>${isAdmin ? "<th>Student</th>" : ""}<th>Course</th><th>Total Fee</th><th>Paid</th><th>Pending</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody>${rows}</tbody>
           </table>
+          <div id="invoicesPagination"></div>
         `;
-          wrap
-            .querySelectorAll(".view-invoice")
-            .forEach((btn) =>
-              btn.addEventListener("click", () => showInvoice(btn.dataset.id)),
-            );
-          wrap
-            .querySelectorAll(".record-payment-btn")
-            .forEach((btn) =>
-              btn.addEventListener("click", () =>
-                openPaymentModal(btn.dataset.id),
-              ),
-            );
-        } else if (activeTab === "payments") {
-          let payments = DB.get("payments");
-          if (!isAdmin) {
-            const myEnrollmentIds = scopedEnrollments().map((e) => e.id);
-            payments = payments.filter((p) =>
-              myEnrollmentIds.includes(p.enrollmentId),
-            );
-          }
-          if (!payments.length) {
-            wrap.innerHTML = `<p class="empty-state">No payments recorded yet.</p>`;
-            return;
-          }
-          const rows = payments
-            .slice()
-            .reverse()
-            .map((p) => {
-              const enrollment = DB.getById("enrollments", p.enrollmentId);
-              const course = enrollment
-                ? DB.getById("courses", enrollment.courseId)
-                : null;
-              return `<tr>
-            <td>${p.id}</td>
+
+        document.getElementById("invoiceSearchInput").addEventListener("input", (e) => {
+          window.currentInvoiceSearch = e.target.value;
+          currentInvoicesPage = 1;
+          renderFeeTabContent();
+          const inp = document.getElementById("invoiceSearchInput");
+          if (inp) { inp.focus(); inp.selectionStart = inp.selectionEnd = inp.value.length; }
+        });
+
+        if (isAdmin) {
+          document.getElementById("invoiceFilterDropdown").addEventListener("change", (e) => {
+            window.currentInvoiceFilter = e.target.value;
+            currentInvoicesPage = 1;
+            renderFeeTabContent();
+          });
+        }
+
+        renderPagination("invoicesPagination", enrollments.length, currentInvoicesPage, 6, (newPage) => {
+          currentInvoicesPage = newPage;
+          renderFeeTabContent();
+        });
+
+        wrap
+          .querySelectorAll(".view-invoice")
+          .forEach((btn) =>
+            btn.addEventListener("click", () => showInvoice(btn.dataset.id)),
+          );
+        wrap
+          .querySelectorAll(".record-payment-btn")
+          .forEach((btn) =>
+            btn.addEventListener("click", () =>
+              openPaymentModal(btn.dataset.id),
+            ),
+          );
+        wrap
+          .querySelectorAll(".student-pay-btn")
+          .forEach((btn) =>
+            btn.addEventListener("click", () =>
+              openStudentPayModal(btn.dataset.id),
+            ),
+          );
+      } else if (activeTab === "payments") {
+        let payments = DB.get("payments");
+        if (!isAdmin) {
+          const myEnrollmentIds = scopedEnrollments().map((e) => e.id);
+          payments = payments.filter((p) =>
+            myEnrollmentIds.includes(p.enrollmentId),
+          );
+        }
+
+        if (typeof window.currentPaymentSearch === 'undefined') window.currentPaymentSearch = "";
+        if (window.currentPaymentSearch) {
+          const q = window.currentPaymentSearch.toLowerCase();
+          payments = payments.filter(p => {
+            const e = DB.getById("enrollments", p.enrollmentId);
+            const s = e ? DB.getById("students", e.studentId) : null;
+            const c = e ? DB.getById("courses", e.courseId) : null;
+            const ref = formatReceiptRef(p).toLowerCase();
+            const extRef = (p.reference || "").toLowerCase();
+            return ref.includes(q) || extRef.includes(q) || (s && s.name.toLowerCase().includes(q)) || (c && c.name.toLowerCase().includes(q));
+          });
+        }
+
+        const topBarHTML = `
+            <div style="display:flex;justify-content:space-between;margin-bottom:1.25rem;gap:1rem;align-items:center;flex-wrap:wrap">
+              <div style="position:relative; width:100%; max-width:320px;">
+                <span class="material-icons" style="position:absolute; left:0.875rem; top:50%; transform:translateY(-50%); color:hsl(var(--muted-foreground)); font-size:1.125rem; pointer-events:none;">search</span>
+                <input type="text" id="paymentSearchInput" class="form-control" placeholder="Search payments..." value="${window.currentPaymentSearch}" style="padding-left:2.5rem; border-radius:10px; height:38px;">
+              </div>
+            </div>
+          `;
+
+        if (!payments.length) {
+          wrap.innerHTML = topBarHTML + `<p class="empty-state">No payments recorded yet.</p>`;
+          document.getElementById("paymentSearchInput").addEventListener("input", (e) => {
+            window.currentPaymentSearch = e.target.value;
+            currentPaymentsPage = 1;
+            renderFeeTabContent();
+            const inp = document.getElementById("paymentSearchInput");
+            if (inp) { inp.focus(); inp.selectionStart = inp.selectionEnd = inp.value.length; }
+          });
+          return;
+        }
+        const reversedPayments = payments.slice().reverse();
+        const paginatedPayments = reversedPayments.slice((currentPaymentsPage - 1) * 6, currentPaymentsPage * 6);
+        const rows = paginatedPayments
+          .map((p) => {
+            const enrollment = DB.getById("enrollments", p.enrollmentId);
+            const course = enrollment
+              ? DB.getById("courses", enrollment.courseId)
+              : null;
+            const student = enrollment
+              ? DB.getById("students", enrollment.studentId)
+              : null;
+            const initials = student ? student.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() : "-";
+            return `<tr>
+            <td>${formatReceiptRef(p)}</td>
+            ${isAdmin ? `
+            <td class="avatar-name-cell">
+              <div class="avatar-circle">${initials}</div>
+              <div class="avatar-details">
+                <span>${student ? student.name : "-"}</span>
+                <span class="avatar-subtext">${student ? student.email : "-"}</span>
+              </div>
+            </td>` : ""}
             <td>${course ? course.name : "-"}</td>
             <td>${formatDate(p.date)}</td>
             <td>${formatCurrency(p.amount)}</td>
@@ -232,24 +638,52 @@
             <td>${p.reference || "-"}</td>
             <td class="actions-cell"><button class="icon-btn view-receipt" data-id="${p.id}"><span class="material-icons">download</span></button></td>
           </tr>`;
-            })
-            .join("");
-          wrap.innerHTML = `
+          })
+          .join("");
+        wrap.innerHTML = topBarHTML + `
           <table class="data-table">
-            <thead><tr><th>Payment ID</th><th>Course</th><th>Date</th><th>Amount</th><th>Mode</th><th>Reference</th><th>Receipt</th></tr></thead>
+            <thead><tr><th>Receipt Ref</th>${isAdmin ? "<th>Student</th>" : ""}<th>Course</th><th>Date</th><th>Amount</th><th>Mode</th><th>Reference</th><th>Receipt</th></tr></thead>
             <tbody>${rows}</tbody>
           </table>
+          <div id="paymentsPagination"></div>
         `;
-          wrap
-            .querySelectorAll(".view-receipt")
-            .forEach((btn) =>
-              btn.addEventListener("click", () => showReceipt(btn.dataset.id)),
-            );
-        } else if (activeTab === "feesetup") {
-          const courses = DB.get("courses");
-          const rows = courses
-            .map(
-              (c) => `
+
+        document.getElementById("paymentSearchInput").addEventListener("input", (e) => {
+          window.currentPaymentSearch = e.target.value;
+          currentPaymentsPage = 1;
+          renderFeeTabContent();
+          const inp = document.getElementById("paymentSearchInput");
+          if (inp) { inp.focus(); inp.selectionStart = inp.selectionEnd = inp.value.length; }
+        });
+
+        renderPagination("paymentsPagination", payments.length, currentPaymentsPage, 6, (newPage) => {
+          currentPaymentsPage = newPage;
+          renderFeeTabContent();
+        });
+
+        wrap
+          .querySelectorAll(".view-receipt")
+          .forEach((btn) =>
+            btn.addEventListener("click", () => showReceipt(btn.dataset.id)),
+          );
+      } else if (activeTab === "feesetup") {
+        let courses = DB.get("courses");
+        if (typeof window.currentFeeSetupSearch === 'undefined') window.currentFeeSetupSearch = "";
+        if (window.currentFeeSetupSearch) {
+          const q = window.currentFeeSetupSearch.toLowerCase();
+          courses = courses.filter(c => c.name.toLowerCase().includes(q));
+        }
+        const topBarHTML = `
+            <div style="display:flex;justify-content:space-between;margin-bottom:1.25rem;gap:1rem;align-items:center;flex-wrap:wrap">
+              <div style="position:relative; width:100%; max-width:320px;">
+                <span class="material-icons" style="position:absolute; left:0.875rem; top:50%; transform:translateY(-50%); color:hsl(var(--muted-foreground)); font-size:1.125rem; pointer-events:none;">search</span>
+                <input type="text" id="feeSetupSearchInput" class="form-control" placeholder="Search courses..." value="${window.currentFeeSetupSearch}" style="padding-left:2.5rem; border-radius:10px; height:38px;">
+              </div>
+            </div>
+          `;
+        const rows = courses
+          .map(
+            (c) => `
           <tr>
             <td>${c.name}</td>
             <td>${c.feePlanType}</td>
@@ -258,108 +692,225 @@
             <td><button class="btn btn-secondary btn-sm edit-feeplan" data-id="${c.id}">Edit</button></td>
           </tr>
         `,
-            )
-            .join("");
-          wrap.innerHTML = `
+          )
+          .join("");
+        wrap.innerHTML = topBarHTML + `
           <table class="data-table">
             <thead><tr><th>Course</th><th>Plan Type</th><th>Base Fee</th><th>Installments</th><th>Actions</th></tr></thead>
-            <tbody>${rows}</tbody>
+            <tbody>${rows.length ? rows : '<tr><td colspan="5" class="empty-state">No courses found.</td></tr>'}</tbody>
           </table>
           <p class="hint-text">Edit fee plan type and base fee from the Courses page (Add/Edit Course form).</p>
         `;
-          wrap
-            .querySelectorAll(".edit-feeplan")
-            .forEach((btn) =>
-              btn.addEventListener(
-                "click",
-                () => (window.location.href = "courses.html"),
-              ),
-            );
-        }
-      }
 
-      function openPaymentModal(enrollmentId) {
-        const enrollment = DB.getById("enrollments", enrollmentId);
-        document.getElementById("paymentForm").reset();
-        document.getElementById("paymentFormError").classList.add("hidden");
-        document.getElementById("payEnrollmentId").value = enrollmentId;
-        document.getElementById("paySummaryTotal").textContent = formatCurrency(
-          enrollment.totalFee,
-        );
-        document.getElementById("paySummaryPaid").textContent = formatCurrency(
-          enrollment.paidAmount || 0,
-        );
-        document.getElementById("paySummaryPending").textContent =
-          formatCurrency(enrollment.totalFee - (enrollment.paidAmount || 0));
-        document.getElementById("payDate").valueAsDate = new Date();
-        document.getElementById("paymentModal").classList.remove("hidden");
-      }
-
-      function setupPaymentModal() {
-        document
-          .getElementById("closePaymentModal")
-          .addEventListener("click", () =>
-            document.getElementById("paymentModal").classList.add("hidden"),
+        document.getElementById("feeSetupSearchInput").addEventListener("input", (e) => {
+          window.currentFeeSetupSearch = e.target.value;
+          renderFeeTabContent();
+          const inp = document.getElementById("feeSetupSearchInput");
+          if (inp) { inp.focus(); inp.selectionStart = inp.selectionEnd = inp.value.length; }
+        });
+        wrap
+          .querySelectorAll(".edit-feeplan")
+          .forEach((btn) =>
+            btn.addEventListener(
+              "click",
+              () => (window.location.href = "courses.html"),
+            ),
           );
-        document
-          .getElementById("cancelPaymentForm")
-          .addEventListener("click", () =>
-            document.getElementById("paymentModal").classList.add("hidden"),
-          );
+      }
+    }
 
-        document
-          .getElementById("paymentForm")
-          .addEventListener("submit", (e) => {
-            e.preventDefault();
-            const enrollmentId =
-              document.getElementById("payEnrollmentId").value;
-            const enrollment = DB.getById("enrollments", enrollmentId);
-            const amount = Number(document.getElementById("payAmount").value);
-            const pending = enrollment.totalFee - (enrollment.paidAmount || 0);
-            const errorEl = document.getElementById("paymentFormError");
+    function openPaymentModal(enrollmentId) {
+      const enrollment = DB.getById("enrollments", enrollmentId);
+      document.getElementById("paymentForm").reset();
+      document.getElementById("paymentFormError").classList.add("hidden");
+      document.getElementById("paymentFormSuccess").classList.add("hidden");
+      document.getElementById("payEnrollmentId").value = enrollmentId;
 
-            if (!amount || amount <= 0)
-              return showFormErr(errorEl, "Enter a valid payment amount.");
-            if (amount > pending)
-              return showFormErr(
-                errorEl,
-                `Amount exceeds pending balance of ${formatCurrency(pending)}.`,
-              );
+      document.getElementById("paySummaryTotal").textContent = formatCurrency(enrollment.totalFee);
+      document.getElementById("paySummaryPaid").textContent = formatCurrency(enrollment.paidAmount || 0);
 
-            const payment = DB.add("payments", {
-              enrollmentId,
-              amount,
-              date: document.getElementById("payDate").value,
-              mode: document.getElementById("payMode").value,
-              reference: document.getElementById("payReference").value.trim(),
-            });
-            DB.update("enrollments", enrollmentId, {
-              paidAmount: (enrollment.paidAmount || 0) + amount,
-            });
+      const pending = enrollment.totalFee - (enrollment.paidAmount || 0);
+      document.getElementById("paySummaryPending").textContent = formatCurrency(pending);
 
-            const studentUser = DB.get("users").find(
-              (u) => u.studentId === enrollment.studentId,
-            );
-            if (studentUser)
-              pushNotification(
-                studentUser.id,
-                `Payment of ${formatCurrency(amount)} received. Receipt generated.`,
-                "info",
-              );
+      document.getElementById("payAmount").value = pending;
+      const hintEl = document.getElementById("payAmountHint");
+      hintEl.textContent = `Pending balance is ${formatCurrency(pending)}`;
+      hintEl.style.color = "hsl(var(--muted-foreground))";
 
-            document.getElementById("paymentModal").classList.add("hidden");
-            alert("Payment recorded. Receipt generated.");
-            renderFeeTabContent();
+      // Reset pills
+      document.querySelectorAll('.pay-mode-pill').forEach(p => p.classList.remove('active', 'btn-primary'));
+      document.querySelectorAll('.pay-mode-pill').forEach(p => {
+        p.style.background = 'hsl(var(--background))';
+        p.style.color = 'hsl(var(--foreground))';
+      });
+      const cashPill = document.querySelector('.pay-mode-pill[data-mode="Cash"]');
+      if (cashPill) {
+        cashPill.classList.add('active');
+        cashPill.style.background = 'hsl(var(--primary))';
+        cashPill.style.color = '#fff';
+      }
+      document.getElementById("payMode").value = "Cash";
+
+      document.getElementById("adminMockGateway").style.display = "none";
+      document.getElementById("adminMockUpi").style.display = "none";
+      document.getElementById("adminMockCard").style.display = "none";
+      document.getElementById("adminMockBank").style.display = "none";
+      document.getElementById("adminMockOnline").style.display = "none";
+
+      // Reset card fields
+      document.getElementById("payCardNo").value = "";
+      document.getElementById("payCardExpiry").value = "";
+      document.getElementById("payCardCvv").value = "";
+      document.getElementById("payCardHolder").value = "";
+      document.querySelector("#adminMockCard .card-mockup-number").textContent = "•••• •••• •••• ••••";
+      document.querySelector("#adminMockCard .card-mockup-name").textContent = "Student Name";
+      document.querySelector("#adminMockCard .card-mockup-expiry").textContent = "MM/YY";
+
+      document.getElementById("paymentModal").classList.remove("hidden");
+    }
+
+    function setupPaymentModal() {
+      // Setup pill click handlers
+      document.querySelectorAll('.pay-mode-pill').forEach(pill => {
+        pill.addEventListener('click', (e) => {
+          document.querySelectorAll('.pay-mode-pill').forEach(p => {
+            p.classList.remove('active');
+            p.style.background = 'hsl(var(--background))';
+            p.style.color = 'hsl(var(--foreground))';
           });
-      }
+          const clicked = e.currentTarget;
+          clicked.classList.add('active');
+          clicked.style.background = 'hsl(var(--primary))';
+          clicked.style.color = '#fff';
+          const mode = clicked.dataset.mode;
+          document.getElementById('payMode').value = mode;
 
-      function showInvoice(enrollmentId) {
-        const e = DB.getById("enrollments", enrollmentId);
-        const student = DB.getById("students", e.studentId);
-        const course = DB.getById("courses", e.courseId);
-        const pending = e.totalFee - (e.paidAmount || 0);
-        document.getElementById("invoiceContent").innerHTML = `
-        <div class="invoice-header"><h2>EduTrack Institute</h2><p>Invoice No: INV-${e.id}</p><p>Date: ${formatDate(e.enrollDate)}</p></div>
+          // Show mock gateway if applicable
+          const gw = document.getElementById("adminMockGateway");
+          const upi = document.getElementById("adminMockUpi");
+          const card = document.getElementById("adminMockCard");
+          const bank = document.getElementById("adminMockBank");
+          const online = document.getElementById("adminMockOnline");
+
+          gw.style.display = "block";
+          upi.style.display = "none";
+          card.style.display = "none";
+          bank.style.display = "none";
+          online.style.display = "none";
+
+          if (mode === "UPI") {
+            upi.style.display = "flex";
+          } else if (mode === "Card") {
+            card.style.display = "block";
+          } else if (mode === "Bank Transfer") {
+            bank.style.display = "block";
+          } else if (mode === "Online") {
+            online.style.display = "block";
+          } else {
+            gw.style.display = "none"; // Cash
+          }
+        });
+      });
+
+      // Admin Card Live Input Observers
+      const payCardNo = document.getElementById("payCardNo");
+      payCardNo.addEventListener("input", () => {
+        let val = payCardNo.value.replace(/\D/g, "");
+        let formatted = "";
+        for (let i = 0; i < val.length; i += 4) {
+          if (i > 0) formatted += " ";
+          formatted += val.substring(i, i + 4);
+        }
+        payCardNo.value = formatted.slice(0, 19);
+        document.querySelector("#adminMockCard .card-mockup-number").textContent = payCardNo.value || "•••• •••• •••• ••••";
+      });
+
+      const payCardExpiry = document.getElementById("payCardExpiry");
+      payCardExpiry.addEventListener("input", () => {
+        let val = payCardExpiry.value.replace(/\D/g, "");
+        if (val.length > 2) {
+          payCardExpiry.value = val.substring(0, 2) + "/" + val.substring(2, 4);
+        } else {
+          payCardExpiry.value = val;
+        }
+        document.querySelector("#adminMockCard .card-mockup-expiry").textContent = payCardExpiry.value || "MM/YY";
+      });
+
+      const payCardHolder = document.getElementById("payCardHolder");
+      payCardHolder.addEventListener("input", () => {
+        document.querySelector("#adminMockCard .card-mockup-name").textContent = payCardHolder.value.toUpperCase() || "Student Name";
+      });
+
+      const payCardCvv = document.getElementById("payCardCvv");
+      payCardCvv.addEventListener("input", () => {
+        payCardCvv.value = payCardCvv.value.replace(/\D/g, "").slice(0, 3);
+      });
+
+      // Setup amount hint dynamically
+      document.getElementById("payAmount").addEventListener("input", (e) => {
+        const enrollmentId = document.getElementById("payEnrollmentId").value;
+        const enrollment = DB.getById("enrollments", enrollmentId);
+        const pending = enrollment.totalFee - (enrollment.paidAmount || 0);
+        const amt = Number(e.target.value);
+        const hintEl = document.getElementById("payAmountHint");
+        if (amt > pending) {
+          hintEl.textContent = `Warning: Amount exceeds pending balance of ${formatCurrency(pending)}.`;
+          hintEl.style.color = "hsl(var(--destructive))";
+        } else if (amt < pending) {
+          hintEl.textContent = `Partial payment. Remaining balance will be ${formatCurrency(pending - amt)}.`;
+          hintEl.style.color = "hsl(var(--warning))";
+        } else {
+          hintEl.textContent = `Full payment of pending balance.`;
+          hintEl.style.color = "hsl(var(--success))";
+        }
+      });
+
+      document.getElementById("closePaymentModal").addEventListener("click", () => document.getElementById("paymentModal").classList.add("hidden"));
+      document.getElementById("cancelPaymentForm").addEventListener("click", () => document.getElementById("paymentModal").classList.add("hidden"));
+
+      document.getElementById("paymentForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const enrollmentId = document.getElementById("payEnrollmentId").value;
+        const enrollment = DB.getById("enrollments", enrollmentId);
+        const amount = Number(document.getElementById("payAmount").value);
+        const pending = enrollment.totalFee - (enrollment.paidAmount || 0);
+        const errorEl = document.getElementById("paymentFormError");
+        const successEl = document.getElementById("paymentFormSuccess");
+
+        errorEl.classList.add("hidden");
+        successEl.classList.add("hidden");
+
+        if (!amount || amount <= 0) return showFormErr(errorEl, "Enter a valid payment amount.");
+        if (amount > pending) return showFormErr(errorEl, `Amount exceeds pending balance of ${formatCurrency(pending)}.`);
+
+        DB.add("payments", {
+          enrollmentId,
+          amount,
+          date: new Date().toISOString().split('T')[0],
+          mode: document.getElementById("payMode").value,
+          reference: "TRX" + Math.floor(Math.random() * 1000000000),
+        });
+
+        DB.update("enrollments", enrollmentId, {
+          paidAmount: (enrollment.paidAmount || 0) + amount,
+        });
+
+        const studentUser = DB.get("users").find((u) => u.studentId === enrollment.studentId);
+        if (studentUser) pushNotification(studentUser.id, `Payment of ${formatCurrency(amount)} received. Receipt generated.`, "info");
+
+        showToast(`Payment of ${formatCurrency(amount)} recorded successfully!`, "success");
+        document.getElementById("paymentModal").classList.add("hidden");
+        renderFeeTabContent();
+      });
+    }
+
+    function showInvoice(enrollmentId) {
+      const e = DB.getById("enrollments", enrollmentId);
+      const student = DB.getById("students", e.studentId);
+      const course = DB.getById("courses", e.courseId);
+      const pending = e.totalFee - (e.paidAmount || 0);
+      document.getElementById("invoiceContent").innerHTML = `
+        <div class="invoice-header"><h2>EduTrack Institute</h2><p>Invoice No: ${formatInvoiceRef(e)}</p><p>Date: ${formatDate(e.enrollDate)}</p></div>
         <p><strong>Student:</strong> ${student ? student.name : "-"}</p>
         <p><strong>Course:</strong> ${course ? course.name : "-"}</p>
         <table class="data-table">
@@ -368,16 +919,16 @@
         </table>
         <button class="btn btn-primary" onclick="window.print()"><span class="material-icons">print</span> Print</button>
       `;
-        document.getElementById("invoiceModal").classList.remove("hidden");
-      }
+      document.getElementById("invoiceModal").classList.remove("hidden");
+    }
 
-      function showReceipt(paymentId) {
-        const p = DB.getById("payments", paymentId);
-        const e = DB.getById("enrollments", p.enrollmentId);
-        const student = DB.getById("students", e.studentId);
-        const course = DB.getById("courses", e.courseId);
-        document.getElementById("invoiceContent").innerHTML = `
-        <div class="invoice-header"><h2>EduTrack Institute</h2><p>Receipt No: RCPT-${p.id}</p><p>Date: ${formatDate(p.date)}</p></div>
+    function showReceipt(paymentId) {
+      const p = DB.getById("payments", paymentId);
+      const e = DB.getById("enrollments", p.enrollmentId);
+      const student = DB.getById("students", e.studentId);
+      const course = DB.getById("courses", e.courseId);
+      document.getElementById("invoiceContent").innerHTML = `
+        <div class="invoice-header"><h2>EduTrack Institute</h2><p>Receipt No: ${formatReceiptRef(p)}</p><p>Date: ${formatDate(p.date)}</p></div>
         <p><strong>Student:</strong> ${student ? student.name : "-"}</p>
         <p><strong>Course:</strong> ${course ? course.name : "-"}</p>
         <p><strong>Amount Paid:</strong> ${formatCurrency(p.amount)}</p>
@@ -385,13 +936,240 @@
         <p><strong>Reference:</strong> ${p.reference || "-"}</p>
         <button class="btn btn-primary" onclick="window.print()"><span class="material-icons">print</span> Print</button>
       `;
-        document.getElementById("invoiceModal").classList.remove("hidden");
-      }
+      document.getElementById("invoiceModal").classList.remove("hidden");
+    }
 
-      function showFormErr(el, msg) {
-        el.textContent = msg;
-        el.classList.remove("hidden");
+    // ====== Student Self-Pay (BUG 6) ======
+    let activePayMethod = "upi";
+
+    function openStudentPayModal(enrollmentId) {
+      var enrollment = DB.getById("enrollments", enrollmentId);
+      var pending = enrollment.totalFee - (enrollment.paidAmount || 0);
+      document.getElementById("spEnrollmentId").value = enrollmentId;
+      document.getElementById("spAmountDue").textContent = formatCurrency(pending);
+
+      // Reset inputs
+      document.getElementById("studentPayForm").reset();
+      document.getElementById("spUpiId").value = "";
+      document.getElementById("spCardNo").value = "";
+      document.getElementById("spCardExpiry").value = "";
+      document.getElementById("spCardCvv").value = "";
+      document.getElementById("spCardHolder").value = "";
+
+      // Reset Card Mockup text
+      document.querySelector(".card-mockup-number").textContent = "•••• •••• •••• ••••";
+      document.querySelector(".card-mockup-name").textContent = "Your Name";
+      document.querySelector(".card-mockup-expiry").textContent = "MM/YY";
+
+      // Reset Pills State to UPI
+      activePayMethod = "UPI";
+      document.querySelectorAll('.sp-pay-mode-pill').forEach(p => {
+        p.classList.remove('active');
+        p.style.background = 'hsl(var(--background))';
+        p.style.color = 'hsl(var(--foreground))';
+      });
+      const spUpiPill = document.querySelector('.sp-pay-mode-pill[data-mode="UPI"]');
+      if (spUpiPill) {
+        spUpiPill.classList.add('active');
+        spUpiPill.style.background = 'hsl(var(--primary))';
+        spUpiPill.style.color = '#fff';
       }
-    </script>
-  </body>
+      document.getElementById("spPayMode").value = "UPI";
+
+      document.getElementById("spMockUpi").style.display = "flex";
+      document.getElementById("spMockCard").style.display = "none";
+      document.getElementById("spMockBank").style.display = "none";
+      document.getElementById("spMockOnline").style.display = "none";
+
+      // Clear error / success status
+      document.getElementById("studentPayError").classList.add("hidden");
+      document.getElementById("studentPaySuccess").classList.add("hidden");
+      document.getElementById("spPayNowBtn").disabled = false;
+      document.getElementById("spPayNowBtn").innerHTML = '<span class="material-icons">payments</span> Pay Now';
+      document.getElementById("studentPayModal").classList.remove("hidden");
+    }
+
+    function setupStudentPayModal() {
+      document.getElementById("closeStudentPayModal").addEventListener("click", function () {
+        document.getElementById("studentPayModal").classList.add("hidden");
+      });
+      document.getElementById("cancelStudentPay").addEventListener("click", function () {
+        document.getElementById("studentPayModal").classList.add("hidden");
+      });
+
+      // Pill Switching
+      document.querySelectorAll(".sp-pay-mode-pill").forEach((pill) => {
+        pill.addEventListener("click", (e) => {
+          document.querySelectorAll(".sp-pay-mode-pill").forEach((p) => {
+            p.classList.remove("active");
+            p.style.background = "hsl(var(--background))";
+            p.style.color = "hsl(var(--foreground))";
+          });
+          const clicked = e.currentTarget;
+          clicked.classList.add("active");
+          clicked.style.background = "hsl(var(--primary))";
+          clicked.style.color = "#fff";
+
+          activePayMethod = clicked.dataset.mode;
+          document.getElementById('spPayMode').value = activePayMethod;
+
+          const upi = document.getElementById("spMockUpi");
+          const card = document.getElementById("spMockCard");
+          const bank = document.getElementById("spMockBank");
+          const online = document.getElementById("spMockOnline");
+
+          upi.style.display = "none";
+          card.style.display = "none";
+          bank.style.display = "none";
+          online.style.display = "none";
+
+          if (activePayMethod === "UPI") {
+            upi.style.display = "flex";
+          } else if (activePayMethod === "Card") {
+            card.style.display = "block";
+          } else if (activePayMethod === "Bank Transfer") {
+            bank.style.display = "block";
+          } else if (activePayMethod === "Online") {
+            online.style.display = "block";
+          }
+        });
+      });
+
+      // Card Live Input Observers
+      const cardNoInput = document.getElementById("spCardNo");
+      cardNoInput.addEventListener("input", () => {
+        let val = cardNoInput.value.replace(/\D/g, "");
+        let formatted = "";
+        for (let i = 0; i < val.length; i += 4) {
+          if (i > 0) formatted += " ";
+          formatted += val.substring(i, i + 4);
+        }
+        cardNoInput.value = formatted.slice(0, 19);
+        document.querySelector(".card-mockup-number").textContent = cardNoInput.value || "•••• •••• •••• ••••";
+      });
+
+      const cardExpiryInput = document.getElementById("spCardExpiry");
+      cardExpiryInput.addEventListener("input", () => {
+        let val = cardExpiryInput.value.replace(/\D/g, "");
+        if (val.length > 2) {
+          cardExpiryInput.value = val.substring(0, 2) + "/" + val.substring(2, 4);
+        } else {
+          cardExpiryInput.value = val;
+        }
+        document.querySelector(".card-mockup-expiry").textContent = cardExpiryInput.value || "MM/YY";
+      });
+
+      const cardHolderInput = document.getElementById("spCardHolder");
+      cardHolderInput.addEventListener("input", () => {
+        document.querySelector(".card-mockup-name").textContent = cardHolderInput.value.toUpperCase() || "Your Name";
+      });
+
+      const cardCvvInput = document.getElementById("spCardCvv");
+      cardCvvInput.addEventListener("input", () => {
+        cardCvvInput.value = cardCvvInput.value.replace(/\D/g, "").slice(0, 3);
+      });
+
+      document.getElementById("studentPayForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var enrollmentId = document.getElementById("spEnrollmentId").value;
+        var enrollment = DB.getById("enrollments", enrollmentId);
+        var pending = enrollment.totalFee - (enrollment.paidAmount || 0);
+        var payBtn = document.getElementById("spPayNowBtn");
+        var errorEl = document.getElementById("studentPayError");
+        var successEl = document.getElementById("studentPaySuccess");
+        errorEl.classList.add("hidden");
+        successEl.classList.add("hidden");
+
+        // Form Validation
+        if (activePayMethod === "upi") {
+          const upiId = document.getElementById("spUpiId").value.trim();
+          if (!upiId || !upiId.includes("@")) {
+            errorEl.textContent = "Please enter a valid UPI ID (e.g. username@upi).";
+            errorEl.classList.remove("hidden");
+            return;
+          }
+        } else {
+          const cardNo = cardNoInput.value.replace(/\s/g, "");
+          const expiry = cardExpiryInput.value.trim();
+          const cvv = cardCvvInput.value.trim();
+          const holder = cardHolderInput.value.trim();
+          if (cardNo.length < 16) {
+            errorEl.textContent = "Please enter a valid 16-digit card number.";
+            errorEl.classList.remove("hidden");
+            return;
+          }
+          if (!expiry.includes("/") || expiry.length < 5) {
+            errorEl.textContent = "Please enter a valid expiry date (MM/YY).";
+            errorEl.classList.remove("hidden");
+            return;
+          }
+          if (cvv.length < 3) {
+            errorEl.textContent = "Please enter a valid 3-digit CVV.";
+            errorEl.classList.remove("hidden");
+            return;
+          }
+          if (!holder) {
+            errorEl.textContent = "Please enter the card holder name.";
+            errorEl.classList.remove("hidden");
+            return;
+          }
+        }
+
+        // Disable button and show loading
+        payBtn.disabled = true;
+        payBtn.innerHTML = '<span class="material-icons">hourglass_top</span> Processing payment...';
+
+        setTimeout(function () {
+          var success = Math.random() > 0.15;
+          if (success) {
+            // Add payment record
+            var payment = DB.add("payments", {
+              enrollmentId: enrollmentId,
+              amount: pending,
+              date: new Date().toISOString().split('T')[0],
+              mode: "Online (Self-Pay)",
+              reference: "ONLINE" + Date.now(),
+            });
+            // Update enrollment paid amount
+            DB.update("enrollments", enrollmentId, {
+              paidAmount: (enrollment.paidAmount || 0) + pending,
+            });
+            // Notify student
+            var course = DB.getById("courses", enrollment.courseId);
+            pushNotification(
+              currentUser.id,
+              "Payment of " + formatCurrency(pending) + " received for " + course.name + " (Online Self-Pay). Receipt generated.",
+              "info"
+            );
+            // Show success and close
+            showToast("Payment successful! Amount paid: " + formatCurrency(pending), "success");
+            document.getElementById("studentPayModal").classList.add("hidden");
+            renderFeeTabContent();
+          } else {
+            // Show failure — re-enable button and shake modal
+            const modalBox = document.querySelector("#studentPayModal .modal-box");
+            showToast("Payment failed. Please try again.", "error");
+            payBtn.disabled = false;
+            payBtn.innerHTML = '<span class="material-icons">payments</span> Pay Now';
+
+            if (modalBox) {
+              modalBox.classList.add("shake");
+              setTimeout(function () {
+                modalBox.classList.remove("shake");
+              }, 350);
+            }
+          }
+        }, 2000);
+      });
+    }
+
+    setupStudentPayModal();
+
+    function showFormErr(el, msg) {
+      el.textContent = msg;
+      el.classList.remove("hidden");
+    }
+  </script>
+</body>
+
 </html>

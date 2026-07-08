@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>EduTrack — Login</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="../css/styles.css?v=2.0" />
+  </head>
+  <body>
+    <div class="auth-page">
+      <div class="auth-branding">
+        <div class="branding-content">
+          <div class="branding-logo">
+            <span class="material-icons brand-icon">school</span>
+            <h2>EduTrack</h2>
+          </div>
+          <p class="branding-tagline">Manage enrollments, fees, and academic operations in one place.</p>
+          <div class="branding-features">
+            <div class="feature-item">
+              <span class="material-icons">track_changes</span>
+              <div>
+                <h4>Real-time seat tracking</h4>
+                <p>Monitor course capacities and auto-promoted waitlists instantly.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="material-icons">notifications_active</span>
+              <div>
+                <h4>Automated fee reminders</h4>
+                <p>Never miss a payment deadline with prompt schedule alerts.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="material-icons">dashboard_customize</span>
+              <div>
+                <h4>Role-based dashboards</h4>
+                <p>Custom panels tailored for admins, faculty, and students.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="auth-card-container">
+        <div class="auth-card">
+          <div class="auth-brand">
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.25rem">
+              <span class="material-icons brand-icon" style="font-size:1.5rem;margin-bottom:0">school</span>
+              <h2 style="font-size:1.25rem;font-weight:700;margin:0">EduTrack</h2>
+            </div>
+            <p class="auth-subtitle">
+              Course Enrollment &amp; Fee Tracking System
+            </p>
+          </div>
+
+          <!-- LOGIN FORM -->
+          <form id="loginForm" class="auth-form">
+            <div class="form-group">
+              <label for="loginEmail">Email</label>
+              <input type="text" id="loginEmail" name="email" placeholder="you@edu.com" autocomplete="username" />
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">Password</label>
+              <div class="password-input-wrapper">
+                <input type="password" id="loginPassword" name="password" placeholder="Enter password" autocomplete="current-password" />
+                <span class="password-toggle" data-target="loginPassword"><span class="material-icons">visibility</span></span>
+              </div>
+            </div>
+            <div id="loginError" class="form-error hidden"></div>
+            <button type="submit" class="btn btn-primary btn-block">
+              <span class="material-icons">login</span> Login
+            </button>
+            <p class="auth-switch">
+              New student? <a href="#" id="showSignup">Register here</a>
+            </p>
+            
+          </form>
+
+          <!-- SIGNUP FORM -->
+          <form id="signupForm" class="auth-form hidden">
+            <div class="form-group">
+              <label for="suName">Full Name</label>
+              <input type="text" id="suName" name="name" placeholder="Full name" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="suEmail">Email</label>
+                <input type="text" id="suEmail" name="email" placeholder="you@edu.com" />
+              </div>
+              <div class="form-group">
+                <label for="suPhone">Phone</label>
+                <input type="text" id="suPhone" name="phone" placeholder="10-digit mobile" maxlength="10" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="suDob">Date of Birth</label>
+                <input type="date" id="suDob" name="dob" />
+              </div>
+              <div class="form-group">
+                <label for="suGender">Gender</label>
+                <select id="suGender" name="gender">
+                  <option value="">Select</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="suAddress">Address</label>
+              <input type="text" id="suAddress" name="address" placeholder="Address" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="suPassword">Password</label>
+                <div class="password-input-wrapper">
+                  <input type="password" id="suPassword" name="password" placeholder="Create password" />
+                  <span class="password-toggle" data-target="suPassword"><span class="material-icons">visibility</span></span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="suConfirmPassword">Confirm Password</label>
+                <div class="password-input-wrapper">
+                  <input type="password" id="suConfirmPassword" name="confirmPassword" placeholder="Confirm password" />
+                  <span class="password-toggle" data-target="suConfirmPassword"><span class="material-icons">visibility</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div id="pwStrengthBar" class="pw-strength-bar"><span></span></div>
+              <span id="pwStrengthLabel" class="pw-strength-label"></span>
+            </div>
+            <div id="signupError" class="form-error hidden"></div>
+            <div id="signupSuccess" class="form-success hidden"></div>
+            <button type="submit" class="btn btn-primary btn-block">
+              <span class="material-icons">person_add</span> Register
+            </button>
+            <p class="auth-switch">
+              Already have an account? <a href="#" id="showLogin">Login here</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/db.js"></script>
+    <script src="../js/seed.js"></script>
+    <script src="../js/validators.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+      // Password visibility toggle
+      document.querySelectorAll(".password-toggle").forEach((toggle) => {
+        toggle.addEventListener("click", () => {
+          const targetId = toggle.dataset.target;
+          const input = document.getElementById(targetId);
+          const icon = toggle.querySelector(".material-icons");
+          if (input.type === "password") { input.type = "text"; icon.textContent = "visibility_off"; }
+          else { input.type = "password"; icon.textContent = "visibility"; }
+        });
+      });
+
+      var todayStr = new Date().toISOString().split('T')[0];
+      var minAdultDate = new Date();
+      minAdultDate.setFullYear(minAdultDate.getFullYear() - 18);
+      var maxDobStr = minAdultDate.toISOString().split('T')[0];
+      document.getElementById('suDob').max = maxDobStr;
+
+      (async () => {
+        await initSeed();
+        const loginForm = document.getElementById("loginForm");
+        const signupForm = document.getElementById("signupForm");
+        document.getElementById("showSignup").addEventListener("click", (e) => { e.preventDefault(); loginForm.classList.add("hidden"); signupForm.classList.remove("hidden"); });
+        document.getElementById("showLogin").addEventListener("click", (e) => { e.preventDefault(); signupForm.classList.add("hidden"); loginForm.classList.remove("hidden"); });
+
+        const existing = getCurrentUser();
+        if (existing) window.location.href = "dashboard.html";
+
+        loginForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const email = document.getElementById("loginEmail").value.trim();
+          const password = document.getElementById("loginPassword").value;
+          const errorEl = document.getElementById("loginError");
+          if (!validateEmail(email)) { errorEl.textContent = "Please enter a valid email address."; errorEl.classList.remove("hidden"); return; }
+          if (!validateRequired(password)) { errorEl.textContent = "Password is required."; errorEl.classList.remove("hidden"); return; }
+          const user = login(email, password);
+          if (!user) { errorEl.textContent = "Invalid email or password."; errorEl.classList.remove("hidden"); return; }
+          if (user.blocked) { errorEl.textContent = user.message; errorEl.classList.remove("hidden"); return; }
+          errorEl.classList.add("hidden");
+          window.location.href = "dashboard.html";
+        });
+
+        const phoneInput = document.getElementById("suPhone");
+        phoneInput.addEventListener("input", () => {
+          phoneInput.value = phoneInput.value.replace(/\D/g, "").slice(0, 10);
+          if (phoneInput.value.length === 10) setFieldError(phoneInput, validatePhone(phoneInput.value) ? "" : "Enter a valid 10-digit phone number.");
+        });
+        const emailInput = document.getElementById("suEmail");
+        emailInput.addEventListener("blur", () => { setFieldError(emailInput, validateEmail(emailInput.value) ? "" : "Enter a valid email address."); });
+        const pwInput = document.getElementById("suPassword");
+        const confirmInput = document.getElementById("suConfirmPassword");
+        const pwBarSpan = document.querySelector("#pwStrengthBar span");
+        const pwLabel = document.getElementById("pwStrengthLabel");
+        pwInput.addEventListener("input", () => {
+          const { score, label } = checkPasswordStrength(pwInput.value);
+          pwBarSpan.style.width = ((score / 4) * 100) + "%";
+          pwBarSpan.className = "";
+          pwBarSpan.classList.add(score <= 1 ? "pw-weak" : score === 2 ? "pw-medium" : score === 3 ? "pw-strong" : "pw-very-strong");
+          pwLabel.textContent = pwInput.value ? label : "";
+        });
+        confirmInput.addEventListener("input", () => { setFieldError(confirmInput, passwordsMatch(pwInput.value, confirmInput.value) ? "" : "Passwords do not match."); });
+
+        signupForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const name = document.getElementById("suName").value.trim();
+          const email = emailInput.value.trim();
+          const phone = phoneInput.value.trim();
+          const dob = document.getElementById("suDob").value;
+          const gender = document.getElementById("suGender").value;
+          const address = document.getElementById("suAddress").value.trim();
+          const password = pwInput.value;
+          const confirmPassword = confirmInput.value;
+          const errorEl = document.getElementById("signupError");
+          const successEl = document.getElementById("signupSuccess");
+          errorEl.classList.add("hidden"); successEl.classList.add("hidden");
+          if (!validateRequired(name)) return showErr(errorEl, "Full name is required.");
+          if (!validateEmail(email)) return showErr(errorEl, "Enter a valid email address.");
+          if (!validatePhone(phone)) return showErr(errorEl, "Phone must start with 6/7/8/9 and be 10 digits.");
+          if (!validateRequired(dob)) return showErr(errorEl, "Date of birth is required.");
+          var dobDate = new Date(dob); var adultDate = new Date(); adultDate.setFullYear(adultDate.getFullYear() - 18);
+          if (dobDate > adultDate) return showErr(errorEl, "You must be at least 18 years old to register.");
+          if (!validateAddress(address)) return showErr(errorEl, "Address must be at least 5 characters and contain only letters, numbers, spaces, commas, periods, or hyphens.");
+          const strength = checkPasswordStrength(password);
+          if (!strength.valid) return showErr(errorEl, "Password must be 8+ chars with at least 3 of: uppercase, number, symbol.");
+          if (!passwordsMatch(password, confirmPassword)) return showErr(errorEl, "Passwords do not match.");
+          const result = signupStudent({ name, email, phone, password, dob, gender, address });
+          if (!result.success) return showErr(errorEl, result.message);
+          successEl.textContent = "Registration successful! You can now login.";
+          successEl.classList.remove("hidden");
+          signupForm.reset(); pwBarSpan.style.width = "0%"; pwLabel.textContent = "";
+        });
+
+        function showErr(el, msg) { el.textContent = msg; el.classList.remove("hidden"); }
+      })();
+    </script>
+  </body>
+</html>

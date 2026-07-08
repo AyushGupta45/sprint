@@ -56,6 +56,8 @@
     <script>
       let currentUser;
       let activeTab = "enrollments";
+      let currentEnrollmentsPage = 1;
+      let currentWaitlistPage = 1;
       (async () => {
         await initSeed();
         currentUser = renderShell("enrollments.html");
@@ -94,6 +96,8 @@
               .forEach((b) => b.classList.remove("tab-active"));
             btn.classList.add("tab-active");
             activeTab = btn.dataset.tab;
+            currentEnrollmentsPage = 1;
+            currentWaitlistPage = 1;
             renderTabContent();
           });
         });
@@ -135,80 +139,155 @@
 
       function renderTabContent() {
         const wrap = document.getElementById("tabContent");
+        
+        const enrollments = getScopedEnrollments();
+        const waitlist = getScopedWaitlist();
+        const activeCount = enrollments.filter(e => e.status === "Active").length;
+        const waitlistCount = waitlist.length;
+        const totalPending = enrollments.filter(e => e.status !== "Cancelled").reduce((s, e) => s + (e.totalFee - (e.paidAmount || 0)), 0);
+
+        const summaryRow = `
+        <div class="bento-grid" style="margin-bottom:1.5rem">
+          <div class="bento-card col-span-4 stat-card-new">
+            <div class="stat-icon-wrapper success-tint">
+              <span class="material-icons">assignment_turned_in</span>
+            </div>
+            <div class="stat-details">
+              <span class="stat-lbl">Active Enrollments</span>
+              <span class="stat-val">${activeCount}</span>
+            </div>
+          </div>
+          <div class="bento-card col-span-4 stat-card-new">
+            <div class="stat-icon-wrapper warning-tint">
+              <span class="material-icons">hourglass_empty</span>
+            </div>
+            <div class="stat-details">
+              <span class="stat-lbl">Waitlist Entries</span>
+              <span class="stat-val">${waitlistCount}</span>
+            </div>
+          </div>
+          <div class="bento-card col-span-4 stat-card-new">
+            <div class="stat-icon-wrapper info-tint">
+              <span class="material-icons">payments</span>
+            </div>
+            <div class="stat-details">
+              <span class="stat-lbl">Total Payments Due</span>
+              <span class="stat-val">${formatCurrency(totalPending)}</span>
+            </div>
+          </div>
+        </div>
+        `;
+
         if (activeTab === "enrollments") {
-          const enrollments = getScopedEnrollments();
           if (!enrollments.length) {
-            wrap.innerHTML = `<p class="empty-state">No enrollments found.</p>`;
+            wrap.innerHTML = summaryRow + `<p class="empty-state">No enrollments found.</p>`;
             return;
           }
-          const rows = enrollments
+          const paginatedEnrollments = enrollments.slice((currentEnrollmentsPage - 1) * 6, currentEnrollmentsPage * 6);
+          const rows = paginatedEnrollments
             .map((e) => {
               const student = DB.getById("students", e.studentId);
               const course = DB.getById("courses", e.courseId);
               const pending = e.totalFee - (e.paidAmount || 0);
+              const initials = student ? student.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() : "-";
               return `<tr>
-            <td>${e.id}</td>
-            <td>${student ? student.name : "-"}</td>
+            <td class="avatar-name-cell">
+              <div class="avatar-circle">${initials}</div>
+              <div class="avatar-details">
+                <span>${student ? student.name : "-"}</span>
+                <span class="avatar-subtext">${student ? student.email : "-"}</span>
+              </div>
+            </td>
             <td>${course ? course.name : "-"}</td>
             <td>${formatCurrency(e.totalFee)}</td>
             <td>${formatCurrency(e.paidAmount || 0)}</td>
             <td>${formatCurrency(pending)}</td>
             <td>${statusPill(e.status)}</td>
-            <td class="actions-cell">
+            ${currentUser.role === "student" ? "" : `<td class="actions-cell">
               ${currentUser.role === "admin" && e.status !== "Cancelled" ? `<button class="icon-btn cancel-enrollment" data-id="${e.id}"><span class="material-icons">cancel</span></button>` : ""}
-            </td>
+            </td>`}
           </tr>`;
             })
             .join("");
-          wrap.innerHTML = `
+          wrap.innerHTML = summaryRow + `
           <table class="data-table">
-            <thead><tr><th>ID</th><th>Student</th><th>Course</th><th>Total Fee</th><th>Paid</th><th>Pending</th><th>Status</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Student</th><th>Course</th><th>Total Fee</th><th>Paid</th><th>Pending</th><th>Status</th>${currentUser.role === "student" ? "" : "<th>Actions</th>"}</tr></thead>
             <tbody>${rows}</tbody>
           </table>
+          <div id="enrollmentsPagination"></div>
         `;
+
+          renderPagination("enrollmentsPagination", enrollments.length, currentEnrollmentsPage, 6, (newPage) => {
+            currentEnrollmentsPage = newPage;
+            renderTabContent();
+          });
+
           wrap.querySelectorAll(".cancel-enrollment").forEach((btn) => {
             btn.addEventListener("click", () => {
-              if (confirm("Cancel this enrollment? Seat will be released.")) {
+              showConfirmModal("Cancel Enrollment", "Cancel this enrollment? Seat will be released.", () => {
+                var courseId = DB.getById("enrollments", btn.dataset.id).courseId;
                 DB.update("enrollments", btn.dataset.id, {
                   status: "Cancelled",
                 });
-                promoteFromWaitlistIfSeatFree(
-                  DB.getById("enrollments", btn.dataset.id).courseId,
-                );
+                syncWaitlistForCourse(courseId);
                 renderTabContent();
-              }
+                showToast("Enrollment cancelled.", "success");
+              });
             });
           });
         } else {
-          const waitlist = getScopedWaitlist();
           if (!waitlist.length) {
-            wrap.innerHTML = `<p class="empty-state">Waitlist is empty.</p>`;
+            wrap.innerHTML = summaryRow + `<p class="empty-state">Waitlist is empty.</p>`;
             return;
           }
-          const rows = waitlist
+          const paginatedWaitlist = waitlist.slice((currentWaitlistPage - 1) * 6, currentWaitlistPage * 6);
+          const rows = paginatedWaitlist
             .map((w) => {
               const student = DB.getById("students", w.studentId);
               const course = DB.getById("courses", w.courseId);
+              const initials = student ? student.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() : "-";
               return `<tr>
             <td>${w.position}</td>
-            <td>${student ? student.name : "-"}</td>
+            <td class="avatar-name-cell">
+              <div class="avatar-circle">${initials}</div>
+              <div class="avatar-details">
+                <span>${student ? student.name : "-"}</span>
+                <span class="avatar-subtext">${student ? student.email : "-"}</span>
+              </div>
+            </td>
             <td>${course ? course.name : "-"}</td>
             <td>${formatDate(w.addedDate)}</td>
-            <td class="actions-cell">
-              ${currentUser.role !== "student" ? `<button class="btn btn-secondary promote-btn" data-id="${w.id}">Promote Now</button>` : ""}
-            </td>
+            ${currentUser.role === "student" ? "" : `<td class="actions-cell">
+              <button class="btn btn-secondary promote-btn" data-id="${w.id}">Promote Now</button>
+            </td>`}
           </tr>`;
             })
             .join("");
-          wrap.innerHTML = `
+          wrap.innerHTML = summaryRow + `
           <table class="data-table">
-            <thead><tr><th>Position</th><th>Student</th><th>Course</th><th>Added Date</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Position</th><th>Student</th><th>Course</th><th>Added Date</th>${currentUser.role === "student" ? "" : "<th>Actions</th>"}</tr></thead>
             <tbody>${rows}</tbody>
           </table>
+          <div id="waitlistPagination"></div>
         `;
+
+          renderPagination("waitlistPagination", waitlist.length, currentWaitlistPage, 6, (newPage) => {
+            currentWaitlistPage = newPage;
+            renderTabContent();
+          });
+
           wrap.querySelectorAll(".promote-btn").forEach((btn) => {
             btn.addEventListener("click", () => {
               const w = DB.getById("waitlist", btn.dataset.id);
+              // BUG 9(a): check capacity before promote
+              var activeCount = DB.get("enrollments").filter(function (e) {
+                return e.courseId === w.courseId && e.status !== "Cancelled";
+              }).length;
+              var course = DB.getById("courses", w.courseId);
+              if (activeCount >= course.capacity) {
+                showToast("Cannot promote — course is already full.", "error");
+                return;
+              }
               promoteWaitlistEntry(w);
               renderTabContent();
             });
@@ -368,6 +447,14 @@
             );
 
             if (enrolledCount >= course.capacity) {
+              // Duplicate check (BUG 3/12)
+              var alreadyOnWaitlist = DB.get("waitlist").some(function (w) {
+                return w.studentId === studentId && w.courseId === courseId;
+              });
+              if (alreadyOnWaitlist) {
+                showToast("Student is already on the waitlist for this course.", "error");
+                return;
+              }
               const position =
                 DB.get("waitlist").filter((w) => w.courseId === courseId)
                   .length + 1;
@@ -383,7 +470,9 @@
                   `Course full. You've been added to waitlist for ${course.name}.`,
                   "info",
                 );
-              alert("Course full — student added to waitlist.");
+              showToast("Course full — student added to waitlist.", "info");
+              document.getElementById("enrollModal").classList.add("hidden");
+              renderTabContent();
             } else {
               DB.add("enrollments", {
                 studentId,
@@ -399,10 +488,10 @@
                   `Enrolled in ${course.name}. Invoice generated for ${formatCurrency(course.fee)}.`,
                   "info",
                 );
-              alert("Student enrolled successfully. Invoice generated.");
+              showToast("Student enrolled successfully. Invoice generated.", "success");
+              document.getElementById("enrollModal").classList.add("hidden");
+              renderTabContent();
             }
-            document.getElementById("enrollModal").classList.add("hidden");
-            renderTabContent();
           });
       }
     </script>

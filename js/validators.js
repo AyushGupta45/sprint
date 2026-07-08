@@ -34,6 +34,12 @@ function checkPasswordStrength(password) {
   return { valid, score, label };
 }
 
+function validateAddress(value) {
+  if (!validateRequired(value)) return false;
+  if (String(value).trim().length < 5) return false;
+  return /^[a-zA-Z0-9\s,.\-]+$/.test(String(value).trim());
+}
+
 function passwordsMatch(p1, p2) {
   return p1 === p2 && p1.length > 0;
 }

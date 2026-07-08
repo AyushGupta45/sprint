@@ -33,49 +33,102 @@
         if (user.role === "admin") {
           const students = DB.get("students");
           const courses = DB.get("courses");
-          const enrollments = DB.get("enrollments");
+          // Only count active/completed enrollments for metrics
+          const enrollments = DB.get("enrollments").filter(e => e.status !== "Cancelled");
+          let pending = 0;
+          enrollments.forEach((e) => {
+            pending += e.totalFee - (e.paidAmount || 0);
+          });
           const payments = DB.get("payments");
           const totalCollected = payments.reduce(
             (s, p) => s + Number(p.amount),
             0,
           );
-          const totalFeeExpected = enrollments.reduce(
-            (s, e) => s + Number(e.totalFee),
-            0,
-          );
-          const pending = totalFeeExpected - totalCollected;
 
           main.innerHTML = `
-          <h2 class="page-title">Admin Dashboard</h2>
-          <div class="stat-grid">
-            ${statCard("group", students.length, "Total Students")}
-            ${statCard("menu_book", courses.length, "Total Courses")}
-            ${statCard("assignment_turned_in", enrollments.length, "Total Enrollments")}
-            ${statCard("payments", formatCurrency(pending), "Pending Fees")}
+          <div class="page-header">
+            <div>
+              <h2 class="page-title">Admin Dashboard</h2>
+              <p class="page-subtitle">Overview of institute metrics, courses and fee status.</p>
+            </div>
           </div>
-          <div class="chart-grid">
-            <div class="chart-card">
+          <div class="bento-grid">
+            <div class="bento-card col-span-3 stat-card-new">
+              <div class="stat-icon-wrapper primary-tint">
+                <span class="material-icons">group</span>
+              </div>
+              <div class="stat-details">
+                <span class="stat-lbl">Total Students</span>
+                <span class="stat-val">${students.length}</span>
+              </div>
+            </div>
+            <div class="bento-card col-span-3 stat-card-new">
+              <div class="stat-icon-wrapper info-tint">
+                <span class="material-icons">menu_book</span>
+              </div>
+              <div class="stat-details">
+                <span class="stat-lbl">Total Courses</span>
+                <span class="stat-val">${courses.length}</span>
+              </div>
+            </div>
+            <div class="bento-card col-span-3 stat-card-new">
+              <div class="stat-icon-wrapper success-tint">
+                <span class="material-icons">assignment_turned_in</span>
+              </div>
+              <div class="stat-details">
+                <span class="stat-lbl">Total Enrollments</span>
+                <span class="stat-val">${enrollments.length}</span>
+              </div>
+            </div>
+            <div class="bento-card col-span-3 stat-card-new">
+              <div class="stat-icon-wrapper warning-tint">
+                <span class="material-icons">payments</span>
+              </div>
+              <div class="stat-details">
+                <span class="stat-lbl">Pending Fees</span>
+                <span class="stat-val">${formatCurrency(pending)}</span>
+              </div>
+            </div>
+
+            <div class="bento-card col-span-8 row-span-2">
               <h3>Enrollment Trend (Last 8 Weeks)</h3>
               <div class="chart-container">
                 <canvas id="enrollmentTrendChart"></canvas>
               </div>
             </div>
-            <div class="chart-card">
+
+            <div class="bento-card col-span-4 row-span-2">
               <h3>Fee Collection Overview</h3>
               <div class="chart-container">
                 <canvas id="feeCollectionChart"></canvas>
               </div>
             </div>
-            <div class="chart-card">
+
+            <div class="bento-card col-span-6">
               <h3>Top Courses by Enrollment</h3>
               <div class="chart-container">
                 <canvas id="topCoursesChart"></canvas>
               </div>
             </div>
-          </div>
-          <div class="section">
-            <h3>Recent Enrollments</h3>
-            ${enrollmentTable(enrollments.slice(-5).reverse())}
+
+            <div class="bento-card col-span-3">
+              <h3>Seat Utilization</h3>
+              <div class="chart-container">
+                <canvas id="seatUtilizationChart"></canvas>
+              </div>
+            </div>
+
+            <div class="bento-card col-span-3">
+              <h3>Role Distribution</h3>
+              <div class="chart-container">
+                <canvas id="roleDistributionChart"></canvas>
+              </div>
+            </div>
+
+            <div class="bento-card col-span-12">
+              <h3>Recent Enrollments</h3>
+              ${enrollmentTable(enrollments.slice(-5).reverse())}
+            </div>
           </div>
         `;
           initAdminCharts();
@@ -85,35 +138,71 @@
           );
           const courseIds = courses.map((c) => c.id);
           const enrollments = DB.get("enrollments").filter((e) =>
-            courseIds.includes(e.courseId),
+            courseIds.includes(e.courseId) && e.status !== "Cancelled"
           );
           const students = new Set(enrollments.map((e) => e.studentId));
 
           main.innerHTML = `
-          <h2 class="page-title">Faculty Dashboard</h2>
-          <div class="stat-grid">
-            ${statCard("menu_book", courses.length, "My Courses")}
-            ${statCard("group", students.size, "Total Students")}
-            ${statCard("assignment_turned_in", enrollments.length, "Total Enrollments")}
+          <div class="page-header">
+            <div>
+              <h2 class="page-title">Faculty Dashboard</h2>
+              <p class="page-subtitle">Overview of your assigned courses, students, and enrollment statistics.</p>
+            </div>
           </div>
-          <div class="chart-grid">
-            <div class="chart-card">
-              <h3>My Courses — Seats Filled vs Available</h3>
+          <div class="bento-grid">
+            <div class="bento-card col-span-4 stat-card-new">
+              <div class="stat-icon-wrapper info-tint">
+                <span class="material-icons">menu_book</span>
+              </div>
+              <div class="stat-details">
+                <span class="stat-lbl">My Courses</span>
+                <span class="stat-val">${courses.length}</span>
+              </div>
+            </div>
+            <div class="bento-card col-span-4 stat-card-new">
+              <div class="stat-icon-wrapper success-tint">
+                <span class="material-icons">group</span>
+              </div>
+              <div class="stat-details">
+                <span class="stat-lbl">Total Students</span>
+                <span class="stat-val">${students.size}</span>
+              </div>
+            </div>
+            <div class="bento-card col-span-4 stat-card-new">
+              <div class="stat-icon-wrapper success-tint">
+                <span class="material-icons">assignment_turned_in</span>
+              </div>
+              <div class="stat-details">
+                <span class="stat-lbl">Total Enrollments</span>
+                <span class="stat-val">${enrollments.length}</span>
+              </div>
+            </div>
+
+            <div class="bento-card col-span-8 row-span-2">
+              <h3>My Courses — Seats Filled vs Capacity</h3>
               <div class="chart-container">
                 <canvas id="facultySeatsChart"></canvas>
               </div>
             </div>
-          </div>
-          <div class="section">
-            <h3>Recent Enrollments</h3>
-            ${enrollmentTable(enrollments.slice(-5).reverse())}
+
+            <div class="bento-card col-span-4 row-span-2">
+              <h3>My Students Enrollment Trend</h3>
+              <div class="chart-container">
+                <canvas id="facultyStudentsTrendChart"></canvas>
+              </div>
+            </div>
+
+            <div class="bento-card col-span-12">
+              <h3>Recent Enrollments</h3>
+              ${enrollmentTable(enrollments.slice(-5).reverse())}
+            </div>
           </div>
         `;
           initFacultyCharts(user);
         } else {
           const student = DB.getById("students", user.studentId);
           const enrollments = DB.get("enrollments").filter(
-            (e) => e.studentId === user.studentId,
+            (e) => e.studentId === user.studentId && e.status !== "Cancelled",
           );
           const totalFee = enrollments.reduce(
             (s, e) => s + Number(e.totalFee),
@@ -128,37 +217,97 @@
           );
 
           main.innerHTML = `
-          <h2 class="page-title">Welcome, ${student ? student.name : user.name}</h2>
-          <div class="stat-grid">
-            ${statCard("menu_book", enrollments.length, "Enrolled Courses")}
-            ${statCard("payments", formatCurrency(totalFee - paid), "Total Fee Due")}
-            ${statCard("event", dueEnrollments.length, "Pending Dues")}
+          <div class="page-header">
+            <div>
+              <h2 class="page-title">Welcome, ${student ? student.name : user.name}</h2>
+              <p class="page-subtitle">Track your registered courses, timeline progress, and payments.</p>
+            </div>
           </div>
-          <div class="chart-grid">
-            <div class="chart-card">
+          <div class="bento-grid">
+            <div class="bento-card col-span-4 stat-card-new">
+              <div class="stat-icon-wrapper info-tint">
+                <span class="material-icons">menu_book</span>
+              </div>
+              <div class="stat-details">
+                <span class="stat-lbl">Enrolled Courses</span>
+                <span class="stat-val">${enrollments.length}</span>
+              </div>
+            </div>
+            <div class="bento-card col-span-4 stat-card-new">
+              <div class="stat-icon-wrapper warning-tint">
+                <span class="material-icons">payments</span>
+              </div>
+              <div class="stat-details">
+                <span class="stat-lbl">Total Fee Due</span>
+                <span class="stat-val">${formatCurrency(totalFee - paid)}</span>
+              </div>
+            </div>
+            <div class="bento-card col-span-4 stat-card-new">
+              <div class="stat-icon-wrapper warning-tint">
+                <span class="material-icons">event</span>
+              </div>
+              <div class="stat-details">
+                <span class="stat-lbl">Pending Dues</span>
+                <span class="stat-val">${dueEnrollments.length}</span>
+              </div>
+            </div>
+
+            <div class="bento-card col-span-4">
               <h3>My Fee Payment Progress</h3>
               <div class="chart-container">
                 <canvas id="studentPaymentChart"></canvas>
               </div>
             </div>
-          </div>
-          <div class="section">
-            <h3>My Courses</h3>
-            ${myCoursesList(enrollments)}
+
+            <div class="bento-card col-span-8">
+              <h3>My Courses Timeline</h3>
+              <div class="timeline-list">
+                ${renderStudentTimeline(enrollments)}
+              </div>
+            </div>
+
+            <div class="bento-card col-span-12">
+              <h3>My Course Enrollments</h3>
+              ${myCoursesList(enrollments)}
+            </div>
           </div>
         `;
           initStudentCharts(user);
         }
       }
 
-      function statCard(icon, value, label) {
-        return `
-        <div class="stat-card">
-          <span class="material-icons stat-icon">${icon}</span>
-          <div class="stat-value">${value}</div>
-          <div class="stat-label">${label}</div>
-        </div>
-      `;
+      function renderStudentTimeline(enrollments) {
+        if (!enrollments.length) {
+          return `<p class="empty-state">No courses enrolled. <a href="courses.html">Browse catalog</a></p>`;
+        }
+        return enrollments
+          .map((e) => {
+            const course = DB.getById("courses", e.courseId);
+            const paidAmt = e.paidAmount || 0;
+            const total = e.totalFee;
+            const pct = total > 0 ? Math.round((paidAmt / total) * 100) : 0;
+            return `
+            <div class="timeline-item">
+              <div class="timeline-icon">
+                <span class="material-icons">class</span>
+              </div>
+              <div class="timeline-details">
+                <h4>${course ? course.name : "Course"}</h4>
+                <p>Status: ${statusPill(e.status)} | Registered on ${formatDate(e.enrollDate)}</p>
+              </div>
+              <div class="timeline-progress">
+                <div class="seat-progress-lbl">
+                  <span>Paid</span>
+                  <span>${pct}%</span>
+                </div>
+                <div class="timeline-progress-bar">
+                  <div class="timeline-progress-fill" style="width: ${pct}%"></div>
+                </div>
+              </div>
+            </div>
+          `;
+          })
+          .join("");
       }
 
       function enrollmentTable(enrollments) {
@@ -168,8 +317,15 @@
           .map((e) => {
             const student = DB.getById("students", e.studentId);
             const course = DB.getById("courses", e.courseId);
+            const initials = student ? student.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() : "-";
             return `<tr>
-          <td>${student ? student.name : "-"}</td>
+          <td class="avatar-name-cell">
+            <div class="avatar-circle">${initials}</div>
+            <div class="avatar-details">
+              <span>${student ? student.name : "-"}</span>
+              <span class="avatar-subtext">${student ? student.email : "-"}</span>
+            </div>
+          </td>
           <td>${course ? course.name : "-"}</td>
           <td>${formatDate(e.enrollDate)}</td>
           <td>${statusPill(e.status)}</td>

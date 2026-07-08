@@ -71,6 +71,106 @@
       </div>
     </div>
 
+    <!-- Student Profile Edit Modal (student self-service) -->
+    <div id="profileModal" class="modal-overlay hidden">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3>My Profile</h3>
+          <button class="icon-btn" id="closeProfileModal">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <form id="profileForm" class="modal-form">
+          <div class="form-group">
+            <label for="prName">Full Name</label>
+            <input type="text" id="prName" disabled />
+          </div>
+          <div class="form-group">
+            <label for="prEmail">Email</label>
+            <input type="text" id="prEmail" disabled />
+          </div>
+          <div class="form-group">
+            <label for="prDob">Date of Birth</label>
+            <input type="date" id="prDob" disabled />
+          </div>
+          <div class="form-group">
+            <label for="prGender">Gender</label>
+            <input type="text" id="prGender" disabled />
+          </div>
+          <div class="form-group">
+            <label for="prStatus">Status</label>
+            <input type="text" id="prStatus" disabled />
+          </div>
+          <div class="form-group">
+            <label for="prPhone">Phone</label>
+            <input type="text" id="prPhone" maxlength="10" />
+          </div>
+          <div class="form-group">
+            <label for="prAddress">Address</label>
+            <textarea id="prAddress"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="prEmergencyName">Emergency Contact Name</label>
+            <input type="text" id="prEmergencyName" />
+          </div>
+          <div class="form-group">
+            <label for="prEmergencyPhone">Emergency Contact Phone</label>
+            <input type="text" id="prEmergencyPhone" maxlength="10" />
+          </div>
+          <div id="profileFormError" class="form-error hidden"></div>
+          <div id="profileFormSuccess" class="form-success hidden"></div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="cancelProfileForm">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Faculty Modal (Admin only) -->
+    <div id="facultyModal" class="modal-overlay hidden">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3 id="facultyModalTitle">Add Faculty</h3>
+          <button class="icon-btn" id="closeFacultyModal">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <form id="facultyForm" class="modal-form">
+          <input type="hidden" id="facultyId" />
+          <div class="form-group">
+            <label for="fcName">Full Name</label>
+            <input type="text" id="fcName" />
+          </div>
+          <div class="form-group">
+            <label for="fcEmail">Email</label>
+            <input type="text" id="fcEmail" />
+          </div>
+          <div class="form-group">
+            <label for="fcPhone">Phone</label>
+            <input type="text" id="fcPhone" maxlength="10" />
+          </div>
+          <div class="form-group">
+            <label for="fcPassword">Password</label>
+            <div style="display:flex;gap:0.5rem;align-items:center">
+              <input type="text" id="fcPassword" placeholder="Auto-generated password" style="flex:1" />
+              <button type="button" id="fcResetPwdBtn" class="btn btn-secondary btn-sm" style="white-space:nowrap">Reset Password</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Assign Courses</label>
+            <div id="fcCoursesList" style="text-align:left;max-height:160px;overflow-y:auto;border:1px solid hsl(var(--border));border-radius:var(--radius);padding:0.25rem;display:flex;flex-direction:column;gap:0.125rem"></div>
+          </div>
+          <div id="facultyFormError" class="form-error hidden"></div>
+          <div id="facultyFormSuccess" class="form-success hidden"></div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="cancelFacultyForm">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Faculty</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <script src="../js/db.js"></script>
     <script src="../js/seed.js"></script>
     <script src="../js/validators.js"></script>
@@ -78,45 +178,231 @@
     <script src="../js/app.js"></script>
     <script>
       let currentUser;
+      var todayStr = new Date().toISOString().split('T')[0];
+      var minAdultDate = new Date();
+      minAdultDate.setFullYear(minAdultDate.getFullYear() - 18);
+      var maxDobStr = minAdultDate.toISOString().split('T')[0];
+      
+      var activePeopleTab = "students";
+      let currentStudentsPage = 1;
+      let currentFacultyPage = 1;
+
       (async () => {
         await initSeed();
-        currentUser = renderShell("students.html");
+        
+        var activePage = "students.html";
+        if (window.location.hash === "#faculty") {
+          activePeopleTab = "faculty";
+          activePage = "students.html#faculty";
+        }
+        
+        currentUser = renderShell(activePage);
         if (!currentUser) return;
         if (currentUser.role === "student") {
-          window.location.href = "dashboard.html";
+          renderStudentProfilePage();
           return;
         }
         renderStudentsPage();
       })();
 
+      // Listen for hash changes to switch tabs dynamically
+      window.addEventListener("hashchange", () => {
+        if (window.location.hash === "#faculty") {
+          activePeopleTab = "faculty";
+        } else {
+          activePeopleTab = "students";
+        }
+        
+        // Update tab buttons
+        document.querySelectorAll("#peopleTabs .tab-btn").forEach(btn => {
+          btn.classList.toggle("tab-active", btn.dataset.tab === activePeopleTab);
+        });
+        
+        // Update Add button
+        var addBtn = document.getElementById("addStudentBtn");
+        if (addBtn && currentUser.role === "admin") {
+          addBtn.innerHTML = activePeopleTab === "faculty" 
+            ? '<span class="material-icons">add</span> Add Faculty'
+            : '<span class="material-icons">add</span> Add Student';
+          addBtn.onclick = activePeopleTab === "faculty"
+            ? function () { openFacultyModal(); }
+            : function () { openStudentModal(); };
+        }
+        
+        renderPeopleContent();
+        
+        // Highlight active navbar item
+        const activeNav = window.location.hash === "#faculty" ? "students.html#faculty" : "students.html";
+        document.querySelectorAll(".nav-item").forEach(item => {
+          const href = item.getAttribute("href");
+          item.classList.toggle("nav-item-active", href === activeNav);
+        });
+      });
+
+      // ====== Student Profile Self-Service (BUG 7/11) ======
+      function renderStudentProfilePage() {
+        var main = document.getElementById("main-content");
+        var student = DB.getById("students", currentUser.studentId);
+        if (!student) {
+          main.innerHTML = '<div id="profilePageContent"><p class="empty-state">Student record not found.</p></div>';
+          return;
+        }
+
+        main.innerHTML = `
+        <div class="page-header">
+          <h2 class="page-title">My Profile</h2>
+        </div>
+        <div class="bento-card" style="max-width: 600px; margin: 0 auto; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); padding: 2rem; border-radius: var(--radius); box-shadow: var(--shadow-sm);">
+          <form id="inlineProfileForm" style="display:flex; flex-direction:column; gap:1.25rem;">
+            <div class="form-row">
+              <div class="form-group" style="margin:0"><label>Full Name</label><input type="text" value="${student.name || ""}" disabled /></div>
+              <div class="form-group" style="margin:0"><label>Email</label><input type="text" value="${student.email || ""}" disabled /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group" style="margin:0"><label>Date of Birth</label><input type="date" value="${student.dob || ""}" disabled /></div>
+              <div class="form-group" style="margin:0"><label>Gender</label><input type="text" value="${student.gender || ""}" disabled /></div>
+            </div>
+            
+            <div style="border-top:1px solid hsl(var(--border)); margin: 1rem 0;"></div>
+            <h4 style="font-size:1rem; margin-bottom: 0.5rem; color:hsl(var(--foreground))">Editable Information</h4>
+
+            <div class="form-group" style="margin:0">
+              <label for="inlPhone">Phone (10 digits)</label>
+              <input type="text" id="inlPhone" maxlength="10" value="${student.phone || ""}" />
+            </div>
+            <div class="form-group" style="margin:0">
+              <label for="inlAddress">Address</label>
+              <textarea id="inlAddress">${student.address || ""}</textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group" style="margin:0"><label for="inlEmergencyName">Emergency Contact Name</label><input type="text" id="inlEmergencyName" value="${student.emergencyName || ""}" /></div>
+              <div class="form-group" style="margin:0"><label for="inlEmergencyPhone">Emergency Phone</label><input type="text" id="inlEmergencyPhone" maxlength="10" value="${student.emergencyPhone || ""}" /></div>
+            </div>
+            
+            <div id="inlineProfileError" class="form-error hidden"></div>
+            <div id="inlineProfileSuccess" class="form-success hidden"></div>
+            
+            <div style="text-align:right; margin-top: 1rem;">
+              <button type="submit" class="btn btn-primary"><span class="material-icons">save</span> Save Changes</button>
+            </div>
+          </form>
+        </div>
+        `;
+
+        var phoneInput = document.getElementById("inlPhone");
+        var ePhoneInput = document.getElementById("inlEmergencyPhone");
+
+        phoneInput.addEventListener("input", function () {
+          phoneInput.value = phoneInput.value.replace(/\\D/g, "").slice(0, 10);
+        });
+        ePhoneInput.addEventListener("input", function () {
+          ePhoneInput.value = ePhoneInput.value.replace(/\\D/g, "").slice(0, 10);
+        });
+
+        document.getElementById("inlineProfileForm").addEventListener("submit", function (e) {
+          e.preventDefault();
+          var currentStudent = DB.getById("students", currentUser.studentId);
+          var phone = phoneInput.value.trim();
+          var address = document.getElementById("inlAddress").value.trim();
+          var emName = document.getElementById("inlEmergencyName").value.trim();
+          var emPhone = ePhoneInput.value.trim();
+          var errorEl = document.getElementById("inlineProfileError");
+          var successEl = document.getElementById("inlineProfileSuccess");
+          errorEl.classList.add("hidden");
+          successEl.classList.add("hidden");
+
+          if (!validatePhone(phone) && phone.length > 0) return showFormErr(errorEl, "Phone must start with 6/7/8/9 and be 10 digits.");
+          if (address && !validateAddress(address)) return showFormErr(errorEl, "Address contains invalid characters or is too short.");
+          if (emPhone && !validatePhone(emPhone)) return showFormErr(errorEl, "Emergency phone must start with 6/7/8/9 and be 10 digits.");
+
+          var updates = {};
+          if (phone) updates.phone = phone;
+          if (address) updates.address = address;
+          if (emName) updates.emergencyName = emName;
+          if (emPhone) updates.emergencyPhone = emPhone;
+
+          if (Object.keys(updates).length === 0) {
+            successEl.textContent = "No changes to save.";
+            successEl.classList.remove("hidden");
+            return;
+          }
+
+          DB.update("students", currentStudent.id, updates);
+          showToast("Profile updated successfully!", "success");
+          successEl.textContent = "Profile updated successfully!";
+          successEl.classList.remove("hidden");
+        });
+      }
+
       function renderStudentsPage() {
         const main = document.getElementById("main-content");
+        const isAdmin = currentUser.role === "admin";
         const isReadOnly = currentUser.role === "faculty";
 
         main.innerHTML = `
         <div class="page-header">
-          <h2 class="page-title">Students</h2>
-          ${isReadOnly ? "" : `<button class="btn btn-primary" id="addStudentBtn"><span class="material-icons">add</span> Add Student</button>`}
+          <h2 class="page-title">${isAdmin ? "People" : "Students"}</h2>
+          ${isReadOnly ? "" : `<button class="btn btn-primary" id="addStudentBtn"><span class="material-icons">add</span> ${isAdmin && activePeopleTab === "faculty" ? "Add Faculty" : "Add Student"}</button>`}
         </div>
-        <div class="toolbar">
-          <input type="text" id="studentSearch" placeholder="Search by name or email...">
-        </div>
-        <div id="studentsTableWrap"></div>
+        ${isAdmin ? `<div class="tabs" id="peopleTabs">
+          <button class="tab-btn ${activePeopleTab === "students" ? "tab-active" : ""}" data-tab="students">Students</button>
+          <button class="tab-btn ${activePeopleTab === "faculty" ? "tab-active" : ""}" data-tab="faculty">Faculty</button>
+        </div>` : ""}
+        <div id="peopleContent"></div>
       `;
 
-        if (!isReadOnly) {
-          document
-            .getElementById("addStudentBtn")
-            .addEventListener("click", () => openStudentModal());
-        }
-        document
-          .getElementById("studentSearch")
-          .addEventListener("input", (e) => {
-            renderStudentsTable(e.target.value, isReadOnly);
+        if (isAdmin) {
+          document.querySelectorAll("#peopleTabs .tab-btn").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+              document.querySelectorAll("#peopleTabs .tab-btn").forEach(function (b) { b.classList.remove("tab-active"); });
+              btn.classList.add("tab-active");
+              activePeopleTab = btn.dataset.tab;
+              window.location.hash = activePeopleTab === "faculty" ? "faculty" : "";
+              renderPeopleContent();
+            });
           });
+        }
+        renderPeopleContent();
+      }
 
-        renderStudentsTable("", isReadOnly);
+      function renderPeopleContent() {
+        if (activePeopleTab === "faculty" && currentUser.role === "admin") {
+          renderFacultySection();
+        } else {
+          renderStudentSection();
+        }
+      }
+
+      function renderStudentSection() {
+        const wrap = document.getElementById("peopleContent");
+        const isReadOnly = currentUser.role === "faculty";
+
+        wrap.innerHTML = `
+        <div class="toolbar" style="margin-bottom: 1.25rem;">
+          <div style="position:relative; width:100%; max-width:320px;">
+            <span class="material-icons" style="position:absolute; left:0.875rem; top:50%; transform:translateY(-50%); color:hsl(var(--muted-foreground)); font-size:1.125rem; pointer-events:none;">search</span>
+            <input type="text" id="studentSearch" class="form-control" placeholder="Search students by name or email..." style="padding-left:2.5rem; border-radius:10px; height:38px;">
+          </div>
+        </div>
+        <div id="studentsTableWrap"></div>
+        <div id="studentsPagination"></div>
+      `;
+
+        var addBtn = document.getElementById("addStudentBtn");
+        if (addBtn) {
+          addBtn.textContent = "Add Student";
+          addBtn.innerHTML = '<span class="material-icons">add</span> Add Student';
+          addBtn.onclick = function () { openStudentModal(); };
+        }
+
+        document.getElementById("studentSearch").addEventListener("input", function (e) {
+          currentStudentsPage = 1;
+          renderStudentsTable(e.target.value, isReadOnly);
+        });
+
         setupStudentModal();
+        currentStudentsPage = 1;
+        renderStudentsTable("", isReadOnly);
       }
 
       function renderStudentsTable(query, isReadOnly) {
@@ -132,40 +418,47 @@
         }
         if (!students.length) {
           wrap.innerHTML = `<p class="empty-state">No students found.</p>`;
+          const pagContainer = document.getElementById("studentsPagination");
+          if (pagContainer) pagContainer.innerHTML = "";
           return;
         }
-        const rows = students
+        const paginatedStudents = students.slice((currentStudentsPage - 1) * 6, currentStudentsPage * 6);
+        const rows = paginatedStudents
           .map((s) => {
             const courseCount = DB.get("enrollments").filter(
               (e) => e.studentId === s.id,
             ).length;
+            const initials = s.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
             return `<tr>
-          <td>${s.id}</td>
-          <td>${s.name}</td>
-          <td>${s.email}</td>
+          <td class="avatar-name-cell">
+            <div class="avatar-circle">${initials}</div>
+            <div class="avatar-details">
+              <span>${s.name}</span>
+              <span class="avatar-subtext">${s.email}</span>
+            </div>
+          </td>
           <td>${s.phone}</td>
           <td>${courseCount}</td>
           <td>${statusPill(s.status)}</td>
-          <td class="actions-cell">
-            ${
-              isReadOnly
-                ? ""
-                : `
+          ${isReadOnly ? "" : `<td class="actions-cell">
               <button class="icon-btn edit-student" data-id="${s.id}"><span class="material-icons">edit</span></button>
               <button class="icon-btn delete-student" data-id="${s.id}"><span class="material-icons">delete</span></button>
-            `
-            }
-          </td>
+          </td>`}
         </tr>`;
           })
           .join("");
 
         wrap.innerHTML = `
         <table class="data-table">
-          <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Courses</th><th>Status</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Student</th><th>Phone</th><th>Courses</th><th>Status</th>${isReadOnly ? "" : "<th>Actions</th>"}</tr></thead>
           <tbody>${rows}</tbody>
         </table>
       `;
+
+        renderPagination("studentsPagination", students.length, currentStudentsPage, 6, (newPage) => {
+          currentStudentsPage = newPage;
+          renderStudentsTable(query, isReadOnly);
+        });
 
         if (!isReadOnly) {
           wrap.querySelectorAll(".edit-student").forEach((btn) => {
@@ -175,13 +468,37 @@
           });
           wrap.querySelectorAll(".delete-student").forEach((btn) => {
             btn.addEventListener("click", () => {
-              if (confirm("Delete this student? This cannot be undone.")) {
-                DB.remove("students", btn.dataset.id);
+              showConfirmModal("Delete Student", "Delete this student? This cannot be undone.", () => {
+                var studentId = btn.dataset.id;
+                // Cancel all active enrollments for this student
+                var enrollments = DB.get("enrollments").filter(function (e) {
+                  return e.studentId === studentId && e.status !== "Cancelled";
+                });
+                var affectedCourseIds = [];
+                enrollments.forEach(function (e) {
+                  DB.update("enrollments", e.id, { status: "Cancelled" });
+                  if (affectedCourseIds.indexOf(e.courseId) === -1)
+                    affectedCourseIds.push(e.courseId);
+                });
+                // Remove waitlist entries for this student
+                var waitlistEntries = DB.get("waitlist").filter(function (w) {
+                  return w.studentId === studentId;
+                });
+                waitlistEntries.forEach(function (w) {
+                  DB.remove("waitlist", w.id);
+                });
+                // Remove the student
+                DB.remove("students", studentId);
+                // Sync waitlist for affected courses
+                affectedCourseIds.forEach(function (cid) {
+                  syncWaitlistForCourse(cid);
+                });
                 renderStudentsTable(
                   document.getElementById("studentSearch").value,
                   isReadOnly,
                 );
-              }
+                showToast("Student deleted.", "success");
+              });
             });
           });
         }
@@ -223,13 +540,20 @@
         });
       }
 
+      var studentModalSetup = false;
       function setupStudentModal() {
+        if (studentModalSetup) return;
+        studentModalSetup = true;
+
         document
           .getElementById("closeStudentModal")
           .addEventListener("click", closeStudentModal);
         document
           .getElementById("cancelStudentForm")
           .addEventListener("click", closeStudentModal);
+
+        // Set DOB max to 18 years ago (must be at least 18)
+        document.getElementById("stDob").max = maxDobStr;
 
         const phoneInput = document.getElementById("stPhone");
         phoneInput.addEventListener("input", () => {
@@ -262,21 +586,35 @@
             }
             setFieldError(phoneInput, "");
 
+            var dob = document.getElementById("stDob").value;
+            var address = document.getElementById("stAddress").value.trim();
+            if (!validateRequired(dob))
+              return showFormErr(errorEl, "Date of birth is required.");
+            if (new Date(dob) > minAdultDate)
+              return showFormErr(errorEl, "Student must be at least 18 years old.");
+            if (!validateAddress(address))
+              return showFormErr(errorEl, "Address must be at least 5 characters and contain only letters, numbers, spaces, commas, periods, or hyphens.");
+
             const payload = {
+              userId: "",
               name,
               email,
               phone,
-              dob: document.getElementById("stDob").value,
+              dob: dob,
               gender: document.getElementById("stGender").value,
-              address: document.getElementById("stAddress").value.trim(),
+              address: address,
+              emergencyName: "",
+              emergencyPhone: "",
               notes: document.getElementById("stNotes").value.trim(),
               status: "Active",
             };
 
             if (id) {
               DB.update("students", id, payload);
+              showToast("Student updated successfully.", "success");
             } else {
               DB.add("students", payload);
+              showToast("Student created successfully.", "success");
             }
             closeStudentModal();
             renderStudentsTable(
@@ -284,6 +622,265 @@
               currentUser.role === "faculty",
             );
           });
+      }
+
+      // ====== Faculty Management ======
+      function renderFacultySection() {
+        const wrap = document.getElementById("peopleContent");
+
+        var addBtn = document.getElementById("addStudentBtn");
+        if (addBtn) {
+          addBtn.innerHTML = '<span class="material-icons">add</span> Add Faculty';
+          addBtn.onclick = function () { openFacultyModal(); };
+        }
+
+        wrap.innerHTML = `
+        <div class="toolbar" style="margin-bottom: 1.25rem;">
+          <div style="position:relative; width:100%; max-width:320px;">
+            <span class="material-icons" style="position:absolute; left:0.875rem; top:50%; transform:translateY(-50%); color:hsl(var(--muted-foreground)); font-size:1.125rem; pointer-events:none;">search</span>
+            <input type="text" id="facultySearch" class="form-control" placeholder="Search faculty by name or email..." style="padding-left:2.5rem; border-radius:10px; height:38px;">
+          </div>
+        </div>
+        <div id="facultyTableWrap"></div><div id="facultyPagination"></div>
+        `;
+        
+        document.getElementById("facultySearch").addEventListener("input", function (e) {
+          currentFacultyPage = 1;
+          renderFacultyTable(e.target.value);
+        });
+
+        currentFacultyPage = 1;
+        renderFacultyTable("");
+        setupFacultyModal();
+      }
+
+      function getAssignedCourseCount(facultyUserId) {
+        return DB.get("courses").filter(function (c) { return c.facultyId === facultyUserId; }).length;
+      }
+
+      function renderFacultyTable(query = "") {
+        var wrap = document.getElementById("facultyTableWrap");
+        var faculty = DB.get("users").filter(function (u) { return u.role === "faculty"; });
+        
+        if (query) {
+          const q = query.toLowerCase();
+          faculty = faculty.filter(
+            (f) =>
+              f.name.toLowerCase().includes(q) ||
+              f.email.toLowerCase().includes(q)
+          );
+        }
+        if (!faculty.length) {
+          wrap.innerHTML = '<p class="empty-state">No faculty members found.</p>';
+          const pagContainer = document.getElementById("facultyPagination");
+          if (pagContainer) pagContainer.innerHTML = "";
+          return;
+        }
+        // Sort: active first, then inactive
+        faculty.sort(function (a, b) {
+          var aStatus = a.status || 'Active';
+          var bStatus = b.status || 'Active';
+          if (aStatus === 'Active' && bStatus !== 'Active') return -1;
+          if (aStatus !== 'Active' && bStatus === 'Active') return 1;
+          return 0;
+        });
+        const paginatedFaculty = faculty.slice((currentFacultyPage - 1) * 6, currentFacultyPage * 6);
+        var rows = paginatedFaculty.map(function (f) {
+          var status = f.status || 'Active';
+          var courseCount = getAssignedCourseCount(f.id);
+          var initials = f.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
+          return '<tr>' +
+            '<td class="avatar-name-cell">' +
+              '<div class="avatar-circle">' + initials + '</div>' +
+              '<div class="avatar-details">' +
+                '<span>' + f.name + '</span>' +
+                '<span class="avatar-subtext">' + f.email + '</span>' +
+              '</div>' +
+            '</td>' +
+            '<td>' + f.phone + '</td>' +
+            '<td>' + courseCount + '</td>' +
+            '<td>' + (status === 'Active' ? statusPill('Active') : statusPill('Cancelled')) + '</td>' +
+            '<td class="actions-cell">' +
+            '<button class="icon-btn edit-faculty" data-id="' + f.id + '" title="Edit"><span class="material-icons">edit</span></button>' +
+            (status === 'Active'
+              ? '<button class="icon-btn deactivate-faculty" data-id="' + f.id + '" title="Deactivate"><span class="material-icons">block</span></button>'
+              : '<button class="icon-btn activate-faculty" data-id="' + f.id + '" title="Activate"><span class="material-icons">check_circle</span></button>') +
+            '</td></tr>';
+        }).join("");
+        wrap.innerHTML = '<table class="data-table"><thead><tr><th>Faculty</th><th>Phone</th><th>Courses</th><th>Status</th><th>Actions</th></tr></thead><tbody>' + rows + '</tbody></table>';
+
+        renderPagination("facultyPagination", faculty.length, currentFacultyPage, 6, (newPage) => {
+          currentFacultyPage = newPage;
+          renderFacultyTable();
+        });
+
+        wrap.querySelectorAll(".edit-faculty").forEach(function (btn) {
+          btn.addEventListener("click", function () { openFacultyModal(btn.dataset.id); });
+        });
+        wrap.querySelectorAll(".deactivate-faculty").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            showConfirmModal("Deactivate Faculty", "Deactivate this faculty member? They will not be able to log in.", () => {
+              var facId = btn.dataset.id;
+              DB.update("users", facId, { status: 'Inactive' });
+              showToast("Faculty deactivated successfully.", "success");
+              renderFacultyTable();
+            });
+          });
+        });
+        wrap.querySelectorAll(".activate-faculty").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            DB.update("users", btn.dataset.id, { status: 'Active' });
+            showToast("Faculty activated successfully.", "success");
+            renderFacultyTable();
+          });
+        });
+      }
+
+      function populateCourseCheckboxes(selectedIds) {
+        var container = document.getElementById("fcCoursesList");
+        var courses = DB.get("courses");
+        if (!courses.length) {
+          container.innerHTML = '<p style="color:hsl(var(--muted-foreground));font-size:0.8125rem">No courses available.</p>';
+          return;
+        }
+        container.innerHTML = courses.map(function (c) {
+          var checked = selectedIds && selectedIds.indexOf(c.id) !== -1 ? 'checked' : '';
+          return '<label class="faculty-course-label" style="display:flex;align-items:center;justify-content:flex-start;gap:0.75rem;padding:0.5rem 0.75rem;font-size:0.875rem;cursor:pointer;border-radius:calc(var(--radius) - 2px);margin:0"> ' +
+            '<input type="checkbox" class="fc-course-cb" style="margin:0;width:1rem;height:1rem" value="' + c.id + '" ' + checked + ' />' +
+            '<span style="text-align:left;color:hsl(var(--foreground));font-weight:500">' + c.name + ' <span style="color:hsl(var(--muted-foreground));font-size:0.75rem;font-weight:400;margin-left:0.25rem">(' + c.batch + ')</span></span>' +
+            '</label>';
+        }).join('');
+      }
+
+      function getSelectedCourseIds() {
+        var cbs = document.querySelectorAll('.fc-course-cb:checked');
+        var ids = [];
+        cbs.forEach(function (cb) { ids.push(cb.value); });
+        return ids;
+      }
+
+      function openFacultyModal(id) {
+        var modal = document.getElementById("facultyModal");
+        document.getElementById("facultyForm").reset();
+        document.getElementById("facultyFormError").classList.add("hidden");
+        document.getElementById("facultyFormSuccess").classList.add("hidden");
+        var title = document.getElementById("facultyModalTitle");
+
+        // Reset Password button
+        var resetBtn = document.getElementById("fcResetPwdBtn");
+        var pwdInput = document.getElementById("fcPassword");
+
+        if (id) {
+          title.textContent = "Edit Faculty";
+          var f = DB.getById("users", id);
+          document.getElementById("facultyId").value = f.id;
+          document.getElementById("fcName").value = f.name;
+          document.getElementById("fcEmail").value = f.email;
+          document.getElementById("fcPhone").value = f.phone;
+          pwdInput.value = '';
+          pwdInput.placeholder = 'Leave blank to keep current password';
+          resetBtn.style.display = '';
+          resetBtn.onclick = function () {
+            var newPwd = Math.random().toString(36).slice(-8);
+            DB.update("users", f.id, { password: newPwd });
+            showAlertModal("Password Reset", "Password reset successfully!\nNew password: " + newPwd, "info");
+          };
+          // Pre-populate assigned courses
+          var assigned = DB.get("courses").filter(function (c) { return c.facultyId === f.id; }).map(function (c) { return c.id; });
+          populateCourseCheckboxes(assigned);
+        } else {
+          title.textContent = "Add Faculty";
+          document.getElementById("facultyId").value = "";
+          pwdInput.value = generatePassword();
+          pwdInput.placeholder = 'Auto-generated password';
+          resetBtn.style.display = 'none';
+          populateCourseCheckboxes([]);
+        }
+        modal.classList.remove("hidden");
+      }
+
+      function closeFacultyModal() {
+        document.getElementById("facultyModal").classList.add("hidden");
+      }
+
+      var facultyModalSetup = false;
+      function setupFacultyModal() {
+        if (facultyModalSetup) return;
+        facultyModalSetup = true;
+
+        document.getElementById("closeFacultyModal").addEventListener("click", closeFacultyModal);
+        document.getElementById("cancelFacultyForm").addEventListener("click", closeFacultyModal);
+
+        document.getElementById("fcPhone").addEventListener("input", function () {
+          this.value = this.value.replace(/\D/g, "").slice(0, 10);
+        });
+
+        document.getElementById("facultyForm").addEventListener("submit", function (e) {
+          e.preventDefault();
+          var id = document.getElementById("facultyId").value;
+          var name = document.getElementById("fcName").value.trim();
+          var email = document.getElementById("fcEmail").value.trim();
+          var phone = document.getElementById("fcPhone").value.trim();
+          var password = document.getElementById("fcPassword").value.trim();
+          var selectedCourses = getSelectedCourseIds();
+          var errorEl = document.getElementById("facultyFormError");
+          var successEl = document.getElementById("facultyFormSuccess");
+          errorEl.classList.add("hidden");
+          successEl.classList.add("hidden");
+
+          if (!validateRequired(name))
+            return showFormErr(errorEl, "Full name is required.");
+          if (!validateEmail(email))
+            return showFormErr(errorEl, "Enter a valid email address.");
+          if (!validatePhone(phone))
+            return showFormErr(errorEl, "Phone must start with 6/7/8/9 and be 10 digits.");
+
+          if (id) {
+            // Editing existing faculty
+            var updates = { name: name, email: email, phone: phone };
+            if (password) updates.password = password;
+            DB.update("users", id, updates);
+            // Update course assignments
+            DB.get("courses").forEach(function (c) {
+              var newFacultyId = selectedCourses.indexOf(c.id) !== -1 ? id : null;
+              if (c.facultyId !== newFacultyId) {
+                DB.update("courses", c.id, { facultyId: newFacultyId });
+              }
+            });
+            showToast("Faculty updated successfully.", "success");
+            closeFacultyModal();
+            renderFacultyTable();
+          } else {
+            // Check duplicate email
+            var existing = DB.get("users").some(function (u) {
+              return u.email.toLowerCase() === email.toLowerCase();
+            });
+            if (existing)
+              return showFormErr(errorEl, "Email already registered.");
+
+            if (!validateRequired(password))
+              return showFormErr(errorEl, "Password is required.");
+
+            var newUser = DB.add("users", {
+              name: name,
+              email: email,
+              phone: phone,
+              password: password,
+              role: "faculty",
+              status: "Active",
+            });
+            // Assign selected courses to this faculty
+            selectedCourses.forEach(function (courseId) {
+              DB.update("courses", courseId, { facultyId: newUser.id });
+            });
+            // Show credentials
+            var credMsg = "Faculty account created.\nRole: faculty\nUsername: " + email + "\nPassword: " + password;
+            showAlertModal("Faculty Created", credMsg, "info", () => {
+              closeFacultyModal();
+              renderFacultyTable();
+            });
+          }
+        });
       }
 
       function showFormErr(el, msg) {

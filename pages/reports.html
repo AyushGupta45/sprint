@@ -34,7 +34,9 @@
       function renderReportsPage() {
         const main = document.getElementById("main-content");
         main.innerHTML = `
-        <h2 class="page-title">Reports</h2>
+        <div class="page-header">
+            <h2 class="page-title">Reports</h2>
+          </div>
         <div class="tabs">
           <button class="tab-btn tab-active" data-tab="pendingfees">Pending Fees / Defaulters</button>
           <button class="tab-btn" data-tab="enrollmentreport">Course-wise Enrollment</button>
@@ -75,8 +77,15 @@
                 (Date.now() - new Date(e.enrollDate)) / (1000 * 60 * 60 * 24),
               );
               const status = daysSince > 30 ? "Overdue" : "Due Soon";
+              const initials = student ? student.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() : "-";
               return `<tr>
-            <td>${student ? student.name : "-"}</td>
+            <td class="avatar-name-cell">
+              <div class="avatar-circle">${initials}</div>
+              <div class="avatar-details">
+                <span>${student ? student.name : "-"}</span>
+                <span class="avatar-subtext">${student ? student.email : "-"}</span>
+              </div>
+            </td>
             <td>${course ? course.name : "-"}</td>
             <td>${formatCurrency(e.totalFee)}</td>
             <td>${formatCurrency(pending)}</td>
@@ -94,6 +103,12 @@
                 <canvas id="pendingFeesAgingChart"></canvas>
               </div>
             </div>
+            <div class="chart-card">
+              <h3>Payment Modes Distribution</h3>
+              <div class="chart-container">
+                <canvas id="paymentModeChart"></canvas>
+              </div>
+            </div>
           </div>
           <div class="section">
             <h3>Defaulters List</h3>
@@ -104,6 +119,7 @@
           </div>
         `;
           initPendingFeesAgingChart();
+          initPaymentModeBreakdownChart();
           wrap.querySelectorAll(".send-reminder").forEach((btn) => {
             btn.addEventListener("click", () => {
               const studentUser = DB.get("users").find(
@@ -115,7 +131,7 @@
                   "Reminder: You have a pending fee balance. Please clear it soon.",
                   "alert",
                 );
-              alert("Reminder sent to student.");
+              showToast("Reminder sent to student.", "success");
             });
           });
         } else {

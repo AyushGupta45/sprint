@@ -2,354 +2,214 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>CEFTS - Login</title>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-    />
-    <link rel="stylesheet" href="css/styles.css?v=1.1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduTrack — Course Enrollment & Fee Tracking System</title>
+    <meta name="description" content="EduTrack simplifies course enrollment, fee tracking, and academic operations for educational institutes. Real-time dashboards for admins, faculty, and students." />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="css/styles.css?v=2.0" />
+    <style>
+      html, body { height: auto; overflow: auto; scroll-behavior: smooth; font-family: "Inter", -apple-system, sans-serif; }
+      body { background: #F7FAFC; background-image: radial-gradient(rgba(15,157,140,0.04) 1px, transparent 1px); background-size: 24px 24px; }
+      .landing-nav { position: sticky; top: 0; z-index: 100; background: hsla(210,40%,98%,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid hsl(214,32%,91%); display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 3rem; animation: slideDown 0.5s ease-out; }
+      .landing-nav .logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 800; font-size: 1.25rem; color: #14324A; letter-spacing: -0.01em; }
+      .landing-nav .logo .material-icons { color: #0F9D8C; font-size: 1.75rem; }
+
+      .hero { display: flex; align-items: center; justify-content: center; min-height: 80vh; padding: 4rem 2rem; position: relative; overflow: hidden; }
+      .hero::before { content: ""; position: absolute; top: -120px; right: -80px; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(15,157,140,0.08) 0%, transparent 70%); pointer-events: none; }
+      .hero::after { content: ""; position: absolute; bottom: -100px; left: -60px; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(217,119,6,0.06) 0%, transparent 70%); pointer-events: none; }
+      .hero-inner { max-width: 1100px; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; z-index: 1; }
+      .hero h1 { font-size: 2.75rem; font-weight: 800; color: #14324A; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 1.25rem; }
+      .hero h1 span { color: #0F9D8C; }
+      .hero p { font-size: 1.125rem; color: #5B7285; line-height: 1.6; margin-bottom: 2rem; }
+      .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+      .hero-cta .btn { padding: 0.875rem 2rem; font-size: 1rem; font-weight: 600; height: auto; border-radius: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+      .hero-cta .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(15,157,140,0.2); }
+      .hero-visual { background: #fff; border: 1px solid #E2E8F0; border-radius: 16px; padding: 1.5rem; box-shadow: 0 24px 48px rgba(20,50,74,0.1); transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+      .hero-visual:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 32px 64px rgba(20,50,74,0.15); }
+      .hero-visual-inner { background: #F7FAFC; border-radius: 10px; padding: 1.25rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+      .mini-stat { background: #fff; border: 1px solid #E2E8F0; border-radius: 8px; padding: 0.875rem; text-align: center; transition: all 0.25s ease; cursor: default; }
+      .mini-stat:hover { transform: translateY(-4px); border-color: #0F9D8C; box-shadow: 0 8px 16px rgba(20,50,74,0.06); }
+      .mini-stat .material-icons { font-size: 1.5rem; margin-bottom: 0.375rem; transition: transform 0.3s ease; }
+      .mini-stat:hover .material-icons { transform: scale(1.15); }
+      .mini-stat .num { font-size: 1.5rem; font-weight: 700; color: #14324A; display: block; }
+      .mini-stat .lbl { font-size: 0.6875rem; color: #5B7285; text-transform: uppercase; letter-spacing: 0.05em; }
+      .mini-stat:nth-child(1) .material-icons { color: #0F9D8C; }
+      .mini-stat:nth-child(2) .material-icons { color: #7C3AED; }
+      .mini-stat:nth-child(3) .material-icons { color: #D97706; }
+      .hero-bar-mock { grid-column: span 3; background: #fff; border: 1px solid #E2E8F0; border-radius: 8px; padding: 1rem; margin-top: 0.25rem; }
+      .hero-bar-mock .bar-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.75rem; color: #5B7285; }
+      .hero-bar-mock .bar-row:last-child { margin-bottom: 0; }
+      .hero-bar-mock .bar-track { flex: 1; height: 8px; background: #F1F5F9; border-radius: 99px; overflow: hidden; }
+      .hero-bar-mock .bar-fill { height: 100%; border-radius: 99px; }
+
+      .features { padding: 5rem 2rem; background: #fff; }
+      .features-inner { max-width: 1100px; margin: 0 auto; text-align: center; }
+      .features-inner h2 { font-size: 2rem; font-weight: 700; color: #14324A; margin-bottom: 0.75rem; }
+      .features-inner > p { color: #5B7285; font-size: 1.05rem; margin-bottom: 3rem; }
+      .features-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
+      .feature-card { flex: 0 1 calc(33.333% - 1rem); min-width: 280px; background: #F7FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 2rem 1.5rem; text-align: left; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); animation: fadeInUp 0.6s ease-out both; }
+      .feature-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 12px 32px rgba(20,50,74,0.1); border-color: #0F9D8C; }
+      .feature-card .fc-icon { width: 3rem; height: 3rem; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+      .feature-card .fc-icon .material-icons { font-size: 1.375rem; }
+      .feature-card h3 { font-size: 1.05rem; font-weight: 600; color: #14324A; margin-bottom: 0.5rem; }
+      .feature-card p { font-size: 0.875rem; color: #5B7285; line-height: 1.5; margin: 0; }
+      .fc-teal { background: #E3F6F3; color: #0F9D8C; }
+      .fc-amber { background: #FEF3E2; color: #D97706; }
+      .fc-violet { background: #F3ECFE; color: #7C3AED; }
+      .fc-green { background: #E8F8EE; color: #16A34A; }
+      .fc-red { background: #FDECEC; color: #DC2626; }
+
+      .roles-section { padding: 5rem 2rem; background: #F7FAFC; }
+      .roles-inner { max-width: 1100px; margin: 0 auto; text-align: center; }
+      .roles-inner h2 { font-size: 2rem; font-weight: 700; color: #14324A; margin-bottom: 0.75rem; }
+      .roles-inner > p { color: #5B7285; font-size: 1.05rem; margin-bottom: 3rem; }
+      .roles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+      .role-card { background: #fff; border: 1px solid #E2E8F0; border-radius: 12px; padding: 2rem; text-align: left; transition: transform 0.3s ease, box-shadow 0.3s ease; animation: fadeInUp 0.6s ease-out both; }
+      .role-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(20,50,74,0.08); }
+      .role-card h3 { display: flex; align-items: center; gap: 0.5rem; font-size: 1.125rem; font-weight: 600; color: #14324A; margin-bottom: 0.75rem; }
+      .role-card ul { list-style: none; padding: 0; margin: 0; }
+      .role-card li { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: #5B7285; padding: 0.375rem 0; }
+      .role-card li .material-icons { font-size: 1rem; color: #0F9D8C; }
+
+      .landing-footer { background: #14324A; color: #C9D6DF; padding: 2.5rem 2rem; text-align: center; }
+      .landing-footer .footer-brand { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 1.05rem; font-weight: 600; color: #fff; }
+      .landing-footer .footer-brand .material-icons { color: #0F9D8C; }
+      .landing-footer p { font-size: 0.8125rem; color: #8BA3B5; margin: 0.25rem 0; }
+
+      @media (max-width: 768px) {
+        .hero-inner { grid-template-columns: 1fr; gap: 2rem; }
+        .hero h1 { font-size: 2rem; }
+        .hero-visual { display: none; }
+        .roles-grid, .features-grid { grid-template-columns: 1fr; }
+      }
+
+      /* Animations */
+      @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+      
+      .hero-inner > div:nth-child(1) { animation: fadeInUp 0.7s ease-out; }
+      .hero-visual { animation: fadeInUp 0.7s ease-out 0.2s both; }
+      
+      .feature-card:nth-child(1) { animation-delay: 0.1s; }
+      .feature-card:nth-child(2) { animation-delay: 0.2s; }
+      .feature-card:nth-child(3) { animation-delay: 0.3s; }
+      .feature-card:nth-child(4) { animation-delay: 0.4s; }
+      .feature-card:nth-child(5) { animation-delay: 0.5s; }
+
+      .role-card:nth-child(1) { animation-delay: 0.2s; }
+      .role-card:nth-child(2) { animation-delay: 0.3s; }
+      .role-card:nth-child(3) { animation-delay: 0.4s; }
+    </style>
   </head>
-  <body>
-    <div class="auth-page">
-      <div class="auth-card">
-        <div class="auth-brand">
-          <span class="material-icons brand-icon">school</span>
-          <h1>EduTrack</h1>
-          <p class="auth-subtitle">
-            Course Enrollment &amp; Fee Tracking System
-          </p>
+  <body style="background-color: #F7FAFC;">
+    <!-- STICKY NAV -->
+    <nav class="landing-nav">
+      <div class="logo"><span class="material-icons">school</span> EduTrack</div>
+      <a href="pages/login.html" class="btn btn-primary" style="height:36px;font-size:0.875rem;font-weight:600;padding:0 1.25rem;">Login / Setup</a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-inner">
+        <div>
+          <h1>Course enrollment and fee tracking, <span>simplified.</span></h1>
+          <p>A complete academic operations platform for educational institutes. Manage enrollments, automate waitlists, track fees, and empower every stakeholder — from admin to student.</p>
+          <div class="hero-cta">
+            <a href="pages/login.html" class="btn btn-primary"><span class="material-icons">login</span> Get Started</a>
+            <a href="#features" class="btn btn-secondary"><span class="material-icons">info</span> Learn More</a>
+          </div>
         </div>
-
-        <!-- LOGIN FORM -->
-        <form id="loginForm" class="auth-form">
-          <div class="form-group">
-            <label for="loginEmail">Email</label>
-            <input
-              type="text"
-              id="loginEmail"
-              name="email"
-              placeholder="you@edu.com"
-              autocomplete="username"
-            />
-          </div>
-          <div class="form-group">
-            <label for="loginPassword">Password</label>
-            <div class="password-input-wrapper">
-              <input
-                type="password"
-                id="loginPassword"
-                name="password"
-                placeholder="Enter password"
-                autocomplete="current-password"
-              />
-              <span class="password-toggle" data-target="loginPassword">
-                <span class="material-icons">visibility</span>
-              </span>
+        <div class="hero-visual">
+          <div class="hero-visual-inner">
+            <div class="mini-stat"><span class="material-icons">group</span><span class="num">248</span><span class="lbl">Students</span></div>
+            <div class="mini-stat"><span class="material-icons">menu_book</span><span class="num">12</span><span class="lbl">Courses</span></div>
+            <div class="mini-stat"><span class="material-icons">payments</span><span class="num">₹4.2L</span><span class="lbl">Collected</span></div>
+            <div class="hero-bar-mock">
+              <div class="bar-row"><span style="width:80px">Web Dev</span><div class="bar-track"><div class="bar-fill" style="width:85%;background:#0F9D8C"></div></div><span>34/40</span></div>
+              <div class="bar-row"><span style="width:80px">Data Sci</span><div class="bar-track"><div class="bar-fill" style="width:60%;background:#D97706"></div></div><span>18/30</span></div>
+              <div class="bar-row"><span style="width:80px">AI/ML</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#DC2626"></div></div><span>25/25</span></div>
             </div>
           </div>
-          <div id="loginError" class="form-error hidden"></div>
-          <button type="submit" class="btn btn-primary btn-block">
-            <span class="material-icons">login</span> Login
-          </button>
-          <p class="auth-switch">
-            New student? <a href="#" id="showSignup">Register here</a>
-          </p>
-          <div class="demo-hint">
-            <p><strong>Demo Logins</strong></p>
-            <p>Admin: admin@edu.com / Admin@123</p>
-            <p>Faculty: faculty@edu.com / Faculty@123</p>
-            <p>Student: student@edu.com / Student@123</p>
-          </div>
-        </form>
-
-        <!-- SIGNUP FORM (Student Registration - US-001) -->
-        <form id="signupForm" class="auth-form hidden">
-          <div class="form-group">
-            <label for="suName">Full Name</label>
-            <input
-              type="text"
-              id="suName"
-              name="name"
-              placeholder="Full name"
-            />
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="suEmail">Email</label>
-              <input
-                type="text"
-                id="suEmail"
-                name="email"
-                placeholder="you@edu.com"
-              />
-            </div>
-            <div class="form-group">
-              <label for="suPhone">Phone</label>
-              <input
-                type="text"
-                id="suPhone"
-                name="phone"
-                placeholder="10-digit mobile"
-                maxlength="10"
-              />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="suDob">Date of Birth</label>
-              <input type="date" id="suDob" name="dob" />
-            </div>
-            <div class="form-group">
-              <label for="suGender">Gender</label>
-              <select id="suGender" name="gender">
-                <option value="">Select</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="suAddress">Address</label>
-            <input
-              type="text"
-              id="suAddress"
-              name="address"
-              placeholder="Address"
-            />
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="suPassword">Password</label>
-              <div class="password-input-wrapper">
-                <input
-                  type="password"
-                  id="suPassword"
-                  name="password"
-                  placeholder="Create password"
-                />
-                <span class="password-toggle" data-target="suPassword">
-                  <span class="material-icons">visibility</span>
-                </span>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="suConfirmPassword">Confirm Password</label>
-              <div class="password-input-wrapper">
-                <input
-                  type="password"
-                  id="suConfirmPassword"
-                  name="confirmPassword"
-                  placeholder="Confirm password"
-                />
-                <span class="password-toggle" data-target="suConfirmPassword">
-                  <span class="material-icons">visibility</span>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div id="pwStrengthBar" class="pw-strength-bar">
-              <span></span>
-            </div>
-            <span id="pwStrengthLabel" class="pw-strength-label"></span>
-          </div>
-          <div id="signupError" class="form-error hidden"></div>
-          <div id="signupSuccess" class="form-success hidden"></div>
-          <button type="submit" class="btn btn-primary btn-block">
-            <span class="material-icons">person_add</span> Register
-          </button>
-          <p class="auth-switch">
-            Already have an account? <a href="#" id="showLogin">Login here</a>
-          </p>
-        </form>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <script src="js/db.js"></script>
-    <script src="js/seed.js"></script>
-    <script src="js/validators.js"></script>
-    <script src="js/auth.js"></script>
-    <script>
-      // Password visibility toggle
-      document.querySelectorAll(".password-toggle").forEach((toggle) => {
-        toggle.addEventListener("click", () => {
-          const targetId = toggle.dataset.target;
-          const input = document.getElementById(targetId);
-          const icon = toggle.querySelector(".material-icons");
+    <!-- FEATURES -->
+    <section class="features" id="features">
+      <div class="features-inner">
+        <h2>Everything you need to run academic operations</h2>
+        <p>Built for institutes that want clarity, speed, and confidence in their enrollment and fee management.</p>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="fc-icon fc-teal"><span class="material-icons">track_changes</span></div>
+            <h3>Real-time Seat Tracking</h3>
+            <p>Monitor course capacities live. Automatic color-coded occupancy bars show availability at a glance.</p>
+          </div>
+          <div class="feature-card">
+            <div class="fc-icon fc-amber"><span class="material-icons">swap_vert</span></div>
+            <h3>Instant Waitlist Promotion</h3>
+            <p>When a seat opens, the next student on the waitlist is auto-promoted and notified immediately.</p>
+          </div>
+          <div class="feature-card">
+            <div class="fc-icon fc-violet"><span class="material-icons">dashboard_customize</span></div>
+            <h3>Role-based Dashboards</h3>
+            <p>Tailored panels for admins, faculty, and students — each sees exactly what they need.</p>
+          </div>
+          <div class="feature-card">
+            <div class="fc-icon fc-green"><span class="material-icons">receipt_long</span></div>
+            <h3>Secure Payment Tracking</h3>
+            <p>Record payments, generate invoices and receipts, and track pending balances with full audit trails.</p>
+          </div>
+          <div class="feature-card">
+            <div class="fc-icon fc-red"><span class="material-icons">notifications_active</span></div>
+            <h3>Automated Fee Reminders</h3>
+            <p>Send payment reminders to students with overdue balances. Never miss a collection cycle.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-          if (input.type === "password") {
-            input.type = "text";
-            icon.textContent = "visibility_off";
-          } else {
-            input.type = "password";
-            icon.textContent = "visibility";
-          }
-        });
-      });
+    <!-- ROLES -->
+    <section class="roles-section" id="roles">
+      <div class="roles-inner">
+        <h2>Built for every stakeholder</h2>
+        <p>Three distinct roles, three tailored experiences — all connected through one platform.</p>
+        <div class="roles-grid">
+          <div class="role-card">
+            <h3><span class="material-icons" style="color:#DC2626">admin_panel_settings</span> Admin</h3>
+            <ul>
+              <li><span class="material-icons">check_circle</span> Manage courses, students, and faculty</li>
+              <li><span class="material-icons">check_circle</span> Record payments and generate receipts</li>
+              <li><span class="material-icons">check_circle</span> View reports, defaulters, and analytics</li>
+              <li><span class="material-icons">check_circle</span> Configure fee plans and installments</li>
+            </ul>
+          </div>
+          <div class="role-card">
+            <h3><span class="material-icons" style="color:#D97706">badge</span> Faculty</h3>
+            <ul>
+              <li><span class="material-icons">check_circle</span> View assigned courses and student lists</li>
+              <li><span class="material-icons">check_circle</span> Track enrollment trends for your courses</li>
+              <li><span class="material-icons">check_circle</span> Monitor seat utilization in real time</li>
+            </ul>
+          </div>
+          <div class="role-card">
+            <h3><span class="material-icons" style="color:#7C3AED">school</span> Student</h3>
+            <ul>
+              <li><span class="material-icons">check_circle</span> Browse the course catalog and self-enroll</li>
+              <li><span class="material-icons">check_circle</span> Pay fees online with UPI or Card</li>
+              <li><span class="material-icons">check_circle</span> Track payment progress and download receipts</li>
+              <li><span class="material-icons">check_circle</span> Join waitlists and get auto-promoted</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
 
-      (async () => {
-        await initSeed();
-
-        const loginForm = document.getElementById("loginForm");
-        const signupForm = document.getElementById("signupForm");
-        document.getElementById("showSignup").addEventListener("click", (e) => {
-          e.preventDefault();
-          loginForm.classList.add("hidden");
-          signupForm.classList.remove("hidden");
-        });
-        document.getElementById("showLogin").addEventListener("click", (e) => {
-          e.preventDefault();
-          signupForm.classList.add("hidden");
-          loginForm.classList.remove("hidden");
-        });
-
-        // Redirect if already logged in
-        const existing = getCurrentUser();
-        if (existing) window.location.href = "pages/dashboard.html";
-
-        loginForm.addEventListener("submit", (e) => {
-          e.preventDefault();
-          const email = document.getElementById("loginEmail").value.trim();
-          const password = document.getElementById("loginPassword").value;
-          const errorEl = document.getElementById("loginError");
-
-          if (!validateEmail(email)) {
-            errorEl.textContent = "Please enter a valid email address.";
-            errorEl.classList.remove("hidden");
-            return;
-          }
-          if (!validateRequired(password)) {
-            errorEl.textContent = "Password is required.";
-            errorEl.classList.remove("hidden");
-            return;
-          }
-          const user = login(email, password);
-          if (!user) {
-            errorEl.textContent = "Invalid email or password.";
-            errorEl.classList.remove("hidden");
-            return;
-          }
-          errorEl.classList.add("hidden");
-          window.location.href = "pages/dashboard.html";
-        });
-
-        // Live validation for signup
-        const phoneInput = document.getElementById("suPhone");
-        phoneInput.addEventListener("input", () => {
-          phoneInput.value = phoneInput.value.replace(/\D/g, "").slice(0, 10);
-          if (phoneInput.value.length === 10) {
-            setFieldError(
-              phoneInput,
-              validatePhone(phoneInput.value)
-                ? ""
-                : "Must start with 6/7/8/9 and be 10 digits.",
-            );
-          }
-        });
-
-        const emailInput = document.getElementById("suEmail");
-        emailInput.addEventListener("blur", () => {
-          setFieldError(
-            emailInput,
-            validateEmail(emailInput.value)
-              ? ""
-              : "Enter a valid email address.",
-          );
-        });
-
-        const pwInput = document.getElementById("suPassword");
-        const confirmInput = document.getElementById("suConfirmPassword");
-        const pwBarSpan = document.querySelector("#pwStrengthBar span");
-        const pwLabel = document.getElementById("pwStrengthLabel");
-
-        pwInput.addEventListener("input", () => {
-          const { score, label } = checkPasswordStrength(pwInput.value);
-          const pct = (score / 4) * 100;
-          pwBarSpan.style.width = pct + "%";
-          pwBarSpan.className = "";
-          pwBarSpan.classList.add(
-            score <= 1
-              ? "pw-weak"
-              : score === 2
-                ? "pw-medium"
-                : score === 3
-                  ? "pw-strong"
-                  : "pw-very-strong",
-          );
-          pwLabel.textContent = pwInput.value ? label : "";
-        });
-
-        confirmInput.addEventListener("input", () => {
-          setFieldError(
-            confirmInput,
-            passwordsMatch(pwInput.value, confirmInput.value)
-              ? ""
-              : "Passwords do not match.",
-          );
-        });
-
-        signupForm.addEventListener("submit", (e) => {
-          e.preventDefault();
-          const name = document.getElementById("suName").value.trim();
-          const email = emailInput.value.trim();
-          const phone = phoneInput.value.trim();
-          const dob = document.getElementById("suDob").value;
-          const gender = document.getElementById("suGender").value;
-          const address = document.getElementById("suAddress").value.trim();
-          const password = pwInput.value;
-          const confirmPassword = confirmInput.value;
-          const errorEl = document.getElementById("signupError");
-          const successEl = document.getElementById("signupSuccess");
-          errorEl.classList.add("hidden");
-          successEl.classList.add("hidden");
-
-          if (!validateRequired(name))
-            return showErr(errorEl, "Full name is required.");
-          if (!validateEmail(email))
-            return showErr(errorEl, "Enter a valid email address.");
-          if (!validatePhone(phone))
-            return showErr(
-              errorEl,
-              "Phone must start with 6/7/8/9 and be 10 digits.",
-            );
-          if (!validateRequired(dob))
-            return showErr(errorEl, "Date of birth is required.");
-          const strength = checkPasswordStrength(password);
-          if (!strength.valid)
-            return showErr(
-              errorEl,
-              "Password must be 8+ chars with at least 3 of: uppercase, number, symbol.",
-            );
-          if (!passwordsMatch(password, confirmPassword))
-            return showErr(errorEl, "Passwords do not match.");
-
-          const result = signupStudent({
-            name,
-            email,
-            phone,
-            password,
-            dob,
-            gender,
-            address,
-          });
-          if (!result.success) return showErr(errorEl, result.message);
-
-          successEl.textContent = "Registration successful! You can now login.";
-          successEl.classList.remove("hidden");
-          signupForm.reset();
-          pwBarSpan.style.width = "0%";
-          pwLabel.textContent = "";
-        });
-
-        function showErr(el, msg) {
-          el.textContent = msg;
-          el.classList.remove("hidden");
-        }
-      })();
-    </script>
+    <!-- FOOTER -->
+    <footer class="landing-footer">
+      <div class="footer-brand"><span class="material-icons">school</span> EduTrack</div>
+      <p>Course Enrollment & Fee Tracking System</p>
+      <p style="margin-top:0.75rem;font-size:0.75rem;color:#5B7285">© 2026 EduTrack. Built for educational excellence.</p>
+    </footer>
   </body>
 </html>
